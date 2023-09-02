@@ -5,16 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.android.politicalpreparedness.databinding.FragmentElectionBinding
 
-class ElectionsFragment: Fragment() {
+class ElectionsFragment : Fragment() {
+
+    private lateinit var binding: FragmentElectionBinding
 
     // TODO: Declare ViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?)
-    : View? {
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentElectionBinding.inflate(inflater)
+        binding.lifecycleOwner = this
+
         // TODO: Add ViewModel values and create ViewModel
 
         // TODO: Add binding values
@@ -24,7 +30,7 @@ class ElectionsFragment: Fragment() {
         // TODO: Initiate recycler adapters
 
         // TODO: Populate recycler adapters
-        return null
+        return binding.root
     }
 
     // TODO: Refresh adapters when fragment loads
