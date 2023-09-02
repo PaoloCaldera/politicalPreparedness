@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- app name -->
     <string name="app_name">Political Preparedness</string>
+
+    <!-- launch fragment -->
+    <string name="ballot_logo_content_description">Image with ballot for political elections</string>
+    <string name="representative_button_text">Find my representatives</string>
+    <string name="upcoming_button_text">Upcoming elections</string>
 
     <!-- TODO: Add necessary string values -->
 
