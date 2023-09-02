@@ -18,20 +18,18 @@ class LaunchFragment : Fragment() {
         binding = FragmentLaunchBinding.inflate(inflater)
         binding.lifecycleOwner = this
 
-        binding.representativeButton.setOnClickListener { navToRepresentatives() }
-        binding.upcomingButton.setOnClickListener { navToElections() }
+        // Navigate to representatives fragment
+        binding.representativeButton.setOnClickListener {
+            findNavController()
+                .navigate(LaunchFragmentDirections.actionLaunchFragmentToRepresentativeFragment())
+        }
+
+        // Navigate to elections fragment
+        binding.upcomingButton.setOnClickListener {
+            findNavController()
+                .navigate(LaunchFragmentDirections.actionLaunchFragmentToElectionsFragment())
+        }
 
         return binding.root
     }
-
-    private fun navToElections() {
-        this.findNavController()
-            .navigate(LaunchFragmentDirections.actionLaunchFragmentToElectionsFragment())
-    }
-
-    private fun navToRepresentatives() {
-        this.findNavController()
-            .navigate(LaunchFragmentDirections.actionLaunchFragmentToRepresentativeFragment())
-    }
-
 }
