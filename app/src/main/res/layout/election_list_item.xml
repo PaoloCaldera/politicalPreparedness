@@ -1,36 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_margin"
-    app:cardElevation="@dimen/cardview_elevation">
+<layout>
 
-    <LinearLayout
+    <data>
+        <variable
+            name="electionListItem"
+            type="com.example.android.politicalpreparedness.network.models.Election" />
+    </data>
+
+    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="@dimen/small_margin_1"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        app:cardElevation="@dimen/cardview_elevation">
 
-        <TextView
-            android:id="@+id/election_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:gravity="center"
-            android:maxLines="2"
-            android:minLines="2"
-            tools:text="VIP Test Election" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/small_margin_1"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/election_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            tools:text="2023-09-03" />
+            <TextView
+                android:id="@+id/election_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:gravity="center"
+                android:maxLines="2"
+                android:minLines="2"
+                android:text="@{electionListItem.name}"
+                tools:text="VIP Test Election" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/election_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@{electionListItem.electionDay.toString()}"
+                tools:text="2023-09-03" />
 
-</androidx.cardview.widget.CardView>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+</layout>
