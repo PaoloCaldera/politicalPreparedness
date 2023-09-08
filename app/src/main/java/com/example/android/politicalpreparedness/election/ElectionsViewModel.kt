@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.android.politicalpreparedness.election.adapter.ElectionListViewItem
 import com.example.android.politicalpreparedness.network.models.Election
 import java.lang.IllegalArgumentException
 
@@ -11,13 +12,13 @@ import java.lang.IllegalArgumentException
 class ElectionsViewModel : ViewModel() {
 
     // UI variable: upcoming election list
-    private val _upcomingElections = MutableLiveData<List<Election>>()
-    val upcomingElections: LiveData<List<Election>>
+    private val _upcomingElections = MutableLiveData<List<ElectionListViewItem>>()
+    val upcomingElections: LiveData<List<ElectionListViewItem>>
         get() = _upcomingElections
 
     // UI variable: saved election list
-    private val _savedElections = MutableLiveData<List<Election>>()
-    val savedElections: LiveData<List<Election>>
+    private val _savedElections = MutableLiveData<List<ElectionListViewItem>>()
+    val savedElections: LiveData<List<ElectionListViewItem>>
         get() = _savedElections
 
     private val _navigateToVoterInfoFlag = MutableLiveData<Election?>(null)

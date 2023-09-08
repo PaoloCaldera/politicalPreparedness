@@ -14,7 +14,7 @@ class ElectionListAdapter(
     private val listTitle: String,
     private val clickListener: ElectionListener
 ) :
-    ListAdapter<Election, RecyclerView.ViewHolder>(ElectionDiffCallback) {
+    ListAdapter<ElectionListViewItem, RecyclerView.ViewHolder>(ElectionDiffCallback) {
 
     // Item types for recycler view
     private val HEADER_VIEW_TYPE = 0
@@ -23,12 +23,12 @@ class ElectionListAdapter(
     /**
      * DiffUtil class managing the modifications on the associated recycler view
      */
-    object ElectionDiffCallback : DiffUtil.ItemCallback<Election>() {
-        override fun areItemsTheSame(oldItem: Election, newItem: Election): Boolean {
+    object ElectionDiffCallback : DiffUtil.ItemCallback<ElectionListViewItem>() {
+        override fun areItemsTheSame(oldItem: ElectionListViewItem, newItem: ElectionListViewItem): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Election, newItem: Election): Boolean {
+        override fun areContentsTheSame(oldItem: ElectionListViewItem, newItem: ElectionListViewItem): Boolean {
             return oldItem == newItem
         }
     }
@@ -90,21 +90,28 @@ class ElectionListAdapter(
 
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == 0) HEADER_VIEW_TYPE else ITEM_VIEW_TYPE
+        return when(getItem(position)) {
+            is ElectionListViewItem.Header -> HEADER_VIEW_TYPE
+            is ElectionListViewItem.ElectionListItem -> ITEM_VIEW_TYPE
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType == HEADER_VIEW_TYPE)
-            ElectionListHeaderViewHolder.from(parent)
-        else
-            ElectionListItemViewHolder.from(parent)
+        return when(viewType) {
+            HEADER_VIEW_TYPE -> ElectionListHeaderViewHolder.from(parent)
+            ITEM_VIEW_TYPE -> ElectionListItemViewHolder.from(parent)
+            else -> throw ClassCastException("Unknown viewType $viewType")
+        }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder.itemViewType == ITEM_VIEW_TYPE)
-            (holder as ElectionListHeaderViewHolder).bind(listTitle)
-        else
-            (holder as ElectionListItemViewHolder).bind(getItem(position - 1), clickListener)
+        when(holder.itemViewType) {
+            HEADER_VIEW_TYPE -> (holder as ElectionListHeaderViewHolder).bind(listTitle)
+            ITEM_VIEW_TYPE -> {
+                val electionListItem = getItem(position) as ElectionListViewItem.ElectionListItem
+                (holder as ElectionListItemViewHolder).bind(electionListItem.election, clickListener)
+            }
+        }
     }
 
 
