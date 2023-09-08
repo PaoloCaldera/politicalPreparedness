@@ -2,9 +2,11 @@
 <layout>
 
     <data>
+
         <variable
             name="electionListItem"
             type="com.example.android.politicalpreparedness.network.models.Election" />
+
         <variable
             name="electionClickListener"
             type="com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter.ElectionListener" />
