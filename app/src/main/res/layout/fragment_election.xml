@@ -3,16 +3,50 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO: Add node to connect Election ViewModel -->
+    <data>
+
+        <variable
+            name="electionsViewModel"
+            type="com.example.android.politicalpreparedness.election.ElectionsViewModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.android.politicalpreparedness.MainActivity">
+        android:layout_margin="@dimen/default_margin"
+        tools:context="com.example.android.politicalpreparedness.MainActivity"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-8dp">
 
-        <!-- TODO: Add Upcoming Election Recycler and Header -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/upcoming_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/default_margin"
+            app:header="@{@string/upcoming_list_title}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@+id/saved_recyclerView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread"
+            app:listData="@{electionsViewModel.upcomingElections}"
+            app:onItemClick="@{() -> electionsViewModel.onElectionClicked}" />
 
-        <!-- TODO: Add Saved Election Recycler and Header -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/saved_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/default_margin"
+            app:header="@{@string/saved_list_title}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/upcoming_recyclerView"
+            app:listData="@{electionsViewModel.savedElections}"
+            app:onItemClick="@{() -> electionsViewModel.onElectionClicked}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
