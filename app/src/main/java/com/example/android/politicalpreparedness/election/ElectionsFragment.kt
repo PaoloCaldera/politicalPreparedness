@@ -7,9 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.FragmentElectionBinding
-import com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter
 import com.example.android.politicalpreparedness.network.models.Election
 
 class ElectionsFragment : Fragment() {
@@ -25,30 +23,30 @@ class ElectionsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentElectionBinding.inflate(inflater)
-        binding.lifecycleOwner = this
-
-        // TODO: Add binding values
+        binding.apply {
+            lifecycleOwner = this@ElectionsFragment
+            electionsViewModel = viewModel
+        }
 
         // TODO: Link elections to voter info
 
         // Logic for setting upcoming recycler view adapter with upcoming elections data
-        val upcoming = binding.upcomingRecyclerView
+        /*val upcoming = binding.upcomingRecyclerView
         val upcomingAdapter = ElectionListAdapter(
             resources.getString(R.string.upcoming_list_title),
             ElectionListAdapter.ElectionListener { election -> viewModel.onElectionClicked(election) }
         )
-        upcomingAdapter.submitList(viewModel.upcomingElections.value)
-        upcoming.adapter = upcomingAdapter
+        upcoming.adapter = upcomingAdapter*/
 
 
         // Logic for setting saved recycler view adapter with saved elections data
-        val saved = binding.savedRecyclerView
+        /*val saved = binding.savedRecyclerView
         val savedAdapter = ElectionListAdapter(
             resources.getString(R.string.saved_list_title),
             ElectionListAdapter.ElectionListener { election -> viewModel.onElectionClicked(election) }
         )
         savedAdapter.submitList(viewModel.savedElections.value)
-        saved.adapter = savedAdapter
+        saved.adapter = savedAdapter*/
 
 
         // Observed variable aimed to handle navigation to voter info fragment

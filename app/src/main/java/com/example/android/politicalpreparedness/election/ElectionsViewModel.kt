@@ -8,7 +8,7 @@ import com.example.android.politicalpreparedness.network.models.Election
 import java.lang.IllegalArgumentException
 
 //TODO: Construct ViewModel and provide election datasource
-class ElectionsViewModel: ViewModel() {
+class ElectionsViewModel : ViewModel() {
 
     // UI variable: upcoming election list
     private val _upcomingElections = MutableLiveData<List<Election>>()
