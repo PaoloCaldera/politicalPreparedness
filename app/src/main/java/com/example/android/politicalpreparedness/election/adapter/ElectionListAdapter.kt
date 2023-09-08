@@ -7,8 +7,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.politicalpreparedness.databinding.ElectionListHeaderBinding
 import com.example.android.politicalpreparedness.databinding.ElectionListItemBinding
-import com.example.android.politicalpreparedness.network.models.Division
-// import com.example.android.politicalpreparedness.databinding.ViewholderElectionBinding
 import com.example.android.politicalpreparedness.network.models.Election
 
 
@@ -113,8 +111,8 @@ class ElectionListAdapter(
     /**
      * Click listener class used to handle the click on a recycler view item
      */
-    class ElectionListener(val clickListener: (electionId: Int, electionDivision: Division) -> Unit) {
-        fun onClick(election: Election) = clickListener(election.id, election.division)
+    class ElectionListener(val clickListener: (election: Election) -> Unit) {
+        fun onClick(election: Election) = clickListener(election)
     }
 }
 

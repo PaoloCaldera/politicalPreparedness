@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.FragmentElectionBinding
 import com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter
+import com.example.android.politicalpreparedness.network.models.Election
 
 class ElectionsFragment : Fragment() {
 
@@ -34,11 +35,7 @@ class ElectionsFragment : Fragment() {
         val upcoming = binding.upcomingRecyclerView
         val upcomingAdapter = ElectionListAdapter(
             resources.getString(R.string.upcoming_list_title),
-            ElectionListAdapter.ElectionListener { electionId, electionDivision ->
-                val action = ElectionsFragmentDirections
-                    .actionElectionsFragmentToVoterInfoFragment(electionId, electionDivision)
-                findNavController().navigate(action)
-            }
+            ElectionListAdapter.ElectionListener { election -> viewModel.onElectionClicked(election) }
         )
         upcomingAdapter.submitList(viewModel.upcomingElections.value)
         upcoming.adapter = upcomingAdapter
@@ -48,17 +45,32 @@ class ElectionsFragment : Fragment() {
         val saved = binding.savedRecyclerView
         val savedAdapter = ElectionListAdapter(
             resources.getString(R.string.saved_list_title),
-            ElectionListAdapter.ElectionListener { electionId, electionDivision ->
-                val action = ElectionsFragmentDirections
-                    .actionElectionsFragmentToVoterInfoFragment(electionId, electionDivision)
-                findNavController().navigate(action)
-            }
+            ElectionListAdapter.ElectionListener { election -> viewModel.onElectionClicked(election) }
         )
         savedAdapter.submitList(viewModel.savedElections.value)
         saved.adapter = savedAdapter
 
 
+        // Observed variable aimed to handle navigation to voter info fragment
+        viewModel.navigateToVoterInfoFlag.observe(viewLifecycleOwner) {
+            it?.let {
+                navigateToVoterInfo(it)
+                viewModel.onClickResolved()
+            }
+
+        }
+
         return binding.root
+    }
+
+
+    /**
+     * Navigate to voter info fragment with required safe args
+     */
+    private fun navigateToVoterInfo(election: Election) {
+        val action = ElectionsFragmentDirections
+            .actionElectionsFragmentToVoterInfoFragment(election.id, election.division)
+        findNavController().navigate(action)
     }
 
     // TODO: Refresh adapters when fragment loads

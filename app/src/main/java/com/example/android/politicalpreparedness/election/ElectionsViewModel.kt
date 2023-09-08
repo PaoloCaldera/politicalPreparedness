@@ -20,9 +20,19 @@ class ElectionsViewModel: ViewModel() {
     val savedElections: LiveData<List<Election>>
         get() = _savedElections
 
+    private val _navigateToVoterInfoFlag = MutableLiveData<Election?>(null)
+    val navigateToVoterInfoFlag: LiveData<Election?>
+        get() = _navigateToVoterInfoFlag
+
     //TODO: Create val and functions to populate live data for upcoming elections from the API and saved elections from local database
 
-    //TODO: Create functions to navigate to saved or upcoming election voter info
+    // Handle navigation for saved or upcoming election list into voter info fragment
+    fun onElectionClicked(election: Election) {
+        _navigateToVoterInfoFlag.value = election
+    }
+    fun onClickResolved() {
+        _navigateToVoterInfoFlag.value = null
+    }
 
     /**
      * View model factory class: instantiate the view model in the fragment class
