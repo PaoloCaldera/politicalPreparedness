@@ -40,6 +40,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="@dimen/big_margin_1"
+                    android:text="@{voterInfoViewModel.voterInfo.state[0].name}"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="@dimen/screen_title_size"
                     android:textStyle="bold"
@@ -53,6 +54,7 @@
                     android:layout_margin="@dimen/big_margin_1"
                     android:drawablePadding="@dimen/big_margin_1"
                     android:gravity="center_vertical"
+                    android:text="@{voterInfoViewModel.voterInfo.election.electionDay.toString()}"
                     android:textSize="@dimen/list_title_size"
                     app:drawableStartCompat="@drawable/ic_calendar"
                     tools:text="06th June 2025" />
@@ -66,6 +68,7 @@
                     android:drawablePadding="@dimen/big_margin_1"
                     android:gravity="center_vertical"
                     android:minLines="2"
+                    android:text="@{voterInfoViewModel.voterInfo.state[0].electionAdministrationBody.correspondenceAddress.toFormattedString()}"
                     android:textSize="@dimen/list_title_size"
                     app:drawableStartCompat="@drawable/ic_location"
                     tools:text="Utah State Capitol Complex 350 North State Street, Suite 220\n84114 Salt Lake City, Utah" />
@@ -81,6 +84,7 @@
                     android:autoLink="web"
                     android:drawablePadding="@dimen/big_margin_1"
                     android:gravity="center_vertical"
+                    android:text="@{voterInfoViewModel.voterInfo.state[0].electionAdministrationBody.votingLocationFinderUrl}"
                     android:textSize="@dimen/list_title_size"
                     app:drawableStartCompat="@drawable/ic_info"
                     tools:text="https://votesearch.utah.gov/voter-search/search/search-by-address/how-and-where-can-i-vote" />
@@ -95,6 +99,7 @@
                     android:autoLink="web"
                     android:drawablePadding="@dimen/big_margin_1"
                     android:gravity="center_vertical"
+                    android:text="@{voterInfoViewModel.voterInfo.state[0].electionAdministrationBody.ballotInfoUrl}"
                     android:textSize="@dimen/list_title_size"
                     app:drawableStartCompat="@drawable/ic_ballot"
                     tools:text="https://votesearch.utah.gov/voter-search/search/search-by-voter/track-mail-ballot" />
@@ -108,10 +113,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
+            android:contentDescription="@string/follow_election"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_save"
-            android:contentDescription="@string/follow_election" />
+            app:srcCompat="@drawable/ic_save" />
 
 
         <!-- TODO: Add button to save election to Room -->

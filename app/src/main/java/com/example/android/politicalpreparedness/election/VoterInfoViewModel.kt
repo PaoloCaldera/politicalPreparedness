@@ -1,13 +1,19 @@
 package com.example.android.politicalpreparedness.election
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.android.politicalpreparedness.database.ElectionDao
+import com.example.android.politicalpreparedness.network.models.VoterInfoResponse
 import java.lang.IllegalArgumentException
 
 class VoterInfoViewModel(private val dataSource: ElectionDao) : ViewModel() {
 
     //TODO: Add live data to hold voter info
+    private val _voterInfo = MutableLiveData<VoterInfoResponse>(null)
+    val voterInfo: LiveData<VoterInfoResponse>
+        get() = _voterInfo
 
     //TODO: Add var and methods to populate voter info
 
