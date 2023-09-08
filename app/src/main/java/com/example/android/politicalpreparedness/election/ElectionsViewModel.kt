@@ -1,16 +1,38 @@
 package com.example.android.politicalpreparedness.election
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.example.android.politicalpreparedness.network.models.Election
+import java.lang.IllegalArgumentException
 
 //TODO: Construct ViewModel and provide election datasource
 class ElectionsViewModel: ViewModel() {
 
-    //TODO: Create live data val for upcoming elections
+    // UI variable: upcoming election list
+    private val _upcomingElections = MutableLiveData<List<Election>>()
+    val upcomingElections: LiveData<List<Election>>
+        get() = _upcomingElections
 
-    //TODO: Create live data val for saved elections
+    // UI variable: saved election list
+    private val _savedElections = MutableLiveData<List<Election>>()
+    val savedElections: LiveData<List<Election>>
+        get() = _savedElections
 
     //TODO: Create val and functions to populate live data for upcoming elections from the API and saved elections from local database
 
     //TODO: Create functions to navigate to saved or upcoming election voter info
 
+    /**
+     * View model factory class: instantiate the view model in the fragment class
+     */
+    @Suppress("UNCHECKED_CAST")
+    class ElectionsViewModelFactory : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(ElectionsViewModel::class.java))
+                return ElectionsViewModel() as T
+            throw IllegalArgumentException("Unknown view model class ElectionsViewModel")
+        }
+    }
 }

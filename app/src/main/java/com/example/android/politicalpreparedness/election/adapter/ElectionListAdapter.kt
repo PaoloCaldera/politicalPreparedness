@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.politicalpreparedness.databinding.ElectionListHeaderBinding
 import com.example.android.politicalpreparedness.databinding.ElectionListItemBinding
+import com.example.android.politicalpreparedness.network.models.Division
 // import com.example.android.politicalpreparedness.databinding.ViewholderElectionBinding
 import com.example.android.politicalpreparedness.network.models.Election
 
@@ -21,6 +22,9 @@ class ElectionListAdapter(
     private val HEADER_VIEW_TYPE = 0
     private val ITEM_VIEW_TYPE = 1
 
+    /**
+     * DiffUtil class managing the modifications on the associated recycler view
+     */
     object ElectionDiffCallback : DiffUtil.ItemCallback<Election>() {
         override fun areItemsTheSame(oldItem: Election, newItem: Election): Boolean {
             return oldItem.id == newItem.id
@@ -77,9 +81,10 @@ class ElectionListAdapter(
         }
 
         // Bind the list item view holder
-        fun bind(listItem: Election) {
+        fun bind(listItem: Election, clickListener: ElectionListener) {
             binding.apply {
                 electionListItem = listItem
+                electionClickListener = clickListener
                 executePendingBindings()
             }
         }
@@ -101,9 +106,15 @@ class ElectionListAdapter(
         if (holder.itemViewType == ITEM_VIEW_TYPE)
             (holder as ElectionListHeaderViewHolder).bind(listTitle)
         else
-            (holder as ElectionListItemViewHolder).bind(getItem(position - 1))
+            (holder as ElectionListItemViewHolder).bind(getItem(position - 1), clickListener)
+    }
+
+
+    /**
+     * Click listener class used to handle the click on a recycler view item
+     */
+    class ElectionListener(val clickListener: (electionId: Int, electionDivision: Division) -> Unit) {
+        fun onClick(election: Election) = clickListener(election.id, election.division)
     }
 }
-
-// TODO: Create ElectionListener
 

@@ -5,6 +5,9 @@
         <variable
             name="electionListItem"
             type="com.example.android.politicalpreparedness.network.models.Election" />
+        <variable
+            name="electionClickListener"
+            type="com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter.ElectionListener" />
     </data>
 
     <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_margin"
+        android:onClick="@{() -> electionClickListener.onClick(electionListItem)}"
         app:cardElevation="@dimen/cardview_elevation">
 
         <LinearLayout
