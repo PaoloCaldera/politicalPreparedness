@@ -24,11 +24,17 @@ class ElectionListAdapter(
      * DiffUtil class managing the modifications on the associated recycler view
      */
     object ElectionDiffCallback : DiffUtil.ItemCallback<ElectionListViewItem>() {
-        override fun areItemsTheSame(oldItem: ElectionListViewItem, newItem: ElectionListViewItem): Boolean {
+        override fun areItemsTheSame(
+            oldItem: ElectionListViewItem,
+            newItem: ElectionListViewItem
+        ): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: ElectionListViewItem, newItem: ElectionListViewItem): Boolean {
+        override fun areContentsTheSame(
+            oldItem: ElectionListViewItem,
+            newItem: ElectionListViewItem
+        ): Boolean {
             return oldItem == newItem
         }
     }
@@ -90,14 +96,14 @@ class ElectionListAdapter(
 
 
     override fun getItemViewType(position: Int): Int {
-        return when(getItem(position)) {
+        return when (getItem(position)) {
             is ElectionListViewItem.Header -> HEADER_VIEW_TYPE
             is ElectionListViewItem.ElectionListItem -> ITEM_VIEW_TYPE
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when(viewType) {
+        return when (viewType) {
             HEADER_VIEW_TYPE -> ElectionListHeaderViewHolder.from(parent)
             ITEM_VIEW_TYPE -> ElectionListItemViewHolder.from(parent)
             else -> throw ClassCastException("Unknown viewType $viewType")
@@ -105,11 +111,14 @@ class ElectionListAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(holder.itemViewType) {
+        when (holder.itemViewType) {
             HEADER_VIEW_TYPE -> (holder as ElectionListHeaderViewHolder).bind(listTitle)
             ITEM_VIEW_TYPE -> {
                 val electionListItem = getItem(position) as ElectionListViewItem.ElectionListItem
-                (holder as ElectionListItemViewHolder).bind(electionListItem.election, clickListener)
+                (holder as ElectionListItemViewHolder).bind(
+                    electionListItem.election,
+                    clickListener
+                )
             }
         }
     }
@@ -122,4 +131,3 @@ class ElectionListAdapter(
         fun onClick(election: Election) = clickListener(election)
     }
 }
-

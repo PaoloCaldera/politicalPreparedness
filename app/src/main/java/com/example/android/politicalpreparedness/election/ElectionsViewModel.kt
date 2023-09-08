@@ -31,9 +31,11 @@ class ElectionsViewModel : ViewModel() {
     fun onElectionClicked(election: Election) {
         _navigateToVoterInfoFlag.value = election
     }
+
     fun onClickResolved() {
         _navigateToVoterInfoFlag.value = null
     }
+
 
     /**
      * View model factory class: instantiate the view model in the fragment class

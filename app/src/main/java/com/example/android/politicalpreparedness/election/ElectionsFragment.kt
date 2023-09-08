@@ -36,6 +36,7 @@ class ElectionsFragment : Fragment() {
             resources.getString(R.string.upcoming_list_title),
             ElectionListAdapter.ElectionListener { election -> viewModel.onElectionClicked(election) }
         )
+        upcomingAdapter.submitList(viewModel.upcomingElections.value)
         upcoming.adapter = upcomingAdapter*/
 
 
