@@ -12,6 +12,9 @@
     <string name="upcoming_list_title">UPCOMING</string>
     <string name="saved_list_title">SAVED</string>
 
+    <!-- voter info fragment -->
+    <string name="follow_election">Save and follow the election</string>
+
     <!-- TODO: Add necessary string values -->
 
 </resources>
