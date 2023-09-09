@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.android.politicalpreparedness.database.ElectionDao
+import com.example.android.politicalpreparedness.network.CivicsApiStatus
 import com.example.android.politicalpreparedness.network.models.VoterInfoResponse
 import java.lang.IllegalArgumentException
 
@@ -15,9 +16,47 @@ class VoterInfoViewModel(private val dataSource: ElectionDao) : ViewModel() {
     val voterInfo: LiveData<VoterInfoResponse>
         get() = _voterInfo
 
+    private val _networkStatus = MutableLiveData<CivicsApiStatus?>()
+    val networkStatus: LiveData<CivicsApiStatus?>
+        get() = _networkStatus
+
+    private val _clickVotingInfoFlag = MutableLiveData(false)
+    val clickVotingInfoFlag: LiveData<Boolean>
+        get() = _clickVotingInfoFlag
+
+    private val _clickBallotInfoFlag = MutableLiveData(false)
+    val clickBallotInfoFlag: LiveData<Boolean>
+        get() = _clickBallotInfoFlag
+
+    init {
+        getVoterInfo()
+    }
+
     //TODO: Add var and methods to populate voter info
+    private fun getVoterInfo() {
+        _networkStatus.value = CivicsApiStatus.LOADING
+        try {
+            // Call function to retrieve voter info data from internet
+            _networkStatus.value = CivicsApiStatus.SUCCESS
+        } catch (e: Exception) {
+            _networkStatus.value = CivicsApiStatus.ERROR
+        }
+    }
 
     //TODO: Add var and methods to support loading URLs
+    fun onVotingInfoClicked() {
+        _clickVotingInfoFlag.value = true
+    }
+    fun offVotingInfoClicked() {
+        _clickVotingInfoFlag.value = false
+    }
+
+    fun onBallotInfoClicked() {
+        _clickBallotInfoFlag.value = true
+    }
+    fun offBallotInfoClicked() {
+        _clickBallotInfoFlag.value = false
+    }
 
     //TODO: Add var and methods to save and remove elections to local database
     //TODO: cont'd -- Populate initial state of save button to reflect proper action based on election saved status

@@ -18,17 +18,19 @@
 
         <!-- Election name is the bar title (election.name) -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/data_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:shadowColor="@color/colorPrimaryDark"
             app:cardElevation="@dimen/cardview_elevation"
             app:cardUseCompatPadding="true"
-            app:layout_constraintBottom_toTopOf="@+id/floatingActionButton"
+            app:layout_constraintBottom_toTopOf="@+id/save_remove_election_fab"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
+                android:id="@+id/linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -42,7 +44,7 @@
                     android:layout_margin="@dimen/big_margin_1"
                     android:text="@{voterInfoViewModel.voterInfo.state[0].name}"
                     android:textColor="@color/colorPrimaryDark"
-                    android:textSize="@dimen/screen_title_size"
+                    android:textSize="@dimen/list_title_size"
                     android:textStyle="bold"
                     tools:text="Utah" />
 
@@ -55,7 +57,7 @@
                     android:drawablePadding="@dimen/big_margin_1"
                     android:gravity="center_vertical"
                     android:text="@{voterInfoViewModel.voterInfo.election.electionDay.toString()}"
-                    android:textSize="@dimen/list_title_size"
+
                     app:drawableStartCompat="@drawable/ic_calendar"
                     tools:text="06th June 2025" />
 
@@ -69,7 +71,6 @@
                     android:gravity="center_vertical"
                     android:minLines="2"
                     android:text="@{voterInfoViewModel.voterInfo.state[0].electionAdministrationBody.correspondenceAddress.toFormattedString()}"
-                    android:textSize="@dimen/list_title_size"
                     app:drawableStartCompat="@drawable/ic_location"
                     tools:text="Utah State Capitol Complex 350 North State Street, Suite 220\n84114 Salt Lake City, Utah" />
 
@@ -84,8 +85,8 @@
                     android:autoLink="web"
                     android:drawablePadding="@dimen/big_margin_1"
                     android:gravity="center_vertical"
+                    android:onClick="@{() -> voterInfoViewModel.onVotingInfoClicked()}"
                     android:text="@{voterInfoViewModel.voterInfo.state[0].electionAdministrationBody.votingLocationFinderUrl}"
-                    android:textSize="@dimen/list_title_size"
                     app:drawableStartCompat="@drawable/ic_info"
                     tools:text="https://votesearch.utah.gov/voter-search/search/search-by-address/how-and-where-can-i-vote" />
 
@@ -99,8 +100,8 @@
                     android:autoLink="web"
                     android:drawablePadding="@dimen/big_margin_1"
                     android:gravity="center_vertical"
+                    android:onClick="@{() -> voterInfoViewModel.onBallotInfoClicked()}"
                     android:text="@{voterInfoViewModel.voterInfo.state[0].electionAdministrationBody.ballotInfoUrl}"
-                    android:textSize="@dimen/list_title_size"
                     app:drawableStartCompat="@drawable/ic_ballot"
                     tools:text="https://votesearch.utah.gov/voter-search/search/search-by-voter/track-mail-ballot" />
 
@@ -109,7 +110,7 @@
         </androidx.cardview.widget.CardView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton"
+            android:id="@+id/save_remove_election_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
@@ -119,7 +120,30 @@
             app:srcCompat="@drawable/ic_save" />
 
 
-        <!-- TODO: Add button to save election to Room -->
+        <ImageView
+            android:id="@+id/loading_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/loading_data"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/loading_img" />
+
+        <ImageView
+            android:id="@+id/connection_error_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/connection_error"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_connection_error" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
