@@ -16,9 +16,11 @@ class ElectionListAdapter(
 ) :
     ListAdapter<ElectionListViewItem, RecyclerView.ViewHolder>(ElectionDiffCallback) {
 
-    // Item types for recycler view
-    private val HEADER_VIEW_TYPE = 0
-    private val ITEM_VIEW_TYPE = 1
+    companion object {
+        // Item types for recycler view
+        private const val HEADER_VIEW_TYPE = 0
+        private const val ITEM_VIEW_TYPE = 1
+    }
 
     /**
      * DiffUtil class managing the modifications on the associated recycler view

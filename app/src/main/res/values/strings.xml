@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- app name -->
+    <!-- app -->
     <string name="app_name">Political Preparedness</string>
+    <string name="connection_error">Connection error!</string>
+    <string name="loading_data">Loading data from internet</string>
 
     <!-- launch fragment -->
     <string name="ballot_logo_content_description">Image with ballot for political elections</string>
@@ -9,8 +11,13 @@
     <string name="upcoming_button_text">Upcoming elections</string>
 
     <!-- election fragment -->
+    <string name="elections_fragment_label">Elections</string>
     <string name="upcoming_list_title">UPCOMING</string>
     <string name="saved_list_title">SAVED</string>
+
+    <!-- voter info fragment -->
+    <string name="follow_election">Save and follow the election</string>
+
 
     <!-- TODO: Add necessary string values -->
 

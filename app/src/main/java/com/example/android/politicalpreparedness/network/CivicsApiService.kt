@@ -37,3 +37,5 @@ object CivicsApi {
         retrofit.create(CivicsApiService::class.java)
     }
 }
+
+enum class CivicsApiStatus { LOADING, SUCCESS, ERROR }
