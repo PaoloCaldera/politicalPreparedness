@@ -115,9 +115,10 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:contentDescription="@string/follow_election"
+            android:onClick="@{() -> voterInfoViewModel.onFabClick()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_save" />
+            app:status="@{voterInfoViewModel.fabStatus}" />
 
 
         <ImageView
@@ -143,7 +144,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_connection_error" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

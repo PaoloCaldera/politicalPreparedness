@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.android.politicalpreparedness.database.ElectionDao
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
+import com.example.android.politicalpreparedness.network.models.Election
 import com.example.android.politicalpreparedness.network.models.VoterInfoResponse
 import java.lang.IllegalArgumentException
 
@@ -20,6 +21,10 @@ class VoterInfoViewModel(private val dataSource: ElectionDao) : ViewModel() {
     val networkStatus: LiveData<CivicsApiStatus?>
         get() = _networkStatus
 
+    private val _fabStatus = MutableLiveData<Election?>(null)
+    val fabStatus: LiveData<Election?>
+        get() = _fabStatus
+
     private val _clickVotingInfoFlag = MutableLiveData(false)
     val clickVotingInfoFlag: LiveData<Boolean>
         get() = _clickVotingInfoFlag
@@ -30,6 +35,7 @@ class VoterInfoViewModel(private val dataSource: ElectionDao) : ViewModel() {
 
     init {
         getVoterInfo()
+        checkFabStatus()
     }
 
     //TODO: Add var and methods to populate voter info
@@ -42,6 +48,31 @@ class VoterInfoViewModel(private val dataSource: ElectionDao) : ViewModel() {
             _networkStatus.value = CivicsApiStatus.ERROR
         }
     }
+
+
+    //TODO: Add var and methods to save and remove elections to local database
+    fun onFabClick() {
+        if (_fabStatus.value == null)
+            insertElection()
+        else
+            deleteElection()
+    }
+
+    private fun checkFabStatus() {
+        _fabStatus.value = selectElection()
+    }
+
+    private fun selectElection(): Election? {
+        // Use the function to verify if the election has been already saved in the database
+        return null
+    }
+    private fun insertElection() {
+        // Use the function to follow/save the election into the database
+    }
+    private fun deleteElection() {
+        // Use the function to unfollow/remove the election from the database
+    }
+
 
     //TODO: Add var and methods to support loading URLs
     fun onVotingInfoClicked() {
@@ -58,12 +89,7 @@ class VoterInfoViewModel(private val dataSource: ElectionDao) : ViewModel() {
         _clickBallotInfoFlag.value = false
     }
 
-    //TODO: Add var and methods to save and remove elections to local database
-    //TODO: cont'd -- Populate initial state of save button to reflect proper action based on election saved status
 
-    /**
-     * Hint: The saved state can be accomplished in multiple ways. It is directly related to how elections are saved/removed from the database.
-     */
 
     @Suppress("UNCHECKED_CAST")
     class VoterInfoViewModelFactory(private val dataSource: ElectionDao) : ViewModelProvider.Factory {
