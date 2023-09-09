@@ -11,7 +11,7 @@ import androidx.fragment.app.viewModels
 import com.example.android.politicalpreparedness.database.ElectionDatabase
 import com.example.android.politicalpreparedness.databinding.FragmentVoterInfoBinding
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
-import com.example.android.politicalpreparedness.network.models.Division
+import com.example.android.politicalpreparedness.network.models.Election
 
 class VoterInfoFragment : Fragment() {
 
@@ -21,15 +21,13 @@ class VoterInfoFragment : Fragment() {
     }
 
     // Arguments
-    private var argId: Int? = null
-    private lateinit var argDivision: Division
+    private lateinit var argElection: Election
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Retrieve arguments from navigation
-        argId = VoterInfoFragmentArgs.fromBundle(arguments).argElectionId
-        argDivision = VoterInfoFragmentArgs.fromBundle(arguments).argDivision
+        argElection = VoterInfoFragmentArgs.fromBundle(arguments).argElection
     }
 
     override fun onCreateView(

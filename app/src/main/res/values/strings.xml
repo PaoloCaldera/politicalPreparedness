@@ -11,6 +11,7 @@
     <string name="upcoming_button_text">Upcoming elections</string>
 
     <!-- election fragment -->
+    <string name="elections_fragment_label">Elections</string>
     <string name="upcoming_list_title">UPCOMING</string>
     <string name="saved_list_title">SAVED</string>
 
