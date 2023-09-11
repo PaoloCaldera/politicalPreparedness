@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        app:constraintSetEnd="@id/constraint_end"
+        app:constraintSetStart="@id/constraint_start">
+        <OnSwipe
+            app:dragDirection="dragUp"
+            app:touchAnchorId="@id/representatives_list" />
+    </Transition>
+
+    <ConstraintSet android:id="@+id/constraint_start">
+        <Constraint
+            android:id="@id/find_form"
+            app:layout_constraintBottom_toTopOf="@id/representatives_list"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/constraint_end">
+        <Constraint
+            android:id="@id/find_form"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </ConstraintSet>
+
+</MotionScene>
