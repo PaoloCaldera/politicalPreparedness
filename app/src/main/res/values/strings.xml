@@ -17,12 +17,18 @@
 
     <!-- voter info fragment -->
     <string name="follow_election">Save and follow the election</string>
+
+    <!-- representative list fragment -->
     <string name="address_line_1">Address (line 1)</string>
     <string name="address_line_2">Address (line 2)</string>
     <string name="city">City</string>
     <string name="zip_code">Zip Code</string>
     <string name="find_my_representatives">Find my representatives</string>
     <string name="use_my_location">Use my location</string>
+    <string name="representative_profile_image">Representative profile image</string>
+    <string name="twitter_profile_link">Twitter profile link</string>
+    <string name="facebook_profile_link">Facebook profile link</string>
+    <string name="website_link">Website link</string>
 
 
     <!-- TODO: Add necessary string values -->
