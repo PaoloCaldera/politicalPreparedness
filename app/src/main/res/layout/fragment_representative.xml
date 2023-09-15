@@ -4,6 +4,11 @@
     xmlns:motion="http://schemas.android.com/tools">
 
     <!-- TODO: Add data binding node -->
+    <data>
+        <variable
+            name="representativeViewModel"
+            type="com.example.android.politicalpreparedness.representative.RepresentativeViewModel" />
+    </data>
 
     <!-- TODO: Add motion scene to hide form on vertical scroll. -->
     <androidx.constraintlayout.motion.widget.MotionLayout
@@ -39,6 +44,7 @@
                 android:autofillHints=""
                 android:inputType="textPostalAddress"
                 android:hint="@string/address_line_1"
+                android:text="@={representativeViewModel.line1}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/search_title" />
@@ -51,6 +57,7 @@
                 android:autofillHints=""
                 android:hint="@string/address_line_2"
                 android:inputType="textPostalAddress"
+                android:text="@={representativeViewModel.line2}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/address_line_1" />
@@ -63,6 +70,7 @@
                 android:autofillHints=""
                 android:hint="@string/city"
                 android:inputType="textPostalAddress"
+                android:text="@={representativeViewModel.city}"
                 app:layout_constraintEnd_toStartOf="@id/state"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/address_line_2" />
@@ -75,6 +83,8 @@
                 android:layout_height="0dp"
                 android:autofillHints=""
                 android:inputType="textPostalAddress"
+                android:entries="@array/states"
+                android:selectedItemPosition="@={representativeViewModel.statePosition}"
                 app:layout_constraintBottom_toBottomOf="@id/city"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/city"
@@ -89,6 +99,7 @@
                 android:hint="@string/zip_code"
                 android:inputType="number"
                 android:maxLength="5"
+                android:text="@={representativeViewModel.zip}"
                 app:layout_constraintEnd_toEndOf="@id/city"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/city" />
@@ -100,6 +111,7 @@
                 android:text="@string/find_my_representatives"
                 android:backgroundTint="@color/colorPrimaryDark"
                 android:textColor="@color/white"
+                android:onClick="@{() -> representativeViewModel.onFindMyRepresentativesClicked()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/zip" />
@@ -126,7 +138,7 @@
             app:layout_constraintTop_toBottomOf="@id/find_form">
 
             <TextView
-                android:id="@+id/representative_title"
+                android:id="@+id/representatives_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/list_title_size"
@@ -144,7 +156,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/representative_title" />
+                app:layout_constraintTop_toBottomOf="@id/representatives_title" />
             
             <TextView
                 android:id="@+id/list_placeholder"
@@ -154,7 +166,7 @@
                 android:textAlignment="center"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/representative_title"
+                app:layout_constraintTop_toBottomOf="@id/representatives_title"
                 motion:visibilityMode="ignore" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

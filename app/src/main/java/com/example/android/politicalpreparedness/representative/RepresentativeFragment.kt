@@ -34,6 +34,22 @@ class RepresentativeFragment : Fragment() {
         binding = FragmentRepresentativeBinding.inflate(inflater)
         binding.lifecycleOwner = this@RepresentativeFragment
 
+        viewModel.representativesFlag.observe(viewLifecycleOwner) {
+            if (it) binding.apply {
+                listPlaceholder.visibility = View.GONE
+                representativesTitle.visibility = View.VISIBLE
+                representativesRecyclerView.visibility = View.VISIBLE
+            } else binding.apply {
+                representativesTitle.visibility = View.GONE
+                representativesRecyclerView.visibility = View.GONE
+                listPlaceholder.visibility = View.VISIBLE
+            }
+        }
+
+        viewModel.geocodeLocationFlag.observe(viewLifecycleOwner) {
+            if (it) checkLocationPermissions()
+        }
+
         //TODO: Establish bindings
 
         //TODO: Define and assign Representative adapter
