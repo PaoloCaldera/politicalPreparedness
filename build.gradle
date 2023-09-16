@@ -17,6 +17,7 @@ buildscript {
         version_play_services_location = "17.0.0"
         version_room = "2.5.1"
         version_timber = "5.0.1"
+        version_material_components = "1.9.0"
     }
 
     repositories {

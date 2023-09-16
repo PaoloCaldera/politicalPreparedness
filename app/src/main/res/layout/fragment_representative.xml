@@ -123,6 +123,7 @@
                 android:text="@string/use_my_location"
                 android:textColor="@color/white"
                 android:backgroundTint="@color/colorPrimaryDark"
+                android:onClick="@{() -> representativeViewModel.onUseMyLocationClicked()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/button_search" />

@@ -6,8 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.android.politicalpreparedness.R
-import com.example.android.politicalpreparedness.database.ElectionDao
-import com.example.android.politicalpreparedness.election.VoterInfoViewModel
 import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.representative.model.Representative
 import java.lang.IllegalArgumentException
@@ -34,6 +32,16 @@ class RepresentativeViewModel : ViewModel() {
     val geocodeLocationFlag: LiveData<Boolean>
         get() = _geocodeLocationFlag
 
+    // Flag that triggers the location permission check
+    private val _locationPermissionFlag = MutableLiveData(false)
+    val locationPermissionFlag: LiveData<Boolean>
+        get() = _locationPermissionFlag
+
+    // Flag that triggers the device location activation check
+    private val _activeDeviceLocationFlag = MutableLiveData(false)
+    val activeDeviceLocationFlag: LiveData<Boolean>
+        get() = _activeDeviceLocationFlag
+
     private fun stateFromPosition(): String {
         return Resources.getSystem().getStringArray(R.array.states)[statePosition.value!!]
     }
@@ -52,12 +60,30 @@ class RepresentativeViewModel : ViewModel() {
     }
 
     fun onUseMyLocationClicked() {
-        _representativesFlag.value = true
-        _geocodeLocationFlag.value = true
+        locationPermissionFlagOn()
+    }
+    fun resetGeocodeLocationFlag() {
+        _geocodeLocationFlag.value = false
     }
     fun onGeocodeLocationRetrieved(address: Address) {
         _geocodeLocationFlag.value = false
         getRepresentatives(address)
+    }
+
+    // Turn on and off the location permission flag
+    private fun locationPermissionFlagOn() {
+        _locationPermissionFlag.value = true
+    }
+    fun locationPermissionFlagOff() {
+        _locationPermissionFlag.value = false
+    }
+
+    // Turn on and off the device location activation flag
+    fun activeDeviceLocationFlagOn() {
+        _activeDeviceLocationFlag.value = true
+    }
+    fun activeDeviceLocationFlagOff() {
+        _activeDeviceLocationFlag.value = false
     }
 
     //TODO: Create function to fetch representatives from API from a provided address
