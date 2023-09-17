@@ -1,6 +1,7 @@
 package com.example.android.politicalpreparedness.representative
 
 import android.content.res.Resources
+import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,10 +29,6 @@ class RepresentativeViewModel : ViewModel() {
     val representativesFlag: LiveData<Boolean>
         get() = _representativesFlag
 
-    private val _geocodeLocationFlag = MutableLiveData(false)
-    val geocodeLocationFlag: LiveData<Boolean>
-        get() = _geocodeLocationFlag
-
     // Flag that triggers the location permission check
     private val _locationPermissionFlag = MutableLiveData(false)
     val locationPermissionFlag: LiveData<Boolean>
@@ -42,10 +39,23 @@ class RepresentativeViewModel : ViewModel() {
     val activeDeviceLocationFlag: LiveData<Boolean>
         get() = _activeDeviceLocationFlag
 
+    // Flag that triggers the retrieval of the current location
+    private val _currentLocationFlag = MutableLiveData(false)
+    val currentLocationFlag: LiveData<Boolean>
+        get() = _currentLocationFlag
+
+    // Flag that triggers the current location decoding
+    private val _geocodeLocationFlag = MutableLiveData<Location?>(null)
+    val geocodeLocationFlag: LiveData<Location?>
+        get() = _geocodeLocationFlag
+
     private fun stateFromPosition(): String {
         return Resources.getSystem().getStringArray(R.array.states)[statePosition.value!!]
     }
 
+    /**
+     * Function triggered when button "Find my representatives" is clicked
+     */
     fun onFindMyRepresentativesClicked() {
         _representativesFlag.value = true
         getRepresentatives(
@@ -59,18 +69,16 @@ class RepresentativeViewModel : ViewModel() {
         )
     }
 
+    /**
+     * Function triggered when button "Use my location" is clicked
+     */
     fun onUseMyLocationClicked() {
         locationPermissionFlagOn()
     }
-    fun resetGeocodeLocationFlag() {
-        _geocodeLocationFlag.value = false
-    }
-    fun onGeocodeLocationRetrieved(address: Address) {
-        _geocodeLocationFlag.value = false
-        getRepresentatives(address)
-    }
 
-    // Turn on and off the location permission flag
+    /**
+     * Turn on and off the locationPermissionFlag
+     */
     private fun locationPermissionFlagOn() {
         _locationPermissionFlag.value = true
     }
@@ -78,7 +86,9 @@ class RepresentativeViewModel : ViewModel() {
         _locationPermissionFlag.value = false
     }
 
-    // Turn on and off the device location activation flag
+    /**
+     * Turn on and off the device locationActivationFlag
+     */
     fun activeDeviceLocationFlagOn() {
         _activeDeviceLocationFlag.value = true
     }
@@ -86,10 +96,33 @@ class RepresentativeViewModel : ViewModel() {
         _activeDeviceLocationFlag.value = false
     }
 
+    /**
+     * Turn on and off the current locationRetrievalFlag
+     */
+    fun currentLocationFlagOn() {
+        _currentLocationFlag.value = true
+    }
+    fun currentLocationFlagOff() {
+        _currentLocationFlag.value = false
+    }
+
+    /**
+     * Turn on and off the geocodeLocationFlag
+     */
+    fun geocodeLocationFlagOn(location: Location) {
+        _geocodeLocationFlag.value = location
+    }
+    fun geocodeLocationFlagOff(address: Address) {
+        _geocodeLocationFlag.value = null
+        getRepresentatives(address)
+    }
+
+
     //TODO: Create function to fetch representatives from API from a provided address
     private fun getRepresentatives(address: Address) {
         // Populate the LiveData variable representativesList with the result of the HTTP call
     }
+
     /**
      *  The following code will prove helpful in constructing a representative from the API. This code combines the two nodes of the RepresentativeResponse into a single official :
 

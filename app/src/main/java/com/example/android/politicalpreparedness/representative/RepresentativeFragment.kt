@@ -1,6 +1,7 @@
 package com.example.android.politicalpreparedness.representative
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
@@ -58,11 +59,20 @@ class RepresentativeFragment : Fragment() {
             }
         }
 
-        viewModel.locationPermissionFlag.observe(viewLifecycleOwner) {
-            if (it) checkLocationPermission()
+        viewModel.locationPermissionFlag.observe(viewLifecycleOwner) { flag ->
+            if (flag) checkLocationPermission()
         }
-        viewModel.activeDeviceLocationFlag.observe(viewLifecycleOwner) {
-            if (it) enableDeviceLocation()
+        viewModel.activeDeviceLocationFlag.observe(viewLifecycleOwner) { flag ->
+            if (flag) enableDeviceLocation()
+        }
+        viewModel.currentLocationFlag.observe(viewLifecycleOwner) { flag ->
+            if (flag) getCurrentLocation()
+        }
+        viewModel.geocodeLocationFlag.observe(viewLifecycleOwner) { location ->
+            location?.let {
+                val address = geocodeLocation(it)
+                viewModel.geocodeLocationFlagOff(address)
+            }
         }
 
         //TODO: Establish bindings
@@ -118,6 +128,10 @@ class RepresentativeFragment : Fragment() {
         return (foregroundPermissionGranted && backgroundPermissionGranted)
     }
 
+    /**
+     * Check the result of the permission enabling request
+     * Show an alert dialog if the user decides not to enable the required permission
+     */
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -135,16 +149,16 @@ class RepresentativeFragment : Fragment() {
 
         if (!outcome) {
             // Build a material alert dialog that addresses the user to the settings app
-            val materialAlertDialog = MaterialAlertDialogBuilder(requireContext())
-                .setTitle(resources.getString(R.string.alert_dialog_title))
-                .setMessage(resources.getString(R.string.alert_dialog_message))
-                .setIcon(R.drawable.ic_location)
-                .setNegativeButton(resources.getString(R.string.permission_negative_button)) { dialog, _ ->
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(resources.getString(R.string.permission_alert_dialog_title))
+                .setMessage(resources.getString(R.string.permission_alert_dialog_message))
+                .setCancelable(false)
+                .setNegativeButton(resources.getString(R.string.permission_alert_dialog_negative_button)) { dialog, _ ->
                     dialog.dismiss()
                     // Reset the permission flag for the next check
                     viewModel.locationPermissionFlagOff()
                 }
-                .setPositiveButton(resources.getString(R.string.permission_positive_button)) { dialog, _ ->
+                .setPositiveButton(resources.getString(R.string.permission_alert_dialog_positive_button)) { dialog, _ ->
                     startActivity(Intent().apply {
                         action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
                         data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
@@ -155,11 +169,14 @@ class RepresentativeFragment : Fragment() {
                     viewModel.locationPermissionFlagOff()
                 }
                 .create()
-            materialAlertDialog.show()
+                .show()
         } else
             checkLocationPermission()
     }
 
+    /**
+     * Check if the device location is enabled and active
+     */
     private fun enableDeviceLocation() {
         // Build location settings request
         val locationSettingsRequest = LocationSettingsRequest.Builder().addLocationRequest(
@@ -173,27 +190,16 @@ class RepresentativeFragment : Fragment() {
         val locationSettingsResponseTask =
             settingsClient.checkLocationSettings(locationSettingsRequest)
 
+        // Device location is already enabled
         locationSettingsResponseTask.addOnSuccessListener {
             viewModel.activeDeviceLocationFlagOff()
-            
+            viewModel.currentLocationFlagOn()
         }
-    }
 
-    private fun getLocation() {
-        // Build location settings request
-        val locationSettingsRequest = LocationSettingsRequest.Builder().addLocationRequest(
-            LocationRequest.create().apply { priority = LocationRequest.PRIORITY_LOW_POWER }
-        ).build()
-        // Define settings client for location services
-        val settingsClient = LocationServices.getSettingsClient(requireContext())
-
-        // Check if the location settings are enabled
-        val locationSettingsResponseTask =
-            settingsClient.checkLocationSettings(locationSettingsRequest)
-
+        // Device location is currently inactive
         locationSettingsResponseTask.addOnFailureListener {
             if (it is ResolvableApiException) {
-                try {
+                try {       // If Android identifies a PendingIntent to be used for the resolution
                     startIntentSenderForResult(
                         it.resolution.intentSender,
                         TURN_DEVICE_LOCATION_ON_REQUEST_CODE,
@@ -202,24 +208,69 @@ class RepresentativeFragment : Fragment() {
                 } catch (sendException: IntentSender.SendIntentException) {
                     Toast.makeText(
                         requireContext(),
-                        resources.getString(R.string.toast_error_message, sendException.message),
+                        resources.getString(
+                            R.string.device_location_toast_error_message,
+                            sendException.message
+                        ),
                         Toast.LENGTH_SHORT
                     ).show()
+                    // Reset the device location flag for the next check
+                    viewModel.activeDeviceLocationFlagOff()
                 }
-            } else {
-
+            } else {        // Otherwise
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(resources.getString(R.string.device_location_alert_dialog_title))
+                    .setMessage(resources.getString(R.string.device_location_alert_dialog_message))
+                    .setPositiveButton(resources.getString(android.R.string.ok)) { dialog, _ -> dialog.dismiss() }
+                    .create()
+                    .show()
+                // Reset the device location flag for the next check
+                viewModel.activeDeviceLocationFlagOff()
             }
         }
-        locationSettingsResponseTask.addOnSuccessListener {
-
-        }
-
-        //TODO: The geoCodeLocation method is a helper function to change the lat/long location to a human readable street address
     }
 
-    private fun geoCodeLocation(location: Location): Address {
-        val geocoder = Geocoder(context, Locale.getDefault())
-        return geocoder.getFromLocation(location.latitude, location.longitude, 1)
+    /**
+     * Result for the device location activation request
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == TURN_DEVICE_LOCATION_ON_REQUEST_CODE)
+            enableDeviceLocation()
+    }
+
+    /**
+     * Retrieve the current location of the user
+     */
+    @SuppressLint("MissingPermission")
+    private fun getCurrentLocation() {
+        LocationServices.getFusedLocationProviderClient(requireContext())
+            .getCurrentLocation(LocationRequest.PRIORITY_LOW_POWER, null)
+            // Location has been correctly retrieved
+            .addOnSuccessListener { location ->
+                if (location != null) {
+                    viewModel.currentLocationFlagOff()
+                    viewModel.geocodeLocationFlagOn(location)
+                }
+            }
+            // Location has not been retrieved: ask the user to retry from a different position
+            .addOnFailureListener {
+                Toast.makeText(
+                    requireContext(),
+                    resources.getString(R.string.current_location_toast_error_message),
+                    Toast.LENGTH_SHORT
+                ).show()
+                // Reset the current location flag for the next attempt
+                viewModel.currentLocationFlagOff()
+            }
+    }
+
+    /**
+     * Decode the lat-long location into a readable address
+     */
+    private fun geocodeLocation(location: Location): Address {
+        val geocoder = Geocoder(requireContext(), Locale.getDefault())
+        return geocoder.getFromLocation(location.latitude, location.longitude, 1)!!
             .map { address ->
                 Address(
                     address.thoroughfare,
@@ -230,12 +281,6 @@ class RepresentativeFragment : Fragment() {
                 )
             }
             .first()
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == TURN_DEVICE_LOCATION_ON_REQUEST_CODE)
-            getLocation()
     }
 
     private fun hideKeyboard() {
