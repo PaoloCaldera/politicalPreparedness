@@ -34,7 +34,6 @@ class RepresentativeFragment : Fragment() {
         RepresentativeViewModel.RepresentativeViewModelFactory()
     }
 
-    //TODO: Declare ViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,7 +48,6 @@ class RepresentativeFragment : Fragment() {
             list?.let {
                 binding.apply {
                     listPlaceholder.visibility = View.GONE
-                    representativesTitle.visibility = View.VISIBLE
                     representativesRecyclerView.visibility = View.VISIBLE
                 }
             }
@@ -77,8 +75,6 @@ class RepresentativeFragment : Fragment() {
 
         //TODO: Populate Representative adapter
 
-        //TODO: Establish button listeners for field and location search
-
         return binding.root
     }
 
@@ -91,7 +87,6 @@ class RepresentativeFragment : Fragment() {
 
         // Hide the recycler view if the live data variable contains an empty list
         if (viewModel.representativeList.value == null) binding.apply {
-            representativesTitle.visibility = View.GONE
             representativesRecyclerView.visibility = View.GONE
             listPlaceholder.visibility = View.VISIBLE
         }

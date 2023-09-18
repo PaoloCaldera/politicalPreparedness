@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="representativeListItem"
+            type="com.example.android.politicalpreparedness.representative.model.Representative" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,6 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin"
+            android:text="@{representativeListItem.office.name}"
             android:textSize="@dimen/large_text_size"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@id/representative_image"
@@ -34,6 +41,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@id/representative_charge"
             app:layout_constraintTop_toBottomOf="@id/representative_charge"
+            android:text="@{representativeListItem.official.name}"
             tools:text="Joe Biden" />
 
         <TextView
@@ -41,6 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/small_text_size"
+            android:text="@{representativeListItem.official.party}"
             app:layout_constraintStart_toStartOf="@id/representative_charge"
             app:layout_constraintTop_toBottomOf="@id/representative_name"
             tools:text="Democratic Party" />

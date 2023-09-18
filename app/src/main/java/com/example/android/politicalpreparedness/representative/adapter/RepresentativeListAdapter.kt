@@ -10,30 +10,76 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.android.politicalpreparedness.databinding.ListHeaderBinding
 import com.example.android.politicalpreparedness.databinding.RepresentativeListItemBinding
 import com.example.android.politicalpreparedness.network.models.Channel
 import com.example.android.politicalpreparedness.representative.model.Representative
 
-class RepresentativeListAdapter(private val clickListener: RepresentativeListener) :
-    ListAdapter<Representative, RepresentativeListAdapter.RepresentativeListItemViewHolder>(
-        RepresentativeDiffCallback
-    ) {
+class RepresentativeListAdapter(private val listTitle: String) :
+    ListAdapter<RepresentativeListViewItem, RecyclerView.ViewHolder>(RepresentativeDiffCallback) {
 
-    object RepresentativeDiffCallback : ItemCallback<Representative>() {
-        override fun areItemsTheSame(oldItem: Representative, newItem: Representative): Boolean {
-            return oldItem == newItem
-        }
-
-        override fun areContentsTheSame(oldItem: Representative, newItem: Representative): Boolean {
-            return oldItem == newItem
-        }
-
+    companion object {
+        // Item types for recycler view
+        private const val HEADER_VIEW_TYPE = 0
+        private const val REPRESENTATIVE_ITEM_VIEW_TYPE = 2
     }
 
-    class RepresentativeListItemViewHolder(val binding: RepresentativeListItemBinding) :
+    /**
+     * DiffUtil class managing the modifications on the associated recycler view.
+     * Since in this case there is no id associated to the list item, the function areItemsTheSame
+     * check the entire data object content instead of just the id
+     */
+    object RepresentativeDiffCallback : ItemCallback<RepresentativeListViewItem>() {
+        override fun areItemsTheSame(
+            oldItem: RepresentativeListViewItem,
+            newItem: RepresentativeListViewItem
+        ): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(
+            oldItem: RepresentativeListViewItem,
+            newItem: RepresentativeListViewItem
+        ): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+
+    /**
+     * ViewHolder class for header of the recycler view
+     */
+    class ListHeaderViewHolder private constructor(val binding: ListHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         companion object {
+            // Inflate the header layout and create the header view holder
+            fun from(parent: ViewGroup): ListHeaderViewHolder {
+                return ListHeaderViewHolder(
+                    ListHeaderBinding.inflate(
+                        LayoutInflater.from(parent.context), parent, false
+                    )
+                )
+            }
+        }
+
+        // Bind the header view holder
+        fun bind(title: String) {
+            binding.apply {
+                listHeaderTitle = title
+                executePendingBindings()
+            }
+        }
+    }
+
+    /**
+     * ViewHolder class for the Representative list items of the recycler view
+     */
+    class RepresentativeListItemViewHolder private constructor(val binding: RepresentativeListItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        companion object {
+            // Inflate the list item layout and create the item view holder
             fun from(parent: ViewGroup): RepresentativeListItemViewHolder {
                 return RepresentativeListItemViewHolder(
                     RepresentativeListItemBinding.inflate(
@@ -43,7 +89,8 @@ class RepresentativeListAdapter(private val clickListener: RepresentativeListene
             }
         }
 
-        fun bind(item: Representative) {
+        // Bind the list item view holder
+        fun bind(listItem: Representative) {
             //binding.representative = item
             //binding.representativePhoto.setImageResource(R.drawable.ic_profile)
 
@@ -91,24 +138,35 @@ class RepresentativeListAdapter(private val clickListener: RepresentativeListene
             val intent = Intent(ACTION_VIEW, uri)
             itemView.context.startActivity(intent)
         }
-
     }
 
+
+    override fun getItemViewType(position: Int): Int {
+        return when (getItem(position)) {
+            is RepresentativeListViewItem.Header -> HEADER_VIEW_TYPE
+            is RepresentativeListViewItem.RepresentativeListItem -> REPRESENTATIVE_ITEM_VIEW_TYPE
+        }
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): RepresentativeListItemViewHolder {
-        return RepresentativeListItemViewHolder.from(parent)
+    ): RecyclerView.ViewHolder {
+        return when (viewType) {
+            HEADER_VIEW_TYPE -> ListHeaderViewHolder.from(parent)
+            REPRESENTATIVE_ITEM_VIEW_TYPE -> RepresentativeListItemViewHolder.from(parent)
+            else -> throw ClassCastException("Unknown viewType $viewType")
+        }
     }
 
-    override fun onBindViewHolder(holder: RepresentativeListItemViewHolder, position: Int) {
-        val item = getItem(position)
-        holder.bind(item)
-    }
-
-
-    class RepresentativeListener(val clickListener: (representative: Representative) -> Unit) {
-        fun onClick(representative: Representative) = clickListener(representative)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder.itemViewType) {
+            HEADER_VIEW_TYPE -> (holder as ListHeaderViewHolder).bind(listTitle)
+            REPRESENTATIVE_ITEM_VIEW_TYPE -> {
+                val representativeListItem =
+                    getItem(position) as RepresentativeListViewItem.RepresentativeListItem
+                (holder as RepresentativeListItemViewHolder).bind(representativeListItem.representative)
+            }
+        }
     }
 }

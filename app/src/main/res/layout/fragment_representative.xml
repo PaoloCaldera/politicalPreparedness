@@ -124,10 +124,10 @@
                 android:id="@+id/button_location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/use_my_location"
-                android:textColor="@color/white"
                 android:backgroundTint="@color/colorPrimaryDark"
                 android:onClick="@{() -> representativeViewModel.onUseMyLocationClicked()}"
+                android:text="@string/use_my_location"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/button_search" />
@@ -142,17 +142,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/find_form">
 
-            <TextView
-                android:id="@+id/representatives_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/list_title_size"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                motion:text="My representatives" />
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/representatives_recyclerView"
                 android:layout_width="match_parent"
@@ -161,7 +150,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/representatives_title" />
+                app:layout_constraintTop_toTopOf="parent" />
             
             <TextView
                 android:id="@+id/list_placeholder"
@@ -171,7 +160,7 @@
                 android:textAlignment="center"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/representatives_title"
+                app:layout_constraintTop_toTopOf="parent"
                 motion:visibilityMode="ignore" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
