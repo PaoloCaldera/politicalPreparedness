@@ -2,7 +2,6 @@ package com.example.android.politicalpreparedness.representative
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
@@ -13,7 +12,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.*
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.example.android.politicalpreparedness.BuildConfig
@@ -84,6 +82,14 @@ class RepresentativeFragment : Fragment() {
         //TODO: Establish button listeners for field and location search
 
         return binding.root
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+
+        // Reset all the flags when accessing the fragment or upon configuration changes
+        viewModel.resetFlags()
     }
 
 
@@ -281,11 +287,6 @@ class RepresentativeFragment : Fragment() {
                 )
             }
             .first()
-    }
-
-    private fun hideKeyboard() {
-        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view!!.windowToken, 0)
     }
 
 

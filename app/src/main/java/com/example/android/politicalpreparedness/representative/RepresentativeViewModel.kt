@@ -30,22 +30,22 @@ class RepresentativeViewModel : ViewModel() {
         get() = _representativesFlag
 
     // Flag that triggers the location permission check
-    private val _locationPermissionFlag = MutableLiveData(false)
+    private val _locationPermissionFlag = MutableLiveData<Boolean>()
     val locationPermissionFlag: LiveData<Boolean>
         get() = _locationPermissionFlag
 
     // Flag that triggers the device location activation check
-    private val _activeDeviceLocationFlag = MutableLiveData(false)
+    private val _activeDeviceLocationFlag = MutableLiveData<Boolean>()
     val activeDeviceLocationFlag: LiveData<Boolean>
         get() = _activeDeviceLocationFlag
 
     // Flag that triggers the retrieval of the current location
-    private val _currentLocationFlag = MutableLiveData(false)
+    private val _currentLocationFlag = MutableLiveData<Boolean>()
     val currentLocationFlag: LiveData<Boolean>
         get() = _currentLocationFlag
 
     // Flag that triggers the current location decoding
-    private val _geocodeLocationFlag = MutableLiveData<Location?>(null)
+    private val _geocodeLocationFlag = MutableLiveData<Location?>()
     val geocodeLocationFlag: LiveData<Location?>
         get() = _geocodeLocationFlag
 
@@ -137,6 +137,16 @@ class RepresentativeViewModel : ViewModel() {
     //TODO: Create function get address from geo location
 
     //TODO: Create function to get address from individual fields
+
+    /**
+     * Set the flags to neutral values, to make the whole location checking restart
+     */
+    fun resetFlags() {
+        _locationPermissionFlag.value = false
+        _activeDeviceLocationFlag.value = false
+        _currentLocationFlag.value = false
+        _geocodeLocationFlag.value = null
+    }
 
     @Suppress("UNCHECKED_CAST")
     class RepresentativeViewModelFactory() : ViewModelProvider.Factory {
