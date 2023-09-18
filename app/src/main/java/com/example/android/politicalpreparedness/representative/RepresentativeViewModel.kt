@@ -13,21 +13,19 @@ import java.lang.IllegalArgumentException
 
 class RepresentativeViewModel : ViewModel() {
 
-    //TODO: Establish live data for representatives and address
+    // LiveData variables exploiting 2-way data binding, used for EditText views (and Spinner)
     val line1 = MutableLiveData<String>()
     val line2 = MutableLiveData<String?>()
     val city = MutableLiveData<String>()
     val statePosition = MutableLiveData(0)
     val zip = MutableLiveData<String>()
 
-    private val _representativesList = MutableLiveData<List<Representative>>()
-    val representativeList: LiveData<List<Representative>>
+
+    // Variable containing the representatives list for the recycler view
+    private val _representativesList = MutableLiveData<List<Representative>?>(null)
+    val representativeList: LiveData<List<Representative>?>
         get() = _representativesList
 
-
-    private val _representativesFlag = MutableLiveData(false)
-    val representativesFlag: LiveData<Boolean>
-        get() = _representativesFlag
 
     // Flag that triggers the location permission check
     private val _locationPermissionFlag = MutableLiveData<Boolean>()
@@ -49,6 +47,7 @@ class RepresentativeViewModel : ViewModel() {
     val geocodeLocationFlag: LiveData<Location?>
         get() = _geocodeLocationFlag
 
+
     private fun stateFromPosition(): String {
         return Resources.getSystem().getStringArray(R.array.states)[statePosition.value!!]
     }
@@ -57,7 +56,6 @@ class RepresentativeViewModel : ViewModel() {
      * Function triggered when button "Find my representatives" is clicked
      */
     fun onFindMyRepresentativesClicked() {
-        _representativesFlag.value = true
         getRepresentatives(
             Address(
                 line1 = line1.value!!,

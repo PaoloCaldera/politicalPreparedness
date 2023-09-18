@@ -1,6 +1,6 @@
 package com.example.android.politicalpreparedness.representative
 
-import android.Manifest
+import  android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.IntentSender
@@ -45,15 +45,13 @@ class RepresentativeFragment : Fragment() {
         binding = FragmentRepresentativeBinding.inflate(inflater)
         binding.lifecycleOwner = this@RepresentativeFragment
 
-        viewModel.representativesFlag.observe(viewLifecycleOwner) {
-            if (it) binding.apply {
-                listPlaceholder.visibility = View.GONE
-                representativesTitle.visibility = View.VISIBLE
-                representativesRecyclerView.visibility = View.VISIBLE
-            } else binding.apply {
-                representativesTitle.visibility = View.GONE
-                representativesRecyclerView.visibility = View.GONE
-                listPlaceholder.visibility = View.VISIBLE
+        viewModel.representativeList.observe(viewLifecycleOwner) { list ->
+            list?.let {
+                binding.apply {
+                    listPlaceholder.visibility = View.GONE
+                    representativesTitle.visibility = View.VISIBLE
+                    representativesRecyclerView.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -90,6 +88,13 @@ class RepresentativeFragment : Fragment() {
 
         // Reset all the flags when accessing the fragment or upon configuration changes
         viewModel.resetFlags()
+
+        // Hide the recycler view if the live data variable contains an empty list
+        if (viewModel.representativeList.value == null) binding.apply {
+            representativesTitle.visibility = View.GONE
+            representativesRecyclerView.visibility = View.GONE
+            listPlaceholder.visibility = View.VISIBLE
+        }
     }
 
 
