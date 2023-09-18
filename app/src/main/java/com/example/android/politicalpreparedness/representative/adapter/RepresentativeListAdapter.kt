@@ -91,52 +91,59 @@ class RepresentativeListAdapter(private val listTitle: String) :
 
         // Bind the list item view holder
         fun bind(listItem: Representative) {
-            //binding.representative = item
-            //binding.representativePhoto.setImageResource(R.drawable.ic_profile)
+            binding.apply {
+                representativeListItem = listItem
 
-            //TODO: Show social links ** Hint: Use provided helper methods
-            //TODO: Show www link ** Hint: Use provided helper methods
+                // Hide social profile links at the beginning, to show then only the available ones
+                representativeWww.visibility = View.GONE
+                representativeFacebook.visibility = View.GONE
+                representativeTwitter.visibility = View.GONE
 
-            binding.executePendingBindings()
+                executePendingBindings()
+            }
+
+            listItem.official.channels?.let { channels -> showSocialLinks(channels) }
+            listItem.official.urls?.let { urls -> showWWWLinks(urls) }
         }
 
+        /*
+        Show social apps icons if there is an available link to social profiles
+         */
         private fun showSocialLinks(channels: List<Channel>) {
-            val facebookUrl = getFacebookUrl(channels)
+            // Set up facebook url
+            val facebookUrl = channels.filter { channel -> channel.type == "Facebook" }
+                .map { channel -> "https://www.facebook.com/${channel.id}" }
+                .firstOrNull()
             if (!facebookUrl.isNullOrBlank()) {
                 enableLink(binding.representativeFacebook, facebookUrl)
             }
 
-            val twitterUrl = getTwitterUrl(channels)
+            // Set up twitter url
+            val twitterUrl = channels.filter { channel -> channel.type == "Twitter" }
+                .map { channel -> "https://www.twitter.com/${channel.id}" }
+                .firstOrNull()
             if (!twitterUrl.isNullOrBlank()) {
                 enableLink(binding.representativeTwitter, twitterUrl)
             }
         }
 
+        /*
+        Show website icon if there is an available website
+         */
         private fun showWWWLinks(urls: List<String>) {
+            // Set up website url
             enableLink(binding.representativeWww, urls.first())
         }
 
-        private fun getFacebookUrl(channels: List<Channel>): String? {
-            return channels.filter { channel -> channel.type == "Facebook" }
-                .map { channel -> "https://www.facebook.com/${channel.id}" }
-                .firstOrNull()
-        }
-
-        private fun getTwitterUrl(channels: List<Channel>): String? {
-            return channels.filter { channel -> channel.type == "Twitter" }
-                .map { channel -> "https://www.twitter.com/${channel.id}" }
-                .firstOrNull()
-        }
-
+        /*
+        Make the corresponding view visible and then prepare the intent to the web page
+         */
         private fun enableLink(view: ImageView, url: String) {
             view.visibility = View.VISIBLE
-            view.setOnClickListener { setIntent(url) }
-        }
-
-        private fun setIntent(url: String) {
-            val uri = Uri.parse(url)
-            val intent = Intent(ACTION_VIEW, uri)
-            itemView.context.startActivity(intent)
+            view.setOnClickListener {
+                val intent = Intent(ACTION_VIEW, Uri.parse(url))
+                itemView.context.startActivity(intent)
+            }
         }
     }
 

@@ -3,8 +3,10 @@ package com.example.android.politicalpreparedness
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter
 import com.example.android.politicalpreparedness.election.adapter.ElectionListViewItem
 import com.example.android.politicalpreparedness.network.models.Election
@@ -30,6 +32,15 @@ fun bindSaveRemoveFab(fab: FloatingActionButton, election: Election?) {
         fab.setImageResource(R.drawable.ic_save)        // To save/follow
     else
         fab.setImageResource(R.drawable.ic_remove)      // To remove/unfollow
+}
+
+
+@BindingAdapter("photoUrl")
+fun bindPhotoUrl(imageView: ImageView, url: String) {
+    Glide.with(imageView)
+        .load(url)
+        .error(R.drawable.ic_profile)
+        .into(imageView)
 }
 
 
