@@ -12,6 +12,8 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.example.android.politicalpreparedness.BuildConfig
@@ -27,13 +29,12 @@ import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.util.Locale
 
-class RepresentativeFragment : Fragment() {
+class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: FragmentRepresentativeBinding
     private val viewModel: RepresentativeViewModel by viewModels {
         RepresentativeViewModel.RepresentativeViewModelFactory()
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,6 +45,7 @@ class RepresentativeFragment : Fragment() {
         binding = FragmentRepresentativeBinding.inflate(inflater)
         binding.lifecycleOwner = this@RepresentativeFragment
 
+        // Observe representative list LiveData variable to make the recycler view visible
         viewModel.representativeList.observe(viewLifecycleOwner) { list ->
             list?.let {
                 binding.apply {
@@ -53,6 +55,7 @@ class RepresentativeFragment : Fragment() {
             }
         }
 
+        // Observe LiveData flags for the device location usage
         viewModel.locationPermissionFlag.observe(viewLifecycleOwner) { flag ->
             if (flag) checkLocationPermission()
         }
@@ -69,6 +72,18 @@ class RepresentativeFragment : Fragment() {
             }
         }
 
+        // Initialize the spinner by applying to it an array adapter
+        val spinner = binding.state
+        spinner.onItemSelectedListener = this@RepresentativeFragment
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.states,
+            android.R.layout.simple_spinner_item
+        ).also { arrayAdapter ->
+            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinner.adapter = arrayAdapter
+        }
+
         //TODO: Establish bindings
 
         //TODO: Define and assign Representative adapter
@@ -77,6 +92,20 @@ class RepresentativeFragment : Fragment() {
 
         return binding.root
     }
+
+    /**
+     * Function called when the user selects an item once opening the Spinner list
+     */
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        parent?.let { adapterView ->
+           viewModel.state.value = adapterView.getItemAtPosition(position) as String
+        }
+    }
+
+    /**
+     * Function called when the user does not select any item once opening the Spinner list
+     */
+    override fun onNothingSelected(parent: AdapterView<*>?) {}
 
 
     override fun onStart() {

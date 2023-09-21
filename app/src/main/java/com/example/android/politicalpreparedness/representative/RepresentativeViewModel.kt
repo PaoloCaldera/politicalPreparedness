@@ -1,12 +1,11 @@
 package com.example.android.politicalpreparedness.representative
 
-import android.content.res.Resources
+
 import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.representative.model.Representative
 import java.lang.IllegalArgumentException
@@ -17,7 +16,7 @@ class RepresentativeViewModel : ViewModel() {
     val line1 = MutableLiveData<String>()
     val line2 = MutableLiveData<String?>()
     val city = MutableLiveData<String>()
-    val statePosition = MutableLiveData(0)
+    val state = MutableLiveData<String>()
     val zip = MutableLiveData<String>()
 
 
@@ -48,10 +47,6 @@ class RepresentativeViewModel : ViewModel() {
         get() = _geocodeLocationFlag
 
 
-    private fun stateFromPosition(): String {
-        return Resources.getSystem().getStringArray(R.array.states)[statePosition.value!!]
-    }
-
     /**
      * Function triggered when button "Find my representatives" is clicked
      */
@@ -61,7 +56,7 @@ class RepresentativeViewModel : ViewModel() {
                 line1 = line1.value!!,
                 line2 = line2.value,
                 city = city.value!!,
-                state = stateFromPosition(),
+                state = state.value!!,
                 zip = zip.value!!
             )
         )
@@ -112,7 +107,19 @@ class RepresentativeViewModel : ViewModel() {
     }
     fun geocodeLocationFlagOff(address: Address) {
         _geocodeLocationFlag.value = null
+        autofillForm(address)
         getRepresentatives(address)
+    }
+
+    /**
+     * Fill automatically the header form when clicking the Use My Location button
+     */
+    fun autofillForm(address: Address) {
+        line1.value = address.line1
+        line2.value = address.line2
+        city.value = address.city
+        state.value = address.state
+        zip.value = address.zip
     }
 
 
