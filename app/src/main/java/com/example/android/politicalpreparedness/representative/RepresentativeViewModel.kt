@@ -114,7 +114,7 @@ class RepresentativeViewModel : ViewModel() {
     /**
      * Fill automatically the header form when clicking the Use My Location button
      */
-    fun autofillForm(address: Address) {
+    private fun autofillForm(address: Address) {
         line1.value = address.line1
         line2.value = address.line2
         city.value = address.city
