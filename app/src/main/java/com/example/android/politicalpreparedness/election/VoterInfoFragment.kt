@@ -42,38 +42,6 @@ class VoterInfoFragment : Fragment() {
         }
 
         // Edit the screen UI according to whether data is correctly retrieved or not
-        handleNetworkStatus()
-
-        /**
-        Hint: You will need to ensure proper data is provided from previous fragment.
-         */
-
-        // TODO: Handle loading of URLs
-        // Observe voting info live data to open the link
-        viewModel.clickVotingInfoFlag.observe(viewLifecycleOwner) {
-            if (it) {
-                val votingUriString =
-                    viewModel.voterInfo.value?.state?.get(0)?.electionAdministrationBody?.votingLocationFinderUrl
-                votingUriString?.let { loadUrl(it) }
-            }
-            viewModel.offVotingInfoClicked()
-        }
-
-        // Observe ballot info live data to open the link
-        viewModel.clickBallotInfoFlag.observe(viewLifecycleOwner) {
-            if (it) {
-                val ballotUriString =
-                    viewModel.voterInfo.value?.state?.get(0)?.electionAdministrationBody?.ballotInfoUrl
-                ballotUriString?.let { loadUrl(it) }
-            }
-            viewModel.offBallotInfoClicked()
-        }
-
-        return binding.root
-    }
-
-
-    private fun handleNetworkStatus() {
         viewModel.networkStatus.observe(viewLifecycleOwner) {
             when (it) {
                 CivicsApiStatus.LOADING -> binding.apply {
@@ -93,6 +61,32 @@ class VoterInfoFragment : Fragment() {
                 else -> throw Exception("Invalid HTTP connection status")
             }
         }
+
+        /**
+        Hint: You will need to ensure proper data is provided from previous fragment.
+         */
+
+        // Observe voting info live data to open the link
+        viewModel.clickVotingInfoFlag.observe(viewLifecycleOwner) {
+            if (it) {
+                val votingUriString =
+                    viewModel.voterInfo.value?.state?.get(0)?.electionAdministrationBody?.votingLocationFinderUrl
+                votingUriString?.let { loadUrl(it) }
+            }
+            viewModel.clickVotingInfoFlagOff()
+        }
+
+        // Observe ballot info live data to open the link
+        viewModel.clickBallotInfoFlag.observe(viewLifecycleOwner) {
+            if (it) {
+                val ballotUriString =
+                    viewModel.voterInfo.value?.state?.get(0)?.electionAdministrationBody?.ballotInfoUrl
+                ballotUriString?.let { loadUrl(it) }
+            }
+            viewModel.clickBallotInfoFlagOff()
+        }
+
+        return binding.root
     }
 
     /**

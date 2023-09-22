@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.android.politicalpreparedness.election.adapter.ElectionListViewItem
+import com.example.android.politicalpreparedness.network.CivicsApiStatus
 import com.example.android.politicalpreparedness.network.models.Election
 import java.lang.IllegalArgumentException
 
@@ -21,20 +22,54 @@ class ElectionsViewModel : ViewModel() {
     val savedElections: LiveData<List<ElectionListViewItem>>
         get() = _savedElections
 
+    // Network status related to the web service call
+    private val _networkStatus = MutableLiveData<CivicsApiStatus?>()
+    val networkStatus: LiveData<CivicsApiStatus?>
+        get() = _networkStatus
+
+    // Navigation to VoterInfoFragment flag
     private val _navigateToVoterInfoFlag = MutableLiveData<Election?>(null)
     val navigateToVoterInfoFlag: LiveData<Election?>
         get() = _navigateToVoterInfoFlag
 
     // Save the function in a variable to use it also in the binding adapter
-    val clickListener: (Election) -> Unit = this::onElectionClicked
+    val onItemClick: (Election) -> Unit = this::navigateToVoterInfoFlagOn
 
-    //TODO: Create val and functions to populate live data for upcoming elections from the API and saved elections from local database
 
-    // Handle navigation for saved or upcoming election list into voter info fragment
-    fun onElectionClicked(election: Election) {
+    init {
+        getUpcomingElections()
+        selectSavedElections()
+    }
+
+
+    /**
+     * Retrieve the upcoming elections from the internet
+     */
+    private fun getUpcomingElections() {
+        _networkStatus.value = CivicsApiStatus.LOADING
+        try {
+            // Retrieve the upcoming elections by calling the web service
+            _networkStatus.value = CivicsApiStatus.SUCCESS
+        } catch (e: Exception) {
+            _networkStatus.value = CivicsApiStatus.ERROR
+        }
+    }
+
+    /**
+     * Retrieve the saved elections from the local database
+     */
+    private fun selectSavedElections() {
+        // Retrieve the saved elections by selecting them from the local database
+    }
+
+
+    /**
+     * Handle navigation for saved or upcoming election list into voter info fragment
+     */
+    private fun navigateToVoterInfoFlagOn(election: Election) {
         _navigateToVoterInfoFlag.value = election
     }
-    fun offElectionClicked() {
+    fun navigateToVoterInfoFlagOff() {
         _navigateToVoterInfoFlag.value = null
     }
 

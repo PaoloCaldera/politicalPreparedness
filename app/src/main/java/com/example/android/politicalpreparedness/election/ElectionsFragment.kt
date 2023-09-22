@@ -30,33 +30,12 @@ class ElectionsFragment : Fragment() {
 
         // TODO: Link elections to voter info
 
-        // Logic for setting upcoming recycler view adapter with upcoming elections data
-        /*val upcoming = binding.upcomingRecyclerView
-        val upcomingAdapter = ElectionListAdapter(
-            resources.getString(R.string.upcoming_list_title),
-            ElectionListAdapter.ElectionListener { election -> viewModel.onElectionClicked(election) }
-        )
-        upcomingAdapter.submitList(viewModel.upcomingElections.value)
-        upcoming.adapter = upcomingAdapter*/
-
-
-        // Logic for setting saved recycler view adapter with saved elections data
-        /*val saved = binding.savedRecyclerView
-        val savedAdapter = ElectionListAdapter(
-            resources.getString(R.string.saved_list_title),
-            ElectionListAdapter.ElectionListener { election -> viewModel.onElectionClicked(election) }
-        )
-        savedAdapter.submitList(viewModel.savedElections.value)
-        saved.adapter = savedAdapter*/
-
-
-        // Observed variable aimed to handle navigation to voter info fragment
+        // Observe LiveData variable aimed to handle navigation to VoterInfoFragment
         viewModel.navigateToVoterInfoFlag.observe(viewLifecycleOwner) {
             it?.let {
                 navigateToVoterInfo(it)
-                viewModel.offElectionClicked()
+                viewModel.navigateToVoterInfoFlagOff()
             }
-
         }
 
         return binding.root

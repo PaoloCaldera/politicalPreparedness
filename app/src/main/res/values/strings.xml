@@ -18,6 +18,28 @@
     <!-- voter info fragment -->
     <string name="follow_election">Save and follow the election</string>
 
+    <!-- representative list fragment -->
+    <string name="representatives_fragment_label">Representatives</string>
+    <string name="address_line_1">Address (line 1)</string>
+    <string name="address_line_2">Address (line 2)</string>
+    <string name="city">City</string>
+    <string name="zip_code">Zip Code</string>
+    <string name="find_my_representatives">Find my representatives</string>
+    <string name="use_my_location">Use my location</string>
+    <string name="representatives_list_title">MY REPRESENTATIVES</string>
+    <string name="representative_profile_image">Representative profile image</string>
+    <string name="twitter_profile_link">Twitter profile link</string>
+    <string name="facebook_profile_link">Facebook profile link</string>
+    <string name="website_link">Website link</string>
+    <string name="permission_alert_dialog_title">Location permission</string>
+    <string name="permission_alert_dialog_message">To find the representatives based on your current location, you need to enable all the location permissions</string>
+    <string name="permission_alert_dialog_negative_button">Cancel</string>
+    <string name="permission_alert_dialog_positive_button">Go to settings</string>
+    <string name="device_location_toast_error_message">"Error getting location settings resolution: %s"</string>
+    <string name="device_location_alert_dialog_title">Enable device location</string>
+    <string name="device_location_alert_dialog_message">In order to use the Use My Location feature, you need to activate the device location</string>
+    <string name="device_location_alert_dialog_positive_button">OK</string>
+    <string name="current_location_toast_error_message">Error in retrieving your current location: try again from a different position</string>
 
     <!-- TODO: Add necessary string values -->
 

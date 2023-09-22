@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.android.politicalpreparedness.databinding.ElectionListHeaderBinding
 import com.example.android.politicalpreparedness.databinding.ElectionListItemBinding
+import com.example.android.politicalpreparedness.databinding.ListHeaderBinding
 import com.example.android.politicalpreparedness.network.models.Election
 
 
@@ -19,7 +19,7 @@ class ElectionListAdapter(
     companion object {
         // Item types for recycler view
         private const val HEADER_VIEW_TYPE = 0
-        private const val ITEM_VIEW_TYPE = 1
+        private const val ELECTION_ITEM_VIEW_TYPE = 1
     }
 
     /**
@@ -45,14 +45,14 @@ class ElectionListAdapter(
     /**
      * ViewHolder class for header of the recycler view
      */
-    class ElectionListHeaderViewHolder private constructor(val binding: ElectionListHeaderBinding) :
+    class ListHeaderViewHolder private constructor(val binding: ListHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         companion object {
             // Inflate the header layout and create the header view holder
-            fun from(parent: ViewGroup): ElectionListHeaderViewHolder {
-                return ElectionListHeaderViewHolder(
-                    ElectionListHeaderBinding.inflate(
+            fun from(parent: ViewGroup): ListHeaderViewHolder {
+                return ListHeaderViewHolder(
+                    ListHeaderBinding.inflate(
                         LayoutInflater.from(parent.context), parent, false
                     )
                 )
@@ -62,10 +62,9 @@ class ElectionListAdapter(
         // Bind the header view holder
         fun bind(title: String) {
             binding.apply {
-                electionListTitle = title
+                listHeaderTitle = title
                 executePendingBindings()
             }
-
         }
     }
 
@@ -100,22 +99,22 @@ class ElectionListAdapter(
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is ElectionListViewItem.Header -> HEADER_VIEW_TYPE
-            is ElectionListViewItem.ElectionListItem -> ITEM_VIEW_TYPE
+            is ElectionListViewItem.ElectionListItem -> ELECTION_ITEM_VIEW_TYPE
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            HEADER_VIEW_TYPE -> ElectionListHeaderViewHolder.from(parent)
-            ITEM_VIEW_TYPE -> ElectionListItemViewHolder.from(parent)
+            HEADER_VIEW_TYPE -> ListHeaderViewHolder.from(parent)
+            ELECTION_ITEM_VIEW_TYPE -> ElectionListItemViewHolder.from(parent)
             else -> throw ClassCastException("Unknown viewType $viewType")
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
-            HEADER_VIEW_TYPE -> (holder as ElectionListHeaderViewHolder).bind(listTitle)
-            ITEM_VIEW_TYPE -> {
+            HEADER_VIEW_TYPE -> (holder as ListHeaderViewHolder).bind(listTitle)
+            ELECTION_ITEM_VIEW_TYPE -> {
                 val electionListItem = getItem(position) as ElectionListViewItem.ElectionListItem
                 (holder as ElectionListItemViewHolder).bind(
                     electionListItem.election,
