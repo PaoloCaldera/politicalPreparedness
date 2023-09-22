@@ -10,7 +10,8 @@ import com.example.android.politicalpreparedness.network.models.Election
 import com.example.android.politicalpreparedness.network.models.VoterInfoResponse
 import java.lang.IllegalArgumentException
 
-class VoterInfoViewModel(private val dataSource: ElectionDao) : ViewModel() {
+class VoterInfoViewModel(election: Election, private val dataSource: ElectionDao) :
+    ViewModel() {
 
     // Information about the voter info
     private val _voterInfo = MutableLiveData<VoterInfoResponse>(null)
@@ -38,16 +39,17 @@ class VoterInfoViewModel(private val dataSource: ElectionDao) : ViewModel() {
         get() = _clickBallotInfoFlag
 
     init {
-        getVoterInfo()
+        getVoterInfo(election)
         checkFabStatus()
     }
 
     /**
      * Retrieve voter info data from the web service
      */
-    private fun getVoterInfo() {
+    private fun getVoterInfo(election: Election) {
         _networkStatus.value = CivicsApiStatus.LOADING
         try {
+            val address = "${election.division.state}, ${election.division.country}"
             // Call function to retrieve voter info data from internet
             _networkStatus.value = CivicsApiStatus.SUCCESS
         } catch (e: Exception) {
@@ -98,6 +100,7 @@ class VoterInfoViewModel(private val dataSource: ElectionDao) : ViewModel() {
     fun clickVotingInfoFlagOn() {
         _clickVotingInfoFlag.value = true
     }
+
     fun clickVotingInfoFlagOff() {
         _clickVotingInfoFlag.value = false
     }
@@ -108,17 +111,20 @@ class VoterInfoViewModel(private val dataSource: ElectionDao) : ViewModel() {
     fun clickBallotInfoFlagOn() {
         _clickBallotInfoFlag.value = true
     }
+
     fun clickBallotInfoFlagOff() {
         _clickBallotInfoFlag.value = false
     }
 
 
-
     @Suppress("UNCHECKED_CAST")
-    class VoterInfoViewModelFactory(private val dataSource: ElectionDao) : ViewModelProvider.Factory {
+    class VoterInfoViewModelFactory(
+        private val election: Election,
+        private val dataSource: ElectionDao
+    ) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(VoterInfoViewModel::class.java))
-                return VoterInfoViewModel(dataSource) as T
+                return VoterInfoViewModel(election, dataSource) as T
             throw IllegalArgumentException("Unknown view model class VoterInfoViewModel")
         }
     }
