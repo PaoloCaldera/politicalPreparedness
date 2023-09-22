@@ -139,7 +139,6 @@ class RepresentativeViewModel : ViewModel() {
         } catch (e: Exception) {
             _networkStatus.value = CivicsApiStatus.ERROR
         }
-
     }
 
     /**

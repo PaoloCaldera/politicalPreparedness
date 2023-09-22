@@ -34,6 +34,34 @@
             app:listData="@{electionsViewModel.upcomingElections}"
             app:onItemClick="@{electionsViewModel.onItemClick}" />
 
+        <ImageView
+            android:id="@+id/loading_image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            android:contentDescription="@string/loading_data"
+            app:layout_constraintBottom_toTopOf="@+id/saved_recyclerView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread"
+            app:srcCompat="@drawable/loading_img" />
+
+        <ImageView
+            android:id="@+id/connection_error_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:contentDescription="@string/connection_error"
+            app:layout_constraintBottom_toTopOf="@+id/saved_recyclerView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread"
+            app:srcCompat="@drawable/ic_connection_error" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/saved_recyclerView"
             android:layout_width="match_parent"

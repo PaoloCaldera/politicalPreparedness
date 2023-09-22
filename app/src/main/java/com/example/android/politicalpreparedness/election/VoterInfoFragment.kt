@@ -42,8 +42,8 @@ class VoterInfoFragment : Fragment() {
         }
 
         // Edit the screen UI according to whether data is correctly retrieved or not
-        viewModel.networkStatus.observe(viewLifecycleOwner) {
-            when (it) {
+        viewModel.networkStatus.observe(viewLifecycleOwner) { apiStatus ->
+            when (apiStatus) {
                 CivicsApiStatus.LOADING -> binding.apply {
                     dataCard.visibility = View.GONE
                     connectionErrorImage.visibility = View.GONE
