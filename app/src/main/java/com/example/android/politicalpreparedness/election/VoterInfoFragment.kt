@@ -17,7 +17,9 @@ class VoterInfoFragment : Fragment() {
 
     private lateinit var binding: FragmentVoterInfoBinding
     private val viewModel: VoterInfoViewModel by viewModels {
-        VoterInfoViewModel.VoterInfoViewModelFactory(ElectionDatabase.getInstance(requireContext()).electionDao)
+        VoterInfoViewModel.VoterInfoViewModelFactory(
+            ElectionDatabase.getInstance(requireContext()).electionDao
+        )
     }
 
     // Arguments
