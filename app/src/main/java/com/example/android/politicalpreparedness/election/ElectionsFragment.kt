@@ -54,9 +54,8 @@ class ElectionsFragment : Fragment() {
         viewModel.navigateToVoterInfoFlag.observe(viewLifecycleOwner) {
             it?.let {
                 navigateToVoterInfo(it)
-                viewModel.offElectionClicked()
+                viewModel.navigateToVoterInfoFlagOff()
             }
-
         }
 
         return binding.root

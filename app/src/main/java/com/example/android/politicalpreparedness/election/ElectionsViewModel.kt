@@ -26,15 +26,15 @@ class ElectionsViewModel : ViewModel() {
         get() = _navigateToVoterInfoFlag
 
     // Save the function in a variable to use it also in the binding adapter
-    val clickListener: (Election) -> Unit = this::onElectionClicked
+    val onItemClick: (Election) -> Unit = this::navigateToVoterInfoFlagOn
 
     //TODO: Create val and functions to populate live data for upcoming elections from the API and saved elections from local database
 
     // Handle navigation for saved or upcoming election list into voter info fragment
-    fun onElectionClicked(election: Election) {
+    private fun navigateToVoterInfoFlagOn(election: Election) {
         _navigateToVoterInfoFlag.value = election
     }
-    fun offElectionClicked() {
+    fun navigateToVoterInfoFlagOff() {
         _navigateToVoterInfoFlag.value = null
     }
 

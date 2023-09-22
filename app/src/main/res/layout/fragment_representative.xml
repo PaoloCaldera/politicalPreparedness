@@ -145,6 +145,8 @@
                 android:id="@+id/representatives_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                app:header="@{@string/representatives_list_title}"
+                app:listData="@{representativeViewModel.representativeList}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

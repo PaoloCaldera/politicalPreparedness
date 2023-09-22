@@ -25,6 +25,7 @@
     <string name="zip_code">Zip Code</string>
     <string name="find_my_representatives">Find my representatives</string>
     <string name="use_my_location">Use my location</string>
+    <string name="representatives_list_title">MY REPRESENTATIVES</string>
     <string name="representative_profile_image">Representative profile image</string>
     <string name="twitter_profile_link">Twitter profile link</string>
     <string name="facebook_profile_link">Facebook profile link</string>
