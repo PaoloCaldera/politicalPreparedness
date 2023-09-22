@@ -85,7 +85,7 @@
                     android:autoLink="web"
                     android:drawablePadding="@dimen/big_margin_1"
                     android:gravity="center_vertical"
-                    android:onClick="@{() -> voterInfoViewModel.onVotingInfoClicked()}"
+                    android:onClick="@{() -> voterInfoViewModel.clickVotingInfoFlagOn()}"
                     android:text="@{voterInfoViewModel.voterInfo.state[0].electionAdministrationBody.votingLocationFinderUrl}"
                     app:drawableStartCompat="@drawable/ic_info"
                     tools:text="https://votesearch.utah.gov/voter-search/search/search-by-address/how-and-where-can-i-vote" />
@@ -100,7 +100,7 @@
                     android:autoLink="web"
                     android:drawablePadding="@dimen/big_margin_1"
                     android:gravity="center_vertical"
-                    android:onClick="@{() -> voterInfoViewModel.onBallotInfoClicked()}"
+                    android:onClick="@{() -> voterInfoViewModel.clickBallotInfoFlagOn()}"
                     android:text="@{voterInfoViewModel.voterInfo.state[0].electionAdministrationBody.ballotInfoUrl}"
                     app:drawableStartCompat="@drawable/ic_ballot"
                     tools:text="https://votesearch.utah.gov/voter-search/search/search-by-voter/track-mail-ballot" />

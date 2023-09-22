@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.android.politicalpreparedness.network.CivicsApiStatus
 import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.representative.model.Representative
 import java.lang.IllegalArgumentException
@@ -24,6 +25,12 @@ class RepresentativeViewModel : ViewModel() {
     private val _representativesList = MutableLiveData<List<Representative>?>(null)
     val representativeList: LiveData<List<Representative>?>
         get() = _representativesList
+
+
+    // Variable containing the network status related to the web service call
+    private val _networkStatus = MutableLiveData<CivicsApiStatus?>()
+    val networkStatus: LiveData<CivicsApiStatus?>
+        get() = _networkStatus
 
 
     // Flag that triggers the location permission check
@@ -125,7 +132,14 @@ class RepresentativeViewModel : ViewModel() {
 
     //TODO: Create function to fetch representatives from API from a provided address
     private fun getRepresentatives(address: Address) {
-        // Populate the LiveData variable representativesList with the result of the HTTP call
+        _networkStatus.value = CivicsApiStatus.LOADING
+        try {
+            // Populate the LiveData variable representativesList with the http response data
+            _networkStatus.value = CivicsApiStatus.SUCCESS
+        } catch (e: Exception) {
+            _networkStatus.value = CivicsApiStatus.ERROR
+        }
+
     }
 
     /**

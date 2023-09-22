@@ -19,6 +19,7 @@
     <string name="follow_election">Save and follow the election</string>
 
     <!-- representative list fragment -->
+    <string name="representatives_fragment_label">Representatives</string>
     <string name="address_line_1">Address (line 1)</string>
     <string name="address_line_2">Address (line 2)</string>
     <string name="city">City</string>
