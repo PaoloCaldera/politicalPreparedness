@@ -4,13 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.android.politicalpreparedness.database.ElectionDao
 import com.example.android.politicalpreparedness.election.adapter.ElectionListViewItem
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
 import com.example.android.politicalpreparedness.network.models.Election
 import java.lang.IllegalArgumentException
 
 //TODO: Construct ViewModel and provide election datasource
-class ElectionsViewModel : ViewModel() {
+class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
 
     // UI variable: upcoming election list
     private val _upcomingElections = MutableLiveData<List<ElectionListViewItem>>()
@@ -69,6 +70,7 @@ class ElectionsViewModel : ViewModel() {
     private fun navigateToVoterInfoFlagOn(election: Election) {
         _navigateToVoterInfoFlag.value = election
     }
+
     fun navigateToVoterInfoFlagOff() {
         _navigateToVoterInfoFlag.value = null
     }
@@ -78,10 +80,10 @@ class ElectionsViewModel : ViewModel() {
      * View model factory class: instantiate the view model in the fragment class
      */
     @Suppress("UNCHECKED_CAST")
-    class ElectionsViewModelFactory : ViewModelProvider.Factory {
+    class ElectionsViewModelFactory(private val dataSource: ElectionDao) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(ElectionsViewModel::class.java))
-                return ElectionsViewModel() as T
+                return ElectionsViewModel(dataSource) as T
             throw IllegalArgumentException("Unknown view model class ElectionsViewModel")
         }
     }

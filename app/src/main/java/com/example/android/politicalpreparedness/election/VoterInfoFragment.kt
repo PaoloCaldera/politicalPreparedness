@@ -17,7 +17,9 @@ class VoterInfoFragment : Fragment() {
 
     private lateinit var binding: FragmentVoterInfoBinding
     private val viewModel: VoterInfoViewModel by viewModels {
-        VoterInfoViewModel.VoterInfoViewModelFactory(ElectionDatabase.getInstance(requireContext()).electionDao)
+        VoterInfoViewModel.VoterInfoViewModelFactory(
+            ElectionDatabase.getInstance(requireContext()).electionDao
+        )
     }
 
     // Arguments
@@ -42,8 +44,8 @@ class VoterInfoFragment : Fragment() {
         }
 
         // Edit the screen UI according to whether data is correctly retrieved or not
-        viewModel.networkStatus.observe(viewLifecycleOwner) {
-            when (it) {
+        viewModel.networkStatus.observe(viewLifecycleOwner) { apiStatus ->
+            when (apiStatus) {
                 CivicsApiStatus.LOADING -> binding.apply {
                     dataCard.visibility = View.GONE
                     connectionErrorImage.visibility = View.GONE
