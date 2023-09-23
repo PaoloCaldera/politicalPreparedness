@@ -148,6 +148,15 @@ class RepresentativeListAdapter(private val listTitle: String) :
     }
 
 
+
+    fun addHeaderAndSubmitList(list: List<Representative>?) {
+        submitList(when (list) {
+            null -> listOf(RepresentativeListViewItem.Header)
+            else -> listOf(RepresentativeListViewItem.Header) +
+                    list.map { RepresentativeListViewItem.RepresentativeListItem(it) }
+        })
+    }
+
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is RepresentativeListViewItem.Header -> HEADER_VIEW_TYPE

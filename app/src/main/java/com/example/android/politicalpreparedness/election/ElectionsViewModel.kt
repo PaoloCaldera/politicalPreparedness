@@ -16,13 +16,13 @@ import java.lang.IllegalArgumentException
 class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
 
     // UI variable: upcoming election list
-    private val _upcomingElections = MutableLiveData<List<Election>>()
-    val upcomingElections: LiveData<List<Election>>
+    private val _upcomingElections = MutableLiveData<List<Election>?>(null)
+    val upcomingElections: LiveData<List<Election>?>
         get() = _upcomingElections
 
     // UI variable: saved election list
-    private val _savedElections = MutableLiveData<List<Election>>()
-    val savedElections: LiveData<List<Election>>
+    private val _savedElections = MutableLiveData<List<Election>?>(null)
+    val savedElections: LiveData<List<Election>?>
         get() = _savedElections
 
     // Network status related to the web service call
