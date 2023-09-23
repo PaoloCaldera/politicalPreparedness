@@ -1,37 +1,18 @@
 package com.example.android.politicalpreparedness.election
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.IntentSender
-import android.content.pm.PackageManager
-import android.location.Geocoder
-import android.location.Location
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.android.politicalpreparedness.BuildConfig
-import com.example.android.politicalpreparedness.R
+import com.example.android.politicalpreparedness.LocationAppServices
 import com.example.android.politicalpreparedness.database.ElectionDatabase
 import com.example.android.politicalpreparedness.databinding.FragmentElectionBinding
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
-import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.network.models.Election
-import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java.util.Locale
 
 class ElectionsFragment : Fragment() {
 
@@ -41,6 +22,9 @@ class ElectionsFragment : Fragment() {
             ElectionDatabase.getInstance(requireContext()).electionDao
         )
     }
+
+    // LocationAppServices: class with methods for checking location permission and activation
+    private val locationAppServices = LocationAppServices(this)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,7 +37,7 @@ class ElectionsFragment : Fragment() {
             electionsViewModel = viewModel
         }
 
-        // Observe LiveData variable that handles the layout based on the network result
+        // Handle the layout based on the network status
         viewModel.networkStatus.observe(viewLifecycleOwner) { apiStatus ->
             when (apiStatus) {
                 CivicsApiStatus.LOADING -> binding.apply {
@@ -61,27 +45,25 @@ class ElectionsFragment : Fragment() {
                     connectionErrorImage.visibility = View.GONE
                     loadingImage.visibility = View.VISIBLE
                 }
-
                 CivicsApiStatus.SUCCESS -> binding.apply {
                     loadingImage.visibility = View.GONE
                     connectionErrorImage.visibility = View.GONE
                     upcomingRecyclerView.visibility = View.VISIBLE
                 }
-
                 CivicsApiStatus.ERROR -> binding.apply {
                     upcomingRecyclerView.visibility = View.GONE
                     loadingImage.visibility = View.GONE
                     connectionErrorImage.visibility = View.VISIBLE
                 }
-
                 else -> throw Exception("Invalid HTTP connection status")
             }
         }
 
-        // Observe LiveData variable aimed to handle navigation to VoterInfoFragment
+        // Handle the navigation to VoterInfoFragment
         viewModel.navigateToVoterInfoFlag.observe(viewLifecycleOwner) { election ->
             election?.let {
                 if (it.division.state == "") {
+                    // Get the state of the user's current location
                     viewModel.locationPermissionFlagOn()
                     return@let
                 }
@@ -90,18 +72,49 @@ class ElectionsFragment : Fragment() {
             }
         }
 
+        // Trigger the location permission check
         viewModel.locationPermissionFlag.observe(viewLifecycleOwner) { flag ->
-            if (flag) checkLocationPermission()
+            if (flag && locationAppServices.checkLocationPermission()) {
+                viewModel.activeDeviceLocationFlagOn()
+                viewModel.locationPermissionFlagOff()
+            }
         }
+
+        // Trigger the device location enabled check
         viewModel.activeDeviceLocationFlag.observe(viewLifecycleOwner) { flag ->
-            if (flag) enableDeviceLocation()
+            if (flag) {
+                locationAppServices.enableDeviceLocation()
+                    .addOnSuccessListener {// Device location already enabled
+                        viewModel.currentLocationFlagOn()
+                        viewModel.activeDeviceLocationFlagOff()
+                    }
+                    .addOnFailureListener { exception ->  // Device location currently inactive
+                        if (!locationAppServices.solveOnDeviceLocationInactive(exception))
+                        // When there is no automatic resolution, reset the flag for the next check
+                            viewModel.activeDeviceLocationFlagOff()
+                    }
+            }
         }
+
+        // Trigger the calculation of the user's current location
         viewModel.currentLocationFlag.observe(viewLifecycleOwner) { flag ->
-            if (flag) getCurrentLocation()
+            if (flag) {
+                locationAppServices.getCurrentLocation()
+                    .addOnSuccessListener { location ->  // Location has been correctly retrieved
+                        viewModel.geocodeLocationFlagOn(location)
+                        viewModel.currentLocationFlagOff()
+                    }
+                    .addOnFailureListener { // Location has not been retrieved
+                        locationAppServices.onCurrentLocationError()
+                        viewModel.currentLocationFlagOff()
+                    }
+            }
         }
+
+        // Trigger the current location decoding, to obtain the address
         viewModel.geocodeLocationFlag.observe(viewLifecycleOwner) { location ->
             location?.let {
-                val address = geocodeLocation(it)
+                val address = locationAppServices.geocodeLocation(it)
                 viewModel.geocodeLocationFlagOff(address)
             }
         }
@@ -118,50 +131,9 @@ class ElectionsFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    /**
-     * Proceed to find location if permission is granted
-     * Request instead the permission if it is not already granted
-     */
-    private fun checkLocationPermission(): Boolean {
-        return if (isPermissionGranted()) {
-            viewModel.locationPermissionFlagOff()
-            viewModel.activeDeviceLocationFlagOn()
-            true
-        } else {
-            var permissionArray = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
-            val resultCode =
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    permissionArray += Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                    FOREGROUND_AND_BACKGROUND_PERMISSION_REQUEST_CODE
-                } else FOREGROUND_PERMISSION_REQUEST_CODE
-            requestPermissions(permissionArray, resultCode)
-            false
-        }
-    }
 
     /**
-     * Check if foreground and background permission are granted by the application
-     */
-    private fun isPermissionGranted(): Boolean {
-        val foregroundPermissionGranted = (PackageManager.PERMISSION_GRANTED ==
-                ActivityCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ))
-        val backgroundPermissionGranted =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                )
-            } else true
-
-        return (foregroundPermissionGranted && backgroundPermissionGranted)
-    }
-
-    /**
-     * Check the result of the permission enabling request
-     * Show an alert dialog if the user decides not to enable the required permission
+     * Check the result of the permission grant request
      */
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -169,154 +141,26 @@ class ElectionsFragment : Fragment() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        //TODO: Handle location permission result to get location on permission granted
-        var outcome = true
-        for (grant in grantResults) {
-            if (grant == PackageManager.PERMISSION_DENIED) {
-                outcome = false
-                break
-            }
+        if (locationAppServices.onRequestPermissionsResult(grantResults)) {
+            viewModel.activeDeviceLocationFlagOn()
         }
-
-        if (!outcome) {
-            // Build a material alert dialog that addresses the user to the settings app
-            MaterialAlertDialogBuilder(requireContext())
-                .setTitle(resources.getString(R.string.permission_alert_dialog_title))
-                .setMessage(resources.getString(R.string.permission_alert_dialog_message))
-                .setCancelable(false)
-                .setNegativeButton(resources.getString(R.string.permission_alert_dialog_negative_button)) { dialog, _ ->
-                    dialog.dismiss()
-                    // Reset the permission flag for the next check
-                    viewModel.locationPermissionFlagOff()
-                }
-                .setPositiveButton(resources.getString(R.string.permission_alert_dialog_positive_button)) { dialog, _ ->
-                    startActivity(Intent().apply {
-                        action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                        data = Uri.fromParts("package", BuildConfig.APPLICATION_ID, null)
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    })
-                    dialog.dismiss()
-                    // Reset the permission flag for the next check
-                    viewModel.locationPermissionFlagOff()
-                }
-                .create()
-                .show()
-        } else
-            checkLocationPermission()
+        /* Reset the permission flag:
+           - for the next check if permissions are not granted yet
+           - for finishing the location permission check if permissions are granted
+         */
+        viewModel.locationPermissionFlagOff()
     }
 
-    /**
-     * Check if the device location is enabled and active
-     */
-    private fun enableDeviceLocation() {
-        // Build location settings request
-        val locationSettingsRequest = LocationSettingsRequest.Builder().addLocationRequest(
-            LocationRequest.create().apply { priority = LocationRequest.PRIORITY_LOW_POWER }
-        ).build()
-
-        // Define settings client for location services
-        val settingsClient = LocationServices.getSettingsClient(requireContext())
-
-        // Check if the location settings are enabled
-        val locationSettingsResponseTask =
-            settingsClient.checkLocationSettings(locationSettingsRequest)
-
-        // Device location is already enabled
-        locationSettingsResponseTask.addOnSuccessListener {
-            viewModel.activeDeviceLocationFlagOff()
-            viewModel.currentLocationFlagOn()
-        }
-
-        // Device location is currently inactive
-        locationSettingsResponseTask.addOnFailureListener {
-            if (it is ResolvableApiException) {
-                try {       // If Android identifies a PendingIntent to be used for the resolution
-                    startIntentSenderForResult(
-                        it.resolution.intentSender,
-                        TURN_DEVICE_LOCATION_ON_REQUEST_CODE,
-                        null, 0, 0, 0, null
-                    )
-                } catch (sendException: IntentSender.SendIntentException) {
-                    Toast.makeText(
-                        requireContext(),
-                        resources.getString(
-                            R.string.device_location_toast_error_message,
-                            sendException.message
-                        ),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    // Reset the device location flag for the next check
-                    viewModel.activeDeviceLocationFlagOff()
-                }
-            } else {        // Otherwise
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle(resources.getString(R.string.device_location_alert_dialog_title))
-                    .setMessage(resources.getString(R.string.device_location_alert_dialog_message))
-                    .setPositiveButton(resources.getString(android.R.string.ok)) { dialog, _ -> dialog.dismiss() }
-                    .create()
-                    .show()
-                // Reset the device location flag for the next check
-                viewModel.activeDeviceLocationFlagOff()
-            }
-        }
-    }
 
     /**
      * Result for the device location activation request
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == TURN_DEVICE_LOCATION_ON_REQUEST_CODE)
-            enableDeviceLocation()
-    }
-
-    /**
-     * Retrieve the current location of the user
-     */
-    @SuppressLint("MissingPermission")
-    private fun getCurrentLocation() {
-        LocationServices.getFusedLocationProviderClient(requireContext())
-            .getCurrentLocation(LocationRequest.PRIORITY_LOW_POWER, null)
-            // Location has been correctly retrieved
-            .addOnSuccessListener { location ->
-                if (location != null) {
-                    viewModel.currentLocationFlagOff()
-                    viewModel.geocodeLocationFlagOn(location)
-                }
-            }
-            // Location has not been retrieved: ask the user to retry from a different position
-            .addOnFailureListener {
-                Toast.makeText(
-                    requireContext(),
-                    resources.getString(R.string.current_location_toast_error_message),
-                    Toast.LENGTH_SHORT
-                ).show()
-                // Reset the current location flag for the next attempt
-                viewModel.currentLocationFlagOff()
-            }
-    }
-
-    /**
-     * Decode the lat-long location into a readable address
-     */
-    private fun geocodeLocation(location: Location): Address {
-        val geocoder = Geocoder(requireContext(), Locale.getDefault())
-        return geocoder.getFromLocation(location.latitude, location.longitude, 1)!!
-            .map { address ->
-                Address(
-                    address.thoroughfare,
-                    address.subThoroughfare,
-                    address.locality,
-                    address.adminArea,
-                    address.postalCode
-                )
-            }
-            .first()
-    }
-
-    companion object {
-        private const val FOREGROUND_AND_BACKGROUND_PERMISSION_REQUEST_CODE = 201
-        private const val FOREGROUND_PERMISSION_REQUEST_CODE = 202
-        private const val TURN_DEVICE_LOCATION_ON_REQUEST_CODE = 203
+        if (requestCode == LocationAppServices.TURN_DEVICE_LOCATION_ON_REQUEST_CODE) {
+            // Turn off and on again the flag to perform automatically another check
+            viewModel.activeDeviceLocationFlagOff()
+            viewModel.activeDeviceLocationFlagOn()
+        }
     }
 }
