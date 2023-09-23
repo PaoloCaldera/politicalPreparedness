@@ -11,18 +11,18 @@ import com.example.android.politicalpreparedness.network.models.Election
 interface ElectionDao {
 
     @Query("SELECT * FROM election_table ORDER BY electionDay ASC")
-    fun selectAll(): LiveData<List<Election>>
+    suspend fun selectAll(): LiveData<List<Election>>
 
     @Query("SELECT * FROM election_table WHERE id = :electionId")
-    fun select(electionId: Int): Election?
+    suspend fun select(electionId: Int): Election?
 
     @Insert
-    fun insert(election: Election)
+    suspend fun insert(election: Election)
 
     @Delete
-    fun delete(election: Election)
+    suspend fun delete(election: Election)
 
     @Query("DELETE FROM election_table")
-    fun clear()
+    suspend fun clear()
 
 }

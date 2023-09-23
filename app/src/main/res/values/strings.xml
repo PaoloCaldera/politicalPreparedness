@@ -13,10 +13,12 @@
     <!-- election fragment -->
     <string name="elections_fragment_label">Elections</string>
     <string name="upcoming_list_title">UPCOMING</string>
-    <string name="saved_list_title">SAVED</string>
+    <string name="saved_list_title">FOLLOWING</string>
+    <string name="clear_list">Clear the entire list of saved elections</string>
 
     <!-- voter info fragment -->
-    <string name="follow_election">Save and follow the election</string>
+    <string name="follow_election">Follow the election</string>
+    <string name="unfollow_election">Unfollow the election</string>
 
     <!-- representative list fragment -->
     <string name="representatives_fragment_label">Representatives</string>
@@ -40,6 +42,7 @@
     <string name="device_location_alert_dialog_message">In order to use the Use My Location feature, you need to activate the device location</string>
     <string name="device_location_alert_dialog_positive_button">OK</string>
     <string name="current_location_toast_error_message">Error in retrieving your current location: try again from a different position</string>
+
 
     <!-- TODO: Add necessary string values -->
 

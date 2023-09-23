@@ -44,10 +44,13 @@ fun bindElectionListData(
  */
 @BindingAdapter("status")
 fun bindSaveRemoveFab(fab: FloatingActionButton, election: Election?) {
-    if (election == null)
+    if (election == null) {
         fab.setImageResource(R.drawable.ic_save)        // To save/follow
-    else
+        fab.contentDescription = fab.context.resources.getString(R.string.follow_election)
+    } else {
         fab.setImageResource(R.drawable.ic_remove)      // To remove/unfollow
+        fab.contentDescription = fab.context.resources.getString(R.string.unfollow_election)
+    }
 }
 
 
