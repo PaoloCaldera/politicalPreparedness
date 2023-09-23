@@ -4,13 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.android.politicalpreparedness.database.ElectionDao
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
 import com.example.android.politicalpreparedness.network.models.Election
 import com.example.android.politicalpreparedness.network.models.VoterInfoResponse
+import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
-class VoterInfoViewModel(election: Election, private val dataSource: ElectionDao) :
+class VoterInfoViewModel(private val election: Election, private val dataSource: ElectionDao) :
     ViewModel() {
 
     // Information about the voter info
@@ -69,29 +71,32 @@ class VoterInfoViewModel(election: Election, private val dataSource: ElectionDao
     }
 
     /**
-     * Check the FAB status by querying the local database
+     * Check the FAB status by querying the local database, to verify if the election
+     * has been already saved
      */
     private fun checkFabStatus() {
-        _fabStatus.value = selectElection()
-    }
-
-    /**
-     * Retrieve election information to verify if the election has been already saved
-     * in the local database
-     */
-    private fun selectElection(): Election? {
-        return null
+        viewModelScope.launch {
+            _fabStatus.value = dataSource.select(election.id)
+        }
     }
 
     /**
      * Follow the election, so save it into the local database
      */
-    private fun insertElection() {}
+    private fun insertElection() {
+        viewModelScope.launch {
+            dataSource.insert(election)
+        }
+    }
 
     /**
      * Unfollow the election, so remove it from the local database
      */
-    private fun deleteElection() {}
+    private fun deleteElection() {
+        viewModelScope.launch {
+            dataSource.delete(election)
+        }
+    }
 
 
     /**

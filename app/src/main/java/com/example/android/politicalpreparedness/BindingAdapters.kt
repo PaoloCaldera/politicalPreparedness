@@ -11,10 +11,9 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.android.politicalpreparedness.election.adapter.ElectionListAdapter
-import com.example.android.politicalpreparedness.election.adapter.ElectionListViewItem
 import com.example.android.politicalpreparedness.network.models.Election
 import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListAdapter
-import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListViewItem
+import com.example.android.politicalpreparedness.representative.model.Representative
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
@@ -28,12 +27,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 fun bindElectionListData(
     recyclerView: RecyclerView,
     header: String,
-    listData: List<ElectionListViewItem>,
+    listData: List<Election>?,
     onItemClick: (Election) -> Unit
 ) {
     val adapter =
         ElectionListAdapter(header, ElectionListAdapter.ElectionListener { onItemClick(it) })
-    adapter.submitList(listData)
+    adapter.addHeaderAndSubmitList(listData)
     recyclerView.adapter = adapter
 }
 
@@ -44,10 +43,13 @@ fun bindElectionListData(
  */
 @BindingAdapter("status")
 fun bindSaveRemoveFab(fab: FloatingActionButton, election: Election?) {
-    if (election == null)
+    if (election == null) {
         fab.setImageResource(R.drawable.ic_save)        // To save/follow
-    else
+        fab.contentDescription = fab.context.resources.getString(R.string.follow_election)
+    } else {
         fab.setImageResource(R.drawable.ic_remove)      // To remove/unfollow
+        fab.contentDescription = fab.context.resources.getString(R.string.unfollow_election)
+    }
 }
 
 
@@ -63,10 +65,10 @@ fun bindSaveRemoveFab(fab: FloatingActionButton, election: Election?) {
 fun bindRepresentativeListData(
     recyclerView: RecyclerView,
     header: String,
-    listData: List<RepresentativeListViewItem>
+    listData: List<Representative>?
 ) {
     val adapter = RepresentativeListAdapter(header)
-    adapter.submitList(listData)
+    adapter.addHeaderAndSubmitList(listData)
     recyclerView.adapter = adapter
 }
 

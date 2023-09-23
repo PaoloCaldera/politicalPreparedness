@@ -5,24 +5,24 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.android.politicalpreparedness.database.ElectionDao
-import com.example.android.politicalpreparedness.election.adapter.ElectionListViewItem
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
 import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.network.models.Election
+import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
-//TODO: Construct ViewModel and provide election datasource
 class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
 
     // UI variable: upcoming election list
-    private val _upcomingElections = MutableLiveData<List<ElectionListViewItem>>()
-    val upcomingElections: LiveData<List<ElectionListViewItem>>
+    private val _upcomingElections = MutableLiveData<List<Election>?>(null)
+    val upcomingElections: LiveData<List<Election>?>
         get() = _upcomingElections
 
     // UI variable: saved election list
-    private val _savedElections = MutableLiveData<List<ElectionListViewItem>>()
-    val savedElections: LiveData<List<ElectionListViewItem>>
+    private val _savedElections = MutableLiveData<List<Election>?>(null)
+    val savedElections: LiveData<List<Election>?>
         get() = _savedElections
 
     // Network status related to the web service call
@@ -59,8 +59,6 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     val onItemClick: (Election) -> Unit = this::navigateToVoterInfoFlagOn
 
 
-
-
     init {
         getUpcomingElections()
         selectSavedElections()
@@ -84,7 +82,18 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
      * Retrieve the saved elections from the local database
      */
     private fun selectSavedElections() {
-        // Retrieve the saved elections by selecting them from the local database
+        viewModelScope.launch {
+            _savedElections.value = dataSource.selectAll().value
+        }
+    }
+
+    /**
+     * Clear the saved elections list by removing all the occurrences from the local database
+     */
+    fun clearElections() {
+        viewModelScope.launch {
+            dataSource.clear()
+        }
     }
 
 
@@ -138,7 +147,7 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     /**
      * Handle navigation for saved or upcoming election list into voter info fragment
      */
-    fun navigateToVoterInfoFlagOn(election: Election) {
+    private fun navigateToVoterInfoFlagOn(election: Election) {
         _navigateToVoterInfoFlag.value = election
     }
     fun navigateToVoterInfoFlagOff() {

@@ -95,6 +95,13 @@ class ElectionListAdapter(
         }
     }
 
+    fun addHeaderAndSubmitList(list: List<Election>?) {
+        submitList(when (list) {
+            null -> listOf(ElectionListViewItem.Header)
+            else -> listOf(ElectionListViewItem.Header) +
+                    list.map { ElectionListViewItem.ElectionListItem(it) }
+        })
+    }
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
