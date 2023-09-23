@@ -11,25 +11,15 @@ import androidx.fragment.app.viewModels
 import com.example.android.politicalpreparedness.database.ElectionDatabase
 import com.example.android.politicalpreparedness.databinding.FragmentVoterInfoBinding
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
-import com.example.android.politicalpreparedness.network.models.Election
 
 class VoterInfoFragment : Fragment() {
 
+    private val election = VoterInfoFragmentArgs.fromBundle(arguments).argElection
     private lateinit var binding: FragmentVoterInfoBinding
     private val viewModel: VoterInfoViewModel by viewModels {
         VoterInfoViewModel.VoterInfoViewModelFactory(
-            ElectionDatabase.getInstance(requireContext()).electionDao
+            election, ElectionDatabase.getInstance(requireContext()).electionDao
         )
-    }
-
-    // Arguments
-    private lateinit var argElection: Election
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // Retrieve arguments from navigation
-        argElection = VoterInfoFragmentArgs.fromBundle(arguments).argElection
     }
 
     override fun onCreateView(
