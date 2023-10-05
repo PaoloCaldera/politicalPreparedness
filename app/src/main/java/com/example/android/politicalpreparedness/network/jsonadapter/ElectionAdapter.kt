@@ -5,6 +5,11 @@ import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 
 class ElectionAdapter {
+
+    /**
+     * Adapter methods for converting the division value into a more suitable format
+     */
+
     @FromJson
     fun divisionFromJson (ocdDivisionId: String): Division {
         val countryDelimiter = "country:"
