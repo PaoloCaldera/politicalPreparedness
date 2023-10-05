@@ -6,9 +6,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
 import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.representative.model.Representative
+import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 class RepresentativeViewModel : ViewModel() {
@@ -82,6 +85,7 @@ class RepresentativeViewModel : ViewModel() {
     private fun locationPermissionFlagOn() {
         _locationPermissionFlag.value = true
     }
+
     fun locationPermissionFlagOff() {
         _locationPermissionFlag.value = false
     }
@@ -92,6 +96,7 @@ class RepresentativeViewModel : ViewModel() {
     fun activeDeviceLocationFlagOn() {
         _activeDeviceLocationFlag.value = true
     }
+
     fun activeDeviceLocationFlagOff() {
         _activeDeviceLocationFlag.value = false
     }
@@ -102,6 +107,7 @@ class RepresentativeViewModel : ViewModel() {
     fun currentLocationFlagOn() {
         _currentLocationFlag.value = true
     }
+
     fun currentLocationFlagOff() {
         _currentLocationFlag.value = false
     }
@@ -112,6 +118,7 @@ class RepresentativeViewModel : ViewModel() {
     fun geocodeLocationFlagOn(location: Location) {
         _geocodeLocationFlag.value = location
     }
+
     fun geocodeLocationFlagOff(address: Address) {
         _geocodeLocationFlag.value = null
         autofillForm(address)
@@ -133,11 +140,16 @@ class RepresentativeViewModel : ViewModel() {
     //TODO: Create function to fetch representatives from API from a provided address
     private fun getRepresentatives(address: Address) {
         _networkStatus.value = CivicsApiStatus.LOADING
-        try {
-            // Populate the LiveData variable representativesList with the http response data
-            _networkStatus.value = CivicsApiStatus.SUCCESS
-        } catch (e: Exception) {
-            _networkStatus.value = CivicsApiStatus.ERROR
+        viewModelScope.launch {
+            try {
+                val (offices, officials) = CivicsApi.retrofitService.getRepresentatives(address.toFormattedString())
+                // Use the flatMap function to combine all the lists to a single representative list
+                _representativesList.value =
+                    offices.flatMap { office -> office.getRepresentatives(officials) }
+                _networkStatus.value = CivicsApiStatus.SUCCESS
+            } catch (e: Exception) {
+                _networkStatus.value = CivicsApiStatus.ERROR
+            }
         }
     }
 

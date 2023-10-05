@@ -35,7 +35,6 @@ class ElectionAdapter {
      * Adapter methods for converting string typed dates into Date objects
      */
 
-
     @FromJson
     fun dateFromJson (electionDay: String): Date {
         return SimpleDateFormat("yyyy-MM-dd").parse(electionDay)!!
