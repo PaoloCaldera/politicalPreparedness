@@ -54,7 +54,6 @@
                     android:drawablePadding="@dimen/big_margin_1"
                     android:gravity="center_vertical"
                     android:text="@{voterInfoViewModel.voterInfo.election.electionDay.toString()}"
-
                     app:drawableStartCompat="@drawable/ic_calendar"
                     tools:text="06th June 2025" />
 
