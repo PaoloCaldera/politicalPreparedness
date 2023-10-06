@@ -15,7 +15,7 @@ class LaunchFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentLaunchBinding.inflate(inflater)
+        binding = FragmentLaunchBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
 
         // Navigate to representatives fragment
