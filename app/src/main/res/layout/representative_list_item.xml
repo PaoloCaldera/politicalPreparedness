@@ -6,7 +6,7 @@
     <data>
         <variable
             name="representativeListItem"
-            type="com.example.android.politicalpreparedness.representative.model.Representative" />
+            type="com.example.android.politicalpreparedness.network.models.Representative" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

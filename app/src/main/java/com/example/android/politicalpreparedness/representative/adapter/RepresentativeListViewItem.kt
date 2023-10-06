@@ -1,6 +1,6 @@
 package com.example.android.politicalpreparedness.representative.adapter
 
-import com.example.android.politicalpreparedness.representative.model.Representative
+import com.example.android.politicalpreparedness.network.models.Representative
 
 sealed class RepresentativeListViewItem {
 

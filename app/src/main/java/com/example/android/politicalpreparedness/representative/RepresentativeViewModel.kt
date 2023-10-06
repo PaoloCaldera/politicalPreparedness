@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
 import com.example.android.politicalpreparedness.network.models.Address
-import com.example.android.politicalpreparedness.representative.model.Representative
+import com.example.android.politicalpreparedness.network.models.Representative
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
