@@ -14,7 +14,7 @@ import com.example.android.politicalpreparedness.network.CivicsApiStatus
 
 class VoterInfoFragment : Fragment() {
 
-    private val election = VoterInfoFragmentArgs.fromBundle(arguments).argElection
+    private val election = VoterInfoFragmentArgs.fromBundle(requireArguments()).argElection
     private lateinit var binding: FragmentVoterInfoBinding
     private val viewModel: VoterInfoViewModel by viewModels {
         VoterInfoViewModel.VoterInfoViewModelFactory(
