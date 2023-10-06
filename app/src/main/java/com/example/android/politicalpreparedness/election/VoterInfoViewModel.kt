@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.android.politicalpreparedness.database.ElectionDao
+import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
 import com.example.android.politicalpreparedness.network.models.Election
 import com.example.android.politicalpreparedness.network.models.VoterInfoResponse
@@ -50,12 +51,14 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
      */
     private fun getVoterInfo(election: Election) {
         _networkStatus.value = CivicsApiStatus.LOADING
-        try {
-            val address = "${election.division.state}, ${election.division.country}"
-            // Call function to retrieve voter info data from internet
-            _networkStatus.value = CivicsApiStatus.SUCCESS
-        } catch (e: Exception) {
-            _networkStatus.value = CivicsApiStatus.ERROR
+        viewModelScope.launch {
+            try {
+                val address = "${election.division.state}, ${election.division.country}"
+                _voterInfo.value = CivicsApi.retrofitService.getVoterInfo(address, election.id)
+                _networkStatus.value = CivicsApiStatus.SUCCESS
+            } catch (e: Exception) {
+                _networkStatus.value = CivicsApiStatus.ERROR
+            }
         }
     }
 

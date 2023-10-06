@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import com.example.android.politicalpreparedness.LocationAppServices
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.FragmentRepresentativeBinding
+import com.example.android.politicalpreparedness.network.CivicsApiStatus
 
 class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
@@ -30,13 +31,28 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
         binding = FragmentRepresentativeBinding.inflate(inflater)
         binding.lifecycleOwner = this@RepresentativeFragment
 
-        // When representative list is populated, make the recycler view visible
-        viewModel.representativeList.observe(viewLifecycleOwner) { list ->
-            list?.let {
-                binding.apply {
+        // Handle the layout based on the network status
+        viewModel.networkStatus.observe(viewLifecycleOwner) { apiStatus ->
+            when (apiStatus) {
+                CivicsApiStatus.LOADING -> binding.apply {
                     listPlaceholder.visibility = View.GONE
+                    representativesRecyclerView.visibility = View.GONE
+                    connectionErrorImage.visibility = View.GONE
+                    loadingImage.visibility = View.VISIBLE
+                }
+                CivicsApiStatus.SUCCESS -> binding.apply {
+                    listPlaceholder.visibility = View.GONE
+                    loadingImage.visibility = View.GONE
+                    connectionErrorImage.visibility = View.GONE
                     representativesRecyclerView.visibility = View.VISIBLE
                 }
+                CivicsApiStatus.ERROR -> binding.apply {
+                    listPlaceholder.visibility = View.GONE
+                    representativesRecyclerView.visibility = View.GONE
+                    loadingImage.visibility = View.GONE
+                    connectionErrorImage.visibility = View.VISIBLE
+                }
+                else -> throw Exception("Invalid HTTP connection status")
             }
         }
 

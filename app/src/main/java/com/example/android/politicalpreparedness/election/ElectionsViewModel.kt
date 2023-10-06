@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.android.politicalpreparedness.database.ElectionDao
+import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
 import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.network.models.Election
@@ -70,11 +71,13 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
      */
     private fun getUpcomingElections() {
         _networkStatus.value = CivicsApiStatus.LOADING
-        try {
-            // Retrieve the upcoming elections by calling the web service
-            _networkStatus.value = CivicsApiStatus.SUCCESS
-        } catch (e: Exception) {
-            _networkStatus.value = CivicsApiStatus.ERROR
+        viewModelScope.launch {
+            try {
+                _upcomingElections.value = CivicsApi.retrofitService.getElections().elections
+                _networkStatus.value = CivicsApiStatus.SUCCESS
+            } catch (e: Exception) {
+                _networkStatus.value = CivicsApiStatus.ERROR
+            }
         }
     }
 
@@ -103,6 +106,7 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     fun locationPermissionFlagOn() {
         _locationPermissionFlag.value = true
     }
+
     fun locationPermissionFlagOff() {
         _locationPermissionFlag.value = false
     }
@@ -113,6 +117,7 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     fun activeDeviceLocationFlagOn() {
         _activeDeviceLocationFlag.value = true
     }
+
     fun activeDeviceLocationFlagOff() {
         _activeDeviceLocationFlag.value = false
     }
@@ -123,6 +128,7 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     fun currentLocationFlagOn() {
         _currentLocationFlag.value = true
     }
+
     fun currentLocationFlagOff() {
         _currentLocationFlag.value = false
     }
@@ -133,6 +139,7 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     fun geocodeLocationFlagOn(location: Location) {
         _geocodeLocationFlag.value = location
     }
+
     fun geocodeLocationFlagOff(address: Address) {
         _geocodeLocationFlag.value = null
 
@@ -150,17 +157,18 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     private fun navigateToVoterInfoFlagOn(election: Election) {
         _navigateToVoterInfoFlag.value = election
     }
+
     fun navigateToVoterInfoFlagOff() {
         _navigateToVoterInfoFlag.value = null
     }
-
 
 
     /**
      * View model factory class: instantiate the view model in the fragment class
      */
     @Suppress("UNCHECKED_CAST")
-    class ElectionsViewModelFactory(private val dataSource: ElectionDao) : ViewModelProvider.Factory {
+    class ElectionsViewModelFactory(private val dataSource: ElectionDao) :
+        ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(ElectionsViewModel::class.java))
                 return ElectionsViewModel(dataSource) as T
