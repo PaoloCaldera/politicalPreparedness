@@ -16,7 +16,7 @@ class LaunchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentLaunchBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this
+        binding.lifecycleOwner = this@LaunchFragment
 
         // Navigate to representatives fragment
         binding.representativeButton.setOnClickListener {
