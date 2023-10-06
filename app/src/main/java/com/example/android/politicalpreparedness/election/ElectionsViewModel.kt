@@ -11,7 +11,9 @@ import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
 import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.network.models.Election
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.lang.IllegalArgumentException
 
 class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
@@ -90,7 +92,9 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
      */
     private fun selectSavedElections() {
         viewModelScope.launch {
-            _savedElections.value = dataSource.selectAll().value
+            withContext(Dispatchers.IO) {
+                _savedElections.value = dataSource.selectAll().value
+            }
         }
     }
 
@@ -99,7 +103,9 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
      */
     fun clearElections() {
         viewModelScope.launch {
-            dataSource.clear()
+            withContext(Dispatchers.IO) {
+                dataSource.clear()
+            }
         }
     }
 

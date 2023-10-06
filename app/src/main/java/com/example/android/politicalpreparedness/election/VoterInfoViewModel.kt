@@ -10,7 +10,9 @@ import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
 import com.example.android.politicalpreparedness.network.models.Election
 import com.example.android.politicalpreparedness.network.models.VoterInfoResponse
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.lang.IllegalArgumentException
 
 class VoterInfoViewModel(private val election: Election, private val dataSource: ElectionDao) :
@@ -74,7 +76,9 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
      */
     private fun checkFabStatus() {
         viewModelScope.launch {
-            _fabStatus.value = dataSource.select(election.id)
+            withContext(Dispatchers.IO) {
+                _fabStatus.value = dataSource.select(election.id)
+            }
         }
     }
 
@@ -83,10 +87,13 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
      * Based on the FAB status, save/remove the election to/from the local database
      */
     fun onFabClick() {
-        if (_fabStatus.value == null)
+        if (_fabStatus.value == null) {
             insertElection()
-        else
+            _fabStatus.value = election
+        } else {
             deleteElection()
+            _fabStatus.value = null
+        }
     }
 
     /**
@@ -94,7 +101,9 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
      */
     private fun insertElection() {
         viewModelScope.launch {
-            dataSource.insert(election)
+            withContext(Dispatchers.IO) {
+                dataSource.insert(election)
+            }
         }
     }
 
@@ -103,7 +112,9 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
      */
     private fun deleteElection() {
         viewModelScope.launch {
-            dataSource.delete(election)
+            withContext(Dispatchers.IO) {
+                dataSource.delete(election)
+            }
         }
     }
 
