@@ -16,7 +16,6 @@
         android:padding="@dimen/big_margin_2"
         tools:context="com.example.android.politicalpreparedness.MainActivity">
 
-        <!-- Election name is the bar title (election.name) -->
         <androidx.cardview.widget.CardView
             android:id="@+id/data_card"
             android:layout_width="match_parent"
@@ -35,7 +34,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- TODO: Add visual styling and content (state.name) -->
                 <TextView
                     android:id="@+id/state_header"
                     android:layout_width="wrap_content"
@@ -48,7 +46,6 @@
                     android:textStyle="bold"
                     tools:text="Utah" />
 
-                <!-- TODO: Add visual styling (election.electionDay) -->
                 <TextView
                     android:id="@+id/election_date"
                     android:layout_width="match_parent"
@@ -57,11 +54,9 @@
                     android:drawablePadding="@dimen/big_margin_1"
                     android:gravity="center_vertical"
                     android:text="@{voterInfoViewModel.voterInfo.election.electionDay.toString()}"
-
                     app:drawableStartCompat="@drawable/ic_calendar"
                     tools:text="06th June 2025" />
 
-                <!-- TODO: Add data binding (state.correspondenceAddress.toFormattedString()) -->
                 <TextView
                     android:id="@+id/address"
                     android:layout_width="match_parent"
@@ -75,8 +70,6 @@
                     tools:text="Utah State Capitol Complex 350 North State Street, Suite 220\n84114 Salt Lake City, Utah" />
 
 
-                <!-- TODO: Add click binding to open web URL -->
-                <!-- TODO: Add visual styling and content (state.votingLocationFinderUrl) -->
                 <TextView
                     android:id="@+id/state_locations"
                     android:layout_width="match_parent"
@@ -90,8 +83,6 @@
                     app:drawableStartCompat="@drawable/ic_info"
                     tools:text="https://votesearch.utah.gov/voter-search/search/search-by-address/how-and-where-can-i-vote" />
 
-                <!-- TODO: Add click binding to open web URL -->
-                <!-- TODO: Add visual styling and content (state.ballotInfoUrl) -->
                 <TextView
                     android:id="@+id/state_ballot"
                     android:layout_width="match_parent"

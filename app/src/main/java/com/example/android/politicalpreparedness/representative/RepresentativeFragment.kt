@@ -28,7 +28,7 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
         savedInstanceState: Bundle?
     ): View {
 
-        binding = FragmentRepresentativeBinding.inflate(inflater)
+        binding = FragmentRepresentativeBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this@RepresentativeFragment
 
         // Handle the layout based on the network status

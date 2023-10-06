@@ -31,7 +31,7 @@ class ElectionsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentElectionBinding.inflate(inflater)
+        binding = FragmentElectionBinding.inflate(inflater, container, false)
         binding.apply {
             lifecycleOwner = this@ElectionsFragment
             electionsViewModel = viewModel

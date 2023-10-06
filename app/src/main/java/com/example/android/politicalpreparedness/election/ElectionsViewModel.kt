@@ -11,7 +11,9 @@ import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
 import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.network.models.Election
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.lang.IllegalArgumentException
 
 class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
@@ -26,10 +28,18 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     val savedElections: LiveData<List<Election>?>
         get() = _savedElections
 
+
     // Network status related to the web service call
     private val _networkStatus = MutableLiveData<CivicsApiStatus?>()
     val networkStatus: LiveData<CivicsApiStatus?>
         get() = _networkStatus
+
+
+    // Flag that triggers the navigation to VoterInfoFragment
+    private val _navigateToVoterInfoFlag = MutableLiveData<Election?>(null)
+    val navigateToVoterInfoFlag: LiveData<Election?>
+        get() = _navigateToVoterInfoFlag
+
 
     // Flag that triggers the location permission check
     private val _locationPermissionFlag = MutableLiveData<Boolean>()
@@ -51,10 +61,6 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     val geocodeLocationFlag: LiveData<Location?>
         get() = _geocodeLocationFlag
 
-    // Flag that triggers the navigation to VoterInfoFragment
-    private val _navigateToVoterInfoFlag = MutableLiveData<Election?>(null)
-    val navigateToVoterInfoFlag: LiveData<Election?>
-        get() = _navigateToVoterInfoFlag
 
     // Save the function in a variable to use it also in the binding adapter
     val onItemClick: (Election) -> Unit = this::navigateToVoterInfoFlagOn
@@ -86,7 +92,9 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
      */
     private fun selectSavedElections() {
         viewModelScope.launch {
-            _savedElections.value = dataSource.selectAll().value
+            withContext(Dispatchers.IO) {
+                _savedElections.value = dataSource.selectAll().value
+            }
         }
     }
 
@@ -95,8 +103,21 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
      */
     fun clearElections() {
         viewModelScope.launch {
-            dataSource.clear()
+            withContext(Dispatchers.IO) {
+                dataSource.clear()
+            }
         }
+    }
+
+
+    /**
+     * Handle navigation for saved or upcoming election list into voter info fragment
+     */
+    private fun navigateToVoterInfoFlagOn(election: Election) {
+        _navigateToVoterInfoFlag.value = election
+    }
+    fun navigateToVoterInfoFlagOff() {
+        _navigateToVoterInfoFlag.value = null
     }
 
 
@@ -106,7 +127,6 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     fun locationPermissionFlagOn() {
         _locationPermissionFlag.value = true
     }
-
     fun locationPermissionFlagOff() {
         _locationPermissionFlag.value = false
     }
@@ -117,7 +137,6 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     fun activeDeviceLocationFlagOn() {
         _activeDeviceLocationFlag.value = true
     }
-
     fun activeDeviceLocationFlagOff() {
         _activeDeviceLocationFlag.value = false
     }
@@ -128,7 +147,6 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     fun currentLocationFlagOn() {
         _currentLocationFlag.value = true
     }
-
     fun currentLocationFlagOff() {
         _currentLocationFlag.value = false
     }
@@ -139,7 +157,6 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     fun geocodeLocationFlagOn(location: Location) {
         _geocodeLocationFlag.value = location
     }
-
     fun geocodeLocationFlagOff(address: Address) {
         _geocodeLocationFlag.value = null
 
@@ -149,17 +166,6 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
                 state = address.state
             )
         )
-    }
-
-    /**
-     * Handle navigation for saved or upcoming election list into voter info fragment
-     */
-    private fun navigateToVoterInfoFlagOn(election: Election) {
-        _navigateToVoterInfoFlag.value = election
-    }
-
-    fun navigateToVoterInfoFlagOff() {
-        _navigateToVoterInfoFlag.value = null
     }
 
 

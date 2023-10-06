@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
 import com.example.android.politicalpreparedness.network.models.Address
-import com.example.android.politicalpreparedness.representative.model.Representative
+import com.example.android.politicalpreparedness.network.models.Representative
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
@@ -58,7 +58,7 @@ class RepresentativeViewModel : ViewModel() {
 
 
     /**
-     * Function triggered when button "Find my representatives" is clicked
+     * "Find my representatives" button clicked
      */
     fun onFindMyRepresentativesClicked() {
         getRepresentatives(
@@ -73,11 +73,12 @@ class RepresentativeViewModel : ViewModel() {
     }
 
     /**
-     * Function triggered when button "Use my location" is clicked
+     * "Use my location" button clicked
      */
     fun onUseMyLocationClicked() {
         locationPermissionFlagOn()
     }
+
 
     /**
      * Turn on and off the locationPermissionFlag
@@ -85,7 +86,6 @@ class RepresentativeViewModel : ViewModel() {
     private fun locationPermissionFlagOn() {
         _locationPermissionFlag.value = true
     }
-
     fun locationPermissionFlagOff() {
         _locationPermissionFlag.value = false
     }
@@ -96,7 +96,6 @@ class RepresentativeViewModel : ViewModel() {
     fun activeDeviceLocationFlagOn() {
         _activeDeviceLocationFlag.value = true
     }
-
     fun activeDeviceLocationFlagOff() {
         _activeDeviceLocationFlag.value = false
     }
@@ -107,7 +106,6 @@ class RepresentativeViewModel : ViewModel() {
     fun currentLocationFlagOn() {
         _currentLocationFlag.value = true
     }
-
     fun currentLocationFlagOff() {
         _currentLocationFlag.value = false
     }
@@ -118,7 +116,6 @@ class RepresentativeViewModel : ViewModel() {
     fun geocodeLocationFlagOn(location: Location) {
         _geocodeLocationFlag.value = location
     }
-
     fun geocodeLocationFlagOff(address: Address) {
         _geocodeLocationFlag.value = null
         autofillForm(address)
@@ -137,7 +134,9 @@ class RepresentativeViewModel : ViewModel() {
     }
 
 
-    //TODO: Create function to fetch representatives from API from a provided address
+    /**
+     * Call the /representatives resource to fetch the representatives
+     */
     private fun getRepresentatives(address: Address) {
         _networkStatus.value = CivicsApiStatus.LOADING
         viewModelScope.launch {
@@ -153,20 +152,6 @@ class RepresentativeViewModel : ViewModel() {
         }
     }
 
-    /**
-     *  The following code will prove helpful in constructing a representative from the API. This code combines the two nodes of the RepresentativeResponse into a single official :
-
-    val (offices, officials) = getRepresentativesDeferred.await()
-    _representatives.value = offices.flatMap { office -> office.getRepresentatives(officials) }
-
-    Note: getRepresentatives in the above code represents the method used to fetch data from the API
-    Note: _representatives in the above code represents the established mutable live data housing representatives
-
-     */
-
-    //TODO: Create function get address from geo location
-
-    //TODO: Create function to get address from individual fields
 
     /**
      * Set the flags to neutral values, to make the whole location checking restart
@@ -178,8 +163,12 @@ class RepresentativeViewModel : ViewModel() {
         _geocodeLocationFlag.value = null
     }
 
+
+    /**
+     * View model factory class: instantiate the view model in the fragment class
+     */
     @Suppress("UNCHECKED_CAST")
-    class RepresentativeViewModelFactory() : ViewModelProvider.Factory {
+    class RepresentativeViewModelFactory : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(RepresentativeViewModel::class.java))
                 return RepresentativeViewModel() as T

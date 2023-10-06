@@ -10,7 +10,9 @@ import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
 import com.example.android.politicalpreparedness.network.models.Election
 import com.example.android.politicalpreparedness.network.models.VoterInfoResponse
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.lang.IllegalArgumentException
 
 class VoterInfoViewModel(private val election: Election, private val dataSource: ElectionDao) :
@@ -21,15 +23,18 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
     val voterInfo: LiveData<VoterInfoResponse>
         get() = _voterInfo
 
+
     // Network status related to the web service call
     private val _networkStatus = MutableLiveData<CivicsApiStatus?>()
     val networkStatus: LiveData<CivicsApiStatus?>
         get() = _networkStatus
 
+
     // Status of the save/remove election FAB
     private val _fabStatus = MutableLiveData<Election?>(null)
     val fabStatus: LiveData<Election?>
         get() = _fabStatus
+
 
     // Flag associated to the user click to the voting info link
     private val _clickVotingInfoFlag = MutableLiveData(false)
@@ -41,10 +46,12 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
     val clickBallotInfoFlag: LiveData<Boolean>
         get() = _clickBallotInfoFlag
 
+
     init {
         getVoterInfo(election)
         checkFabStatus()
     }
+
 
     /**
      * Retrieve voter info data from the web service
@@ -64,22 +71,28 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
 
 
     /**
-     * Based on the FAB status, save/remove the election to/from the local database
-     */
-    fun onFabClick() {
-        if (_fabStatus.value == null)
-            insertElection()
-        else
-            deleteElection()
-    }
-
-    /**
      * Check the FAB status by querying the local database, to verify if the election
      * has been already saved
      */
     private fun checkFabStatus() {
         viewModelScope.launch {
-            _fabStatus.value = dataSource.select(election.id)
+            withContext(Dispatchers.IO) {
+                _fabStatus.value = dataSource.select(election.id)
+            }
+        }
+    }
+
+
+    /**
+     * Based on the FAB status, save/remove the election to/from the local database
+     */
+    fun onFabClick() {
+        if (_fabStatus.value == null) {
+            insertElection()
+            _fabStatus.value = election
+        } else {
+            deleteElection()
+            _fabStatus.value = null
         }
     }
 
@@ -88,7 +101,9 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
      */
     private fun insertElection() {
         viewModelScope.launch {
-            dataSource.insert(election)
+            withContext(Dispatchers.IO) {
+                dataSource.insert(election)
+            }
         }
     }
 
@@ -97,7 +112,9 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
      */
     private fun deleteElection() {
         viewModelScope.launch {
-            dataSource.delete(election)
+            withContext(Dispatchers.IO) {
+                dataSource.delete(election)
+            }
         }
     }
 
@@ -123,6 +140,7 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
     fun clickBallotInfoFlagOff() {
         _clickBallotInfoFlag.value = false
     }
+
 
 
     @Suppress("UNCHECKED_CAST")

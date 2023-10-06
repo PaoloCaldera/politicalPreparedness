@@ -27,7 +27,7 @@ class VoterInfoFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentVoterInfoBinding.inflate(inflater)
+        binding = FragmentVoterInfoBinding.inflate(inflater, container, false)
         binding.apply {
             lifecycleOwner = this@VoterInfoFragment
             voterInfoViewModel = viewModel

@@ -14,9 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/default_margin"
-        tools:context="com.example.android.politicalpreparedness.MainActivity"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="-8dp">
+        tools:context="com.example.android.politicalpreparedness.MainActivity">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/upcoming_recyclerView"
@@ -77,6 +75,7 @@
             app:onItemClick="@{electionsViewModel.onItemClick}" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/clear_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
