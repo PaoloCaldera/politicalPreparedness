@@ -6,7 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/big_margin_1"
         tools:context="com.example.android.politicalpreparedness.MainActivity">
 
 
@@ -25,7 +25,7 @@
             android:id="@+id/representative_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/big_margin_1"
+            android:layout_margin="@dimen/default_margin"
             android:text="@string/representative_button_text"
             app:layout_constraintBottom_toTopOf="@+id/upcoming_button"
             app:layout_constraintEnd_toEndOf="parent"
@@ -35,7 +35,7 @@
             android:id="@+id/upcoming_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/big_margin_1"
+            android:layout_margin="@dimen/default_margin"
             android:text="@string/upcoming_button_text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
