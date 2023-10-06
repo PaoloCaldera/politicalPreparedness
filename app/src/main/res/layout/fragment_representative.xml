@@ -43,7 +43,6 @@
                 android:inputType="textPostalAddress"
                 android:hint="@string/address_line_1"
                 android:text="@={representativeViewModel.line1}"
-                app:autoHideKeyboard="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/search_title" />
@@ -56,7 +55,6 @@
                 android:hint="@string/address_line_2"
                 android:inputType="textPostalAddress"
                 android:text="@={representativeViewModel.line2}"
-                app:autoHideKeyboard="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/address_line_1" />
@@ -69,7 +67,6 @@
                 android:hint="@string/city"
                 android:inputType="textPostalAddress"
                 android:text="@={representativeViewModel.city}"
-                app:autoHideKeyboard="true"
                 app:layout_constraintEnd_toStartOf="@id/state"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/address_line_2" />
@@ -95,7 +92,6 @@
                 android:inputType="number"
                 android:maxLength="5"
                 android:text="@={representativeViewModel.zip}"
-                app:autoHideKeyboard="true"
                 app:layout_constraintEnd_toEndOf="@id/city"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/city" />

@@ -1,8 +1,10 @@
 package com.example.android.politicalpreparedness.representative
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
@@ -29,7 +31,13 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
     ): View {
 
         binding = FragmentRepresentativeBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this@RepresentativeFragment
+        binding.apply {
+            lifecycleOwner = this@RepresentativeFragment
+            addressLine1.setOnFocusChangeListener { v, hasFocus -> hideSoftKeyboard(v, hasFocus) }
+            addressLine2.setOnFocusChangeListener { v, hasFocus -> hideSoftKeyboard(v, hasFocus) }
+            city.setOnFocusChangeListener { v, hasFocus -> hideSoftKeyboard(v, hasFocus) }
+            zip.setOnFocusChangeListener { v, hasFocus -> hideSoftKeyboard(v, hasFocus) }
+        }
 
         // Handle the layout based on the network status
         viewModel.networkStatus.observe(viewLifecycleOwner) { apiStatus ->
@@ -115,6 +123,7 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
             spinner.adapter = arrayAdapter
         }
 
+
         return binding.root
     }
 
@@ -172,6 +181,21 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
             // Turn off and on again the flag to perform automatically another check
             viewModel.activeDeviceLocationFlagOff()
             viewModel.activeDeviceLocationFlagOn()
+        }
+    }
+
+
+    /**
+     * Hide soft keyboard when EditText view loses focus
+     */
+    private fun hideSoftKeyboard(view: View, hasFocus: Boolean) {
+        if (!hasFocus) {
+            val inputMethodManager =
+                view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(
+                view.windowToken,
+                InputMethodManager.HIDE_IMPLICIT_ONLY
+            )
         }
     }
 }

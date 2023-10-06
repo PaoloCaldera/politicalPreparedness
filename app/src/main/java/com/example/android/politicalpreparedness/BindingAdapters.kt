@@ -1,9 +1,7 @@
 package com.example.android.politicalpreparedness
 
-import android.content.Context
-import android.view.inputmethod.InputMethodManager
+
 import android.widget.ArrayAdapter
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
 import androidx.core.net.toUri
@@ -107,23 +105,4 @@ fun Spinner.setNewValue(value: String?) {
 @Suppress("UNCHECKED_CAST")
 inline fun <reified T> toTypedAdapter(adapter: ArrayAdapter<*>): ArrayAdapter<T> {
     return adapter as ArrayAdapter<T>
-}
-
-/**
- * Auto-hide the soft keyboard when the focus is not anymore on an EditText view
- */
-@BindingAdapter("autoHideKeyboard")
-fun bindAutoHideKeyboardOption(editText: EditText, autoHideKeyboard: Boolean) {
-    if (!autoHideKeyboard) return
-
-    editText.setOnFocusChangeListener { v, hasFocus ->
-        if (!hasFocus) {
-            val inputMethodManager =
-                v.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.hideSoftInputFromWindow(
-                v.windowToken,
-                InputMethodManager.HIDE_IMPLICIT_ONLY
-            )
-        }
-    }
 }
