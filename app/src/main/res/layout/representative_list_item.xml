@@ -63,7 +63,7 @@
             android:contentDescription="@string/website_link"
             app:layout_constraintBottom_toBottomOf="@id/representative_twitter"
             app:layout_constraintEnd_toStartOf="@id/representative_facebook"
-            tools:srcCompat="@drawable/ic_www" />
+            app:srcCompat="@drawable/ic_www" />
 
         <ImageView
             android:id="@+id/representative_facebook"
@@ -73,7 +73,7 @@
             android:contentDescription="@string/facebook_profile_link"
             app:layout_constraintBottom_toBottomOf="@id/representative_twitter"
             app:layout_constraintEnd_toStartOf="@id/representative_twitter"
-            tools:srcCompat="@drawable/ic_facebook" />
+            app:srcCompat="@drawable/ic_facebook" />
 
         <ImageView
             android:id="@+id/representative_twitter"
@@ -83,7 +83,7 @@
             android:contentDescription="@string/twitter_profile_link"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:srcCompat="@drawable/ic_twitter" />
+            app:srcCompat="@drawable/ic_twitter" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

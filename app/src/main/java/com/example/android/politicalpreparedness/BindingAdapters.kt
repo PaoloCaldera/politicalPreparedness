@@ -78,13 +78,13 @@ fun bindRepresentativeListData(
 @BindingAdapter("photoUrl")
 fun bindPhotoUrl(imageView: ImageView, url: String?) {
     url?.let {
-        val uri = url.toUri().buildUpon().scheme("https").build()
         Glide.with(imageView)
-            .load(uri)
-            .error(R.drawable.ic_profile)
+            .load(url.toUri().buildUpon().scheme("https").build())
             .circleCrop()
+            .placeholder(R.drawable.ic_profile)
+            .error(R.drawable.ic_broken_image)
             .into(imageView)
-    }
+    } ?: imageView.setImageResource(R.drawable.ic_profile)
 }
 
 /**
