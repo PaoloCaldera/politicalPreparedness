@@ -13,15 +13,14 @@
     <androidx.constraintlayout.motion.widget.MotionLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutDescription="@xml/fragment_representative_scene">
+        app:layoutDescription="@xml/fragment_representative_scene"
+        app:layout_scrollFlags="scroll|enterAlways|snap|exitUntilCollapsed">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/find_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            app:layout_constraintBottom_toTopOf="@id/representatives_list"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_margin="@dimen/default_margin">
 
             <TextView
                 android:id="@+id/search_title"
@@ -128,6 +127,7 @@
             android:layout_margin="@dimen/default_margin"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/find_form">
 
             <ImageView
