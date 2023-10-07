@@ -33,6 +33,7 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
         binding = FragmentRepresentativeBinding.inflate(inflater, container, false)
         binding.apply {
             lifecycleOwner = this@RepresentativeFragment
+            representativeViewModel = viewModel
             addressLine1.setOnFocusChangeListener { v, hasFocus -> hideSoftKeyboard(v, hasFocus) }
             addressLine2.setOnFocusChangeListener { v, hasFocus -> hideSoftKeyboard(v, hasFocus) }
             city.setOnFocusChangeListener { v, hasFocus -> hideSoftKeyboard(v, hasFocus) }

@@ -44,7 +44,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="spread"
-            app:srcCompat="@drawable/loading_img" />
+            app:srcCompat="@drawable/loading_animation" />
 
         <ImageView
             android:id="@+id/connection_error_image"
