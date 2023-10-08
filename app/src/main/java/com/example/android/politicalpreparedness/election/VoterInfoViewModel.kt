@@ -23,12 +23,10 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
     val voterInfo: LiveData<VoterInfoResponse>
         get() = _voterInfo
 
-
     // Network status related to the web service call
     private val _networkStatus = MutableLiveData<CivicsApiStatus?>()
     val networkStatus: LiveData<CivicsApiStatus?>
         get() = _networkStatus
-
 
     // Status of the save/remove election FAB
     private val _fabStatus = MutableLiveData<Election?>(null)
@@ -76,9 +74,12 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
      */
     private fun checkFabStatus() {
         viewModelScope.launch {
+            var selectedElection: Election?
             withContext(Dispatchers.IO) {
-                _fabStatus.value = dataSource.select(election.id)
+                // Use a custom variable: LiveData value cannot be set inside the I/O dispatcher
+                selectedElection = dataSource.select(election.id)
             }
+            _fabStatus.value = selectedElection
         }
     }
 
@@ -125,7 +126,6 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
     fun clickVotingInfoFlagOn() {
         _clickVotingInfoFlag.value = true
     }
-
     fun clickVotingInfoFlagOff() {
         _clickVotingInfoFlag.value = false
     }
@@ -136,7 +136,6 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
     fun clickBallotInfoFlagOn() {
         _clickBallotInfoFlag.value = true
     }
-
     fun clickBallotInfoFlagOff() {
         _clickBallotInfoFlag.value = false
     }

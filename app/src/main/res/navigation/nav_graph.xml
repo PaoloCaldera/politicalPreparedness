@@ -28,10 +28,13 @@
     <fragment
         android:id="@+id/voterInfoFragment"
         android:name="com.example.android.politicalpreparedness.election.VoterInfoFragment"
-        android:label="{arg_election.name}">
+        android:label="{arg_election_name}">
         <argument
             android:name="arg_election"
             app:argType="com.example.android.politicalpreparedness.network.models.Election" />
+        <argument
+            android:name="arg_election_name"
+            app:argType="string" />
     </fragment>
 
     <fragment

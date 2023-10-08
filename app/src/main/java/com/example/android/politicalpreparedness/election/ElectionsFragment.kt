@@ -127,7 +127,7 @@ class ElectionsFragment : Fragment() {
      */
     private fun navigateToVoterInfo(election: Election) {
         val action = ElectionsFragmentDirections
-            .actionElectionsFragmentToVoterInfoFragment(election)
+            .actionElectionsFragmentToVoterInfoFragment(election, election.name)
         findNavController().navigate(action)
     }
 
