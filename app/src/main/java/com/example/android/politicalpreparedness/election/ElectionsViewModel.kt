@@ -42,22 +42,22 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
 
 
     // Flag that triggers the location permission check
-    private val _locationPermissionFlag = MutableLiveData<Boolean>()
+    private val _locationPermissionFlag = MutableLiveData(false)
     val locationPermissionFlag: LiveData<Boolean>
         get() = _locationPermissionFlag
 
     // Flag that triggers the device location activation check
-    private val _activeDeviceLocationFlag = MutableLiveData<Boolean>()
+    private val _activeDeviceLocationFlag = MutableLiveData(false)
     val activeDeviceLocationFlag: LiveData<Boolean>
         get() = _activeDeviceLocationFlag
 
     // Flag that triggers the retrieval of the current location
-    private val _currentLocationFlag = MutableLiveData<Boolean>()
+    private val _currentLocationFlag = MutableLiveData(false)
     val currentLocationFlag: LiveData<Boolean>
         get() = _currentLocationFlag
 
     // Flag that triggers the current location decoding
-    private val _geocodeLocationFlag = MutableLiveData<Location?>()
+    private val _geocodeLocationFlag = MutableLiveData<Location?>(null)
     val geocodeLocationFlag: LiveData<Location?>
         get() = _geocodeLocationFlag
 
@@ -92,9 +92,12 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
      */
     private fun selectSavedElections() {
         viewModelScope.launch {
+            var dbElections: MutableList<Election>?
             withContext(Dispatchers.IO) {
-                _savedElections.value = dataSource.selectAll().value
+                // Use a custom variable: LiveData value cannot be set inside the I/O dispatcher
+                dbElections = dataSource.selectAll().value as MutableList<Election>?
             }
+            _savedElections.value = dbElections
         }
     }
 
