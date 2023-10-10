@@ -17,6 +17,7 @@ import com.example.android.politicalpreparedness.database.ElectionDatabase
 import com.example.android.politicalpreparedness.databinding.FragmentElectionBinding
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
 import com.example.android.politicalpreparedness.network.models.Election
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class ElectionsFragment : Fragment() {
 
@@ -143,6 +144,14 @@ class ElectionsFragment : Fragment() {
         return when(item.itemId) {
             R.id.clear_following -> {
                 viewModel.clearElections()
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(resources.getString(R.string.clearing_title))
+                    .setMessage(resources.getString(R.string.clearing_message))
+                    .setPositiveButton(resources.getString(android.R.string.ok)) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .create()
+                    .show()
                 true
             }
             else -> super.onOptionsItemSelected(item)

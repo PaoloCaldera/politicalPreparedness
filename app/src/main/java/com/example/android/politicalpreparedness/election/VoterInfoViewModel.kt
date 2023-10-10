@@ -34,6 +34,11 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
         get() = _fabStatus
 
 
+    // Flag associated to the status change of the election FAB
+    private val _fabStatusFollowingFlag = MutableLiveData<Boolean>()
+    val fabStatusFollowingFlag: LiveData<Boolean>
+        get() = _fabStatusFollowingFlag
+
     // Flag associated to the user click to the voting info link
     private val _clickVotingInfoFlag = MutableLiveData(false)
     val clickVotingInfoFlag: LiveData<Boolean>
@@ -91,9 +96,11 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
         if (_fabStatus.value == null) {
             insertElection()
             _fabStatus.value = election
+            _fabStatusFollowingFlag.value = true
         } else {
             deleteElection()
             _fabStatus.value = null
+            _fabStatusFollowingFlag.value = false
         }
     }
 

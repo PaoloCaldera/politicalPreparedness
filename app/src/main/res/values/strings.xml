@@ -25,10 +25,16 @@
     <string name="saved_list_title">FOLLOWING</string>
     <string name="clear_list">Clear the entire list of saved elections</string>
     <string name="clear_following_list_option">Clear following list</string>
+    <string name="clearing_title">Clearing all</string>
+    <string name="clearing_message">You are not following any election anymore</string>
 
     <!-- voter info fragment -->
     <string name="follow_election">Follow the election</string>
     <string name="unfollow_election">Unfollow the election</string>
+    <string name="following_title">Following</string>
+    <string name="unfollowing_title">Unfollowing</string>
+    <string name="following_message">You are following the election %s</string>
+    <string name="unfollowing_message">You are not following the election %s anymore</string>
 
     <!-- representative list fragment -->
     <string name="representatives_fragment_label">Representatives</string>

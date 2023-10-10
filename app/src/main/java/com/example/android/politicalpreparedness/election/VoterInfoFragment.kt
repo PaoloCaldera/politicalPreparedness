@@ -11,9 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.database.ElectionDatabase
 import com.example.android.politicalpreparedness.databinding.FragmentVoterInfoBinding
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class VoterInfoFragment : Fragment() {
 
@@ -75,6 +77,7 @@ class VoterInfoFragment : Fragment() {
             }
         }
 
+        // Observe the voter info variable to handle correctly the UI
         viewModel.voterInfo.observe(viewLifecycleOwner) { voterInfo ->
             voterInfo?.let {
                 if (it.state == null) {
@@ -91,6 +94,29 @@ class VoterInfoFragment : Fragment() {
                     binding.stateLocations.visibility = View.GONE
                 else if (it.state[0].electionAdministrationBody.ballotInfoUrl == null)
                     binding.stateBallot.visibility = View.GONE
+            }
+        }
+
+        // Observe the fab status live data to alert the user when following/unfollowing the election
+        viewModel.fabStatusFollowingFlag.observe(viewLifecycleOwner) { election ->
+            if (election) {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(resources.getString(R.string.following_title))
+                    .setMessage(resources.getString(R.string.following_message, args.argElectionName))
+                    .setPositiveButton(resources.getString(android.R.string.ok)) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .create()
+                    .show()
+            } else {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(resources.getString(R.string.unfollowing_title))
+                    .setMessage(resources.getString(R.string.unfollowing_message, args.argElectionName))
+                    .setPositiveButton(resources.getString(android.R.string.ok)) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .create()
+                    .show()
             }
         }
 
