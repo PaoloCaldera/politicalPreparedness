@@ -11,7 +11,7 @@ import com.example.android.politicalpreparedness.network.models.Election
 interface ElectionDao {
 
     @Query("SELECT * FROM election_table ORDER BY electionDay ASC")
-    fun selectAll(): LiveData<List<Election>>
+    fun selectAll(): LiveData<List<Election>?>
 
     @Query("SELECT * FROM election_table WHERE id = :electionId")
     fun select(electionId: Int): Election?

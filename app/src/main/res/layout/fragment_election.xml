@@ -76,16 +76,5 @@
             app:listData="@{electionsViewModel.savedElections}"
             app:onItemClick="@{electionsViewModel.onItemClick}" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/clear_fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:contentDescription="@string/clear_list"
-            android:onClick="@{() -> electionsViewModel.clearElections()}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_remove" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

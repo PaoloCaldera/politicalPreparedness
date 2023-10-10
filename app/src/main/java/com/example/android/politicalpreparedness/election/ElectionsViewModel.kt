@@ -23,10 +23,8 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     val upcomingElections: LiveData<List<Election>?>
         get() = _upcomingElections
 
-    // UI variable: saved election list
-    private val _savedElections = MutableLiveData<List<Election>?>(null)
-    val savedElections: LiveData<List<Election>?>
-        get() = _savedElections
+    // UI variable: saved election list (from the local database)
+    val savedElections: LiveData<List<Election>?> = dataSource.selectAll()
 
 
     // Network status related to the web service call
@@ -68,7 +66,6 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
 
     init {
         getUpcomingElections()
-        selectSavedElections()
     }
 
 
@@ -84,20 +81,6 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
             } catch (e: Exception) {
                 _networkStatus.value = CivicsApiStatus.ERROR
             }
-        }
-    }
-
-    /**
-     * Retrieve the saved elections from the local database
-     */
-    private fun selectSavedElections() {
-        viewModelScope.launch {
-            var dbElections: MutableList<Election>?
-            withContext(Dispatchers.IO) {
-                // Use a custom variable: LiveData value cannot be set inside the I/O dispatcher
-                dbElections = dataSource.selectAll().value as MutableList<Election>?
-            }
-            _savedElections.value = dbElections
         }
     }
 

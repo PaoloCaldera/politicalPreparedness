@@ -3,12 +3,16 @@ package com.example.android.politicalpreparedness.election
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.android.politicalpreparedness.LocationAppServices
+import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.database.ElectionDatabase
 import com.example.android.politicalpreparedness.databinding.FragmentElectionBinding
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
@@ -119,8 +123,32 @@ class ElectionsFragment : Fragment() {
             }
         }
 
+        setHasOptionsMenu(true)
+
         return binding.root
     }
+
+    /**
+     * Inflate the menu layout
+     */
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_election, menu)
+    }
+
+    /**
+     * If the menu option is selected, clear all the saved elections from the database
+     */
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.clear_following -> {
+                viewModel.clearElections()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
 
     /**
      * Navigate to voter info fragment with required safe args

@@ -24,6 +24,7 @@
     <string name="upcoming_list_title">UPCOMING</string>
     <string name="saved_list_title">FOLLOWING</string>
     <string name="clear_list">Clear the entire list of saved elections</string>
+    <string name="clear_following_list_option">Clear following list</string>
 
     <!-- voter info fragment -->
     <string name="follow_election">Follow the election</string>
@@ -42,6 +43,7 @@
     <string name="twitter_profile_link">Twitter profile link</string>
     <string name="facebook_profile_link">Facebook profile link</string>
     <string name="website_link">Website link</string>
+
 
     <!-- TODO: Add necessary string values -->
 
