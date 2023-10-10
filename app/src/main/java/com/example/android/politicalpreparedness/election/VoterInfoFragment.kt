@@ -6,8 +6,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.android.politicalpreparedness.database.ElectionDatabase
 import com.example.android.politicalpreparedness.databinding.FragmentVoterInfoBinding
@@ -19,16 +21,13 @@ class VoterInfoFragment : Fragment() {
     private lateinit var binding: FragmentVoterInfoBinding
     private lateinit var viewModel: VoterInfoViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
         // Arguments late initialization
         val argsDefinition: VoterInfoFragmentArgs by navArgs()
         args = argsDefinition
-
-        binding = FragmentVoterInfoBinding.inflate(inflater, container, false)
 
         // ViewModel late initialization
         val viewModelDefinition: VoterInfoViewModel by viewModels {
@@ -37,6 +36,15 @@ class VoterInfoFragment : Fragment() {
             )
         }
         viewModel = viewModelDefinition
+    }
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentVoterInfoBinding.inflate(inflater, container, false)
 
         binding.apply {
             lifecycleOwner = this@VoterInfoFragment
@@ -51,22 +59,40 @@ class VoterInfoFragment : Fragment() {
                     connectionErrorImage.visibility = View.GONE
                     loadingImage.visibility = View.VISIBLE
                 }
+
                 CivicsApiStatus.SUCCESS -> binding.apply {
                     dataCard.visibility = View.VISIBLE
                     loadingImage.visibility = View.GONE
                 }
+
                 CivicsApiStatus.ERROR -> binding.apply {
                     dataCard.visibility = View.GONE
                     loadingImage.visibility = View.GONE
                     connectionErrorImage.visibility = View.VISIBLE
                 }
+
                 else -> throw Exception("Invalid HTTP connection status")
             }
         }
 
-        /**
-        Hint: You will need to ensure proper data is provided from previous fragment.
-         */
+        viewModel.voterInfo.observe(viewLifecycleOwner) { voterInfo ->
+            voterInfo?.let {
+                if (it.state == null) {
+                    // If the voter info state is null, no detailed election data is available
+                    Toast.makeText(
+                        requireContext(),
+                        "No election detail data provided",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    findNavController().popBackStack()
+                } else if (it.state[0].electionAdministrationBody.correspondenceAddress == null)
+                    binding.address.visibility = View.GONE
+                else if (it.state[0].electionAdministrationBody.votingLocationFinderUrl == null)
+                    binding.stateLocations.visibility = View.GONE
+                else if (it.state[0].electionAdministrationBody.ballotInfoUrl == null)
+                    binding.stateBallot.visibility = View.GONE
+            }
+        }
 
         // Observe voting info live data to open the link
         viewModel.clickVotingInfoFlag.observe(viewLifecycleOwner) { flag ->
@@ -79,7 +105,7 @@ class VoterInfoFragment : Fragment() {
         }
 
         // Observe ballot info live data to open the link
-        viewModel.clickBallotInfoFlag.observe(viewLifecycleOwner) {flag ->
+        viewModel.clickBallotInfoFlag.observe(viewLifecycleOwner) { flag ->
             if (flag) {
                 val ballotUriString =
                     viewModel.voterInfo.value?.state?.get(0)?.electionAdministrationBody?.ballotInfoUrl

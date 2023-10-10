@@ -21,4 +21,9 @@ data class Election(
     fun formatDateForList(): String {
         return SimpleDateFormat("yyyy-MM-dd").format(electionDay)
     }
+
+    @SuppressLint("SimpleDateFormat")
+    fun formatDateForDetail(): String {
+        return SimpleDateFormat("E, dd MMMM yyyy").format(electionDay)
+    }
 }

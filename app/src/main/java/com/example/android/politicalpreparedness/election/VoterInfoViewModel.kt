@@ -19,8 +19,8 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
     ViewModel() {
 
     // Information about the voter info
-    private val _voterInfo = MutableLiveData<VoterInfoResponse>(null)
-    val voterInfo: LiveData<VoterInfoResponse>
+    private val _voterInfo = MutableLiveData<VoterInfoResponse?>(null)
+    val voterInfo: LiveData<VoterInfoResponse?>
         get() = _voterInfo
 
     // Network status related to the web service call
@@ -126,6 +126,7 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
     fun clickVotingInfoFlagOn() {
         _clickVotingInfoFlag.value = true
     }
+
     fun clickVotingInfoFlagOff() {
         _clickVotingInfoFlag.value = false
     }
@@ -136,10 +137,10 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
     fun clickBallotInfoFlagOn() {
         _clickBallotInfoFlag.value = true
     }
+
     fun clickBallotInfoFlagOff() {
         _clickBallotInfoFlag.value = false
     }
-
 
 
     @Suppress("UNCHECKED_CAST")
