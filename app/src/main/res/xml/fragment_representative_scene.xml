@@ -22,9 +22,7 @@
     <ConstraintSet android:id="@+id/constraint_end">
         <Constraint
             android:id="@id/find_form"
-            app:layout_constraintBottom_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintBottom_toTopOf="parent" />
     </ConstraintSet>
 
 </MotionScene>
