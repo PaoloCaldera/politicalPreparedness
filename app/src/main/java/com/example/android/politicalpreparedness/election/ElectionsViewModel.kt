@@ -76,7 +76,8 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
         _networkStatus.value = CivicsApiStatus.LOADING
         viewModelScope.launch {
             try {
-                _upcomingElections.value = CivicsApi.retrofitService.getElections().elections
+                _upcomingElections.value =
+                    CivicsApi.retrofitService.getElections().elections.sortedBy { it.electionDay }
                 _networkStatus.value = CivicsApiStatus.SUCCESS
             } catch (e: Exception) {
                 _networkStatus.value = CivicsApiStatus.ERROR
@@ -102,6 +103,7 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     private fun navigateToVoterInfoFlagOn(election: Election) {
         _navigateToVoterInfoFlag.value = election
     }
+
     fun navigateToVoterInfoFlagOff() {
         _navigateToVoterInfoFlag.value = null
     }
@@ -113,6 +115,7 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     fun locationPermissionFlagOn() {
         _locationPermissionFlag.value = true
     }
+
     fun locationPermissionFlagOff() {
         _locationPermissionFlag.value = false
     }
@@ -123,6 +126,7 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     fun activeDeviceLocationFlagOn() {
         _activeDeviceLocationFlag.value = true
     }
+
     fun activeDeviceLocationFlagOff() {
         _activeDeviceLocationFlag.value = false
     }
@@ -133,6 +137,7 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     fun currentLocationFlagOn() {
         _currentLocationFlag.value = true
     }
+
     fun currentLocationFlagOff() {
         _currentLocationFlag.value = false
     }
@@ -143,6 +148,7 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     fun geocodeLocationFlagOn(location: Location) {
         _geocodeLocationFlag.value = location
     }
+
     fun geocodeLocationFlagOff(address: Address) {
         _geocodeLocationFlag.value = null
 
