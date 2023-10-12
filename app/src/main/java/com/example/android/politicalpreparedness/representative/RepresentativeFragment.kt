@@ -44,19 +44,16 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
         viewModel.networkStatus.observe(viewLifecycleOwner) { apiStatus ->
             when (apiStatus) {
                 CivicsApiStatus.LOADING -> binding.apply {
-                    listPlaceholder.visibility = View.GONE
                     representativesRecyclerView.visibility = View.GONE
                     connectionErrorImage.visibility = View.GONE
                     loadingImage.visibility = View.VISIBLE
                 }
                 CivicsApiStatus.SUCCESS -> binding.apply {
-                    listPlaceholder.visibility = View.GONE
                     loadingImage.visibility = View.GONE
                     connectionErrorImage.visibility = View.GONE
                     representativesRecyclerView.visibility = View.VISIBLE
                 }
                 CivicsApiStatus.ERROR -> binding.apply {
-                    listPlaceholder.visibility = View.GONE
                     representativesRecyclerView.visibility = View.GONE
                     loadingImage.visibility = View.GONE
                     connectionErrorImage.visibility = View.VISIBLE
@@ -124,22 +121,7 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
             spinner.adapter = arrayAdapter
         }
 
-
         return binding.root
-    }
-
-
-    override fun onStart() {
-        super.onStart()
-
-        // Reset all the flags when accessing the fragment or upon configuration changes
-        viewModel.resetFlags()
-
-        // Hide the recycler view if the live data variable contains an empty list
-        if (viewModel.representativeList.value == null) binding.apply {
-            representativesRecyclerView.visibility = View.GONE
-            listPlaceholder.visibility = View.VISIBLE
-        }
     }
 
 

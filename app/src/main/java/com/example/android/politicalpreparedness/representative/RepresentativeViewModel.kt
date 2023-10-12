@@ -86,6 +86,7 @@ class RepresentativeViewModel : ViewModel() {
     private fun locationPermissionFlagOn() {
         _locationPermissionFlag.value = true
     }
+
     fun locationPermissionFlagOff() {
         _locationPermissionFlag.value = false
     }
@@ -96,6 +97,7 @@ class RepresentativeViewModel : ViewModel() {
     fun activeDeviceLocationFlagOn() {
         _activeDeviceLocationFlag.value = true
     }
+
     fun activeDeviceLocationFlagOff() {
         _activeDeviceLocationFlag.value = false
     }
@@ -106,6 +108,7 @@ class RepresentativeViewModel : ViewModel() {
     fun currentLocationFlagOn() {
         _currentLocationFlag.value = true
     }
+
     fun currentLocationFlagOff() {
         _currentLocationFlag.value = false
     }
@@ -116,6 +119,7 @@ class RepresentativeViewModel : ViewModel() {
     fun geocodeLocationFlagOn(location: Location) {
         _geocodeLocationFlag.value = location
     }
+
     fun geocodeLocationFlagOff(address: Address) {
         _geocodeLocationFlag.value = null
         autofillForm(address)
@@ -137,30 +141,17 @@ class RepresentativeViewModel : ViewModel() {
     /**
      * Call the /representatives resource to fetch the representatives
      */
-    private fun getRepresentatives(address: Address) {
+    private fun getRepresentatives(address: Address) = viewModelScope.launch {
         _networkStatus.value = CivicsApiStatus.LOADING
-        viewModelScope.launch {
-            try {
-                val (offices, officials) = CivicsApi.retrofitService.getRepresentatives(address.toFormattedString())
-                // Use the flatMap function to combine all the lists to a single representative list
-                _representativesList.value =
-                    offices.flatMap { office -> office.getRepresentatives(officials) }
-                _networkStatus.value = CivicsApiStatus.SUCCESS
-            } catch (e: Exception) {
-                _networkStatus.value = CivicsApiStatus.ERROR
-            }
+        try {
+            val (offices, officials) = CivicsApi.retrofitService.getRepresentatives(address.toFormattedString())
+            // Use the flatMap function to combine all the lists to a single representative list
+            _representativesList.value =
+                offices.flatMap { office -> office.getRepresentatives(officials) }
+            _networkStatus.value = CivicsApiStatus.SUCCESS
+        } catch (e: Exception) {
+            _networkStatus.value = CivicsApiStatus.ERROR
         }
-    }
-
-
-    /**
-     * Set the flags to neutral values, to make the whole location checking restart
-     */
-    fun resetFlags() {
-        _locationPermissionFlag.value = false
-        _activeDeviceLocationFlag.value = false
-        _currentLocationFlag.value = false
-        _geocodeLocationFlag.value = null
     }
 
 

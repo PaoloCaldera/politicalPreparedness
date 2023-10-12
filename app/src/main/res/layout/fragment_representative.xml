@@ -18,8 +18,12 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/find_form"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/representatives_recyclerView"
             android:layout_margin="@dimen/default_margin">
 
             <TextView
@@ -120,64 +124,41 @@
                 app:layout_constraintTop_toBottomOf="@id/button_search" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/representatives_list"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/representatives_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="@dimen/default_margin"
+            android:scrollbars="vertical"
+            app:header="@{@string/representatives_list_title}"
+            app:listData="@{representativeViewModel.representativeList}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/find_form" />
+
+        <ImageView
+            android:id="@+id/loading_image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:contentDescription="@string/loading_data"
+            app:layout_constraintTop_toBottomOf="@id/find_form"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/find_form">
+            app:srcCompat="@drawable/loading_animation" />
 
-            <ImageView
-                android:id="@+id/loading_image"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:contentDescription="@string/loading_data"
-                android:visibility="gone"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:srcCompat="@drawable/loading_animation" />
-
-            <ImageView
-                android:id="@+id/connection_error_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/connection_error"
-                android:visibility="gone"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:srcCompat="@drawable/ic_connection_error" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/representatives_recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:scrollbars="vertical"
-                app:header="@{@string/representatives_list_title}"
-                app:listData="@{representativeViewModel.representativeList}"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-            
-            <TextView
-                android:id="@+id/list_placeholder"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:gravity="center"
-                android:textAlignment="center"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                motion:visibilityMode="ignore" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <ImageView
+            android:id="@+id/connection_error_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/connection_error"
+            app:layout_constraintTop_toBottomOf="@id/find_form"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_connection_error" />
 
     </androidx.constraintlayout.motion.widget.MotionLayout>
 </layout>
