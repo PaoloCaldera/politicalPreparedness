@@ -59,16 +59,14 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
     /**
      * Retrieve voter info data from the web service
      */
-    private fun getVoterInfo(election: Election) {
+    private fun getVoterInfo(election: Election) = viewModelScope.launch {
         _networkStatus.value = CivicsApiStatus.LOADING
-        viewModelScope.launch {
-            try {
-                val address = "${election.division.state}, ${election.division.country}"
-                _voterInfo.value = CivicsApi.retrofitService.getVoterInfo(address, election.id)
-                _networkStatus.value = CivicsApiStatus.SUCCESS
-            } catch (e: Exception) {
-                _networkStatus.value = CivicsApiStatus.ERROR
-            }
+        try {
+            val address = "${election.division.state}, ${election.division.country}"
+            _voterInfo.value = CivicsApi.retrofitService.getVoterInfo(address, election.id)
+            _networkStatus.value = CivicsApiStatus.SUCCESS
+        } catch (e: Exception) {
+            _networkStatus.value = CivicsApiStatus.ERROR
         }
     }
 
