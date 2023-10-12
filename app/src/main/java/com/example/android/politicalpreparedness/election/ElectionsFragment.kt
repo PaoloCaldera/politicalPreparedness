@@ -42,22 +42,30 @@ class ElectionsFragment : Fragment() {
             electionsViewModel = viewModel
         }
 
+        viewModel.savedElections.observe(viewLifecycleOwner) { electionList ->
+            if (electionList.isNullOrEmpty()) {
+                binding.savedRecyclerView.visibility = View.INVISIBLE
+            } else {
+                binding.savedRecyclerView.visibility = View.VISIBLE
+            }
+        }
+
         // Handle the layout based on the network status
         viewModel.networkStatus.observe(viewLifecycleOwner) { apiStatus ->
             when (apiStatus) {
                 CivicsApiStatus.LOADING -> binding.apply {
-                    upcomingRecyclerView.visibility = View.GONE
-                    connectionErrorImage.visibility = View.GONE
+                    upcomingRecyclerView.visibility = View.INVISIBLE
+                    connectionErrorImage.visibility = View.INVISIBLE
                     loadingImage.visibility = View.VISIBLE
                 }
                 CivicsApiStatus.SUCCESS -> binding.apply {
-                    loadingImage.visibility = View.GONE
-                    connectionErrorImage.visibility = View.GONE
+                    loadingImage.visibility = View.INVISIBLE
+                    connectionErrorImage.visibility = View.INVISIBLE
                     upcomingRecyclerView.visibility = View.VISIBLE
                 }
                 CivicsApiStatus.ERROR -> binding.apply {
-                    upcomingRecyclerView.visibility = View.GONE
-                    loadingImage.visibility = View.GONE
+                    upcomingRecyclerView.visibility = View.INVISIBLE
+                    loadingImage.visibility = View.INVISIBLE
                     connectionErrorImage.visibility = View.VISIBLE
                 }
                 else -> throw Exception("Invalid HTTP connection status")
