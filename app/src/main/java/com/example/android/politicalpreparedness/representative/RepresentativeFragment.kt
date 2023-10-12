@@ -44,18 +44,18 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
         viewModel.networkStatus.observe(viewLifecycleOwner) { apiStatus ->
             when (apiStatus) {
                 CivicsApiStatus.LOADING -> binding.apply {
-                    representativesRecyclerView.visibility = View.GONE
-                    connectionErrorImage.visibility = View.GONE
+                    representativesRecyclerView.visibility = View.INVISIBLE
+                    connectionErrorImage.visibility = View.INVISIBLE
                     loadingImage.visibility = View.VISIBLE
                 }
                 CivicsApiStatus.SUCCESS -> binding.apply {
-                    loadingImage.visibility = View.GONE
-                    connectionErrorImage.visibility = View.GONE
+                    loadingImage.visibility = View.INVISIBLE
+                    connectionErrorImage.visibility = View.INVISIBLE
                     representativesRecyclerView.visibility = View.VISIBLE
                 }
                 CivicsApiStatus.ERROR -> binding.apply {
-                    representativesRecyclerView.visibility = View.GONE
-                    loadingImage.visibility = View.GONE
+                    representativesRecyclerView.visibility = View.INVISIBLE
+                    loadingImage.visibility = View.INVISIBLE
                     connectionErrorImage.visibility = View.VISIBLE
                 }
                 else -> throw Exception("Invalid HTTP connection status")

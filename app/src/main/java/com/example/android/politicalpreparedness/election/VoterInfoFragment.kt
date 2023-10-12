@@ -64,6 +64,7 @@ class VoterInfoFragment : Fragment() {
                 CivicsApiStatus.SUCCESS -> binding.apply {
                     dataCard.visibility = View.VISIBLE
                     loadingImage.visibility = View.GONE
+                    connectionErrorImage.visibility = View.GONE
                 }
                 CivicsApiStatus.ERROR -> binding.apply {
                     dataCard.visibility = View.GONE

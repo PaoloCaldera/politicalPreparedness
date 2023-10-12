@@ -72,16 +72,14 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     /**
      * Retrieve the upcoming elections from the internet
      */
-    private fun getUpcomingElections() {
+    private fun getUpcomingElections() = viewModelScope.launch {
         _networkStatus.value = CivicsApiStatus.LOADING
-        viewModelScope.launch {
-            try {
-                _upcomingElections.value =
-                    CivicsApi.retrofitService.getElections().elections.sortedBy { it.electionDay }
-                _networkStatus.value = CivicsApiStatus.SUCCESS
-            } catch (e: Exception) {
-                _networkStatus.value = CivicsApiStatus.ERROR
-            }
+        try {
+            _upcomingElections.value =
+                CivicsApi.retrofitService.getElections().elections.sortedBy { it.electionDay }
+            _networkStatus.value = CivicsApiStatus.SUCCESS
+        } catch (e: Exception) {
+            _networkStatus.value = CivicsApiStatus.ERROR
         }
     }
 
