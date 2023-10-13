@@ -21,9 +21,9 @@
             android:layout_gravity="center_horizontal"
             android:padding="@dimen/default_padding"
             android:text="@{listHeaderTitle}"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/list_title_size"
             android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
             tools:text="LIST TITLE" />
 
     </LinearLayout>

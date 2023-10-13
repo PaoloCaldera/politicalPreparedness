@@ -48,16 +48,19 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     connectionErrorImage.visibility = View.INVISIBLE
                     loadingImage.visibility = View.VISIBLE
                 }
+
                 CivicsApiStatus.SUCCESS -> binding.apply {
                     loadingImage.visibility = View.INVISIBLE
                     connectionErrorImage.visibility = View.INVISIBLE
                     representativesRecyclerView.visibility = View.VISIBLE
                 }
+
                 CivicsApiStatus.ERROR -> binding.apply {
                     representativesRecyclerView.visibility = View.INVISIBLE
                     loadingImage.visibility = View.INVISIBLE
                     connectionErrorImage.visibility = View.VISIBLE
                 }
+
                 else -> throw Exception("Invalid HTTP connection status")
             }
         }
@@ -80,7 +83,7 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     }
                     .addOnFailureListener { exception ->  // Device location currently inactive
                         if (!locationAppServices.solveOnDeviceLocationInactive(exception))
-                            // When there is no automatic resolution, reset the flag for the next check
+                        // When there is no automatic resolution, reset the flag for the next check
                             viewModel.activeDeviceLocationFlagOff()
                     }
             }
@@ -128,7 +131,7 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
     // Spinner selection
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         parent?.let { adapterView ->
-           viewModel.state.value = adapterView.getItemAtPosition(position) as String
+            viewModel.state.value = adapterView.getItemAtPosition(position) as String
         }
     }
 

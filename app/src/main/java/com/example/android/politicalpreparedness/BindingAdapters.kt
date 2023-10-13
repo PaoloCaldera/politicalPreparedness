@@ -51,8 +51,6 @@ fun bindSaveRemoveFab(fab: FloatingActionButton, election: Election?) {
 }
 
 
-
-
 /*  RepresentativeFragment  */
 
 /**
@@ -102,6 +100,7 @@ fun Spinner.setNewValue(value: String?) {
         setSelection(position)
     }
 }
+
 @Suppress("UNCHECKED_CAST")
 inline fun <reified T> toTypedAdapter(adapter: ArrayAdapter<*>): ArrayAdapter<T> {
     return adapter as ArrayAdapter<T>

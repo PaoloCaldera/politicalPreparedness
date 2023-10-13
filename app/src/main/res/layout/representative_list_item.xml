@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="representativeListItem"
             type="com.example.android.politicalpreparedness.network.models.Representative" />
@@ -19,9 +20,9 @@
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:contentDescription="@string/representative_profile_image"
-            app:photoUrl="@{representativeListItem.official.photoUrl}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:photoUrl="@{representativeListItem.official.photoUrl}"
             tools:srcCompat="@drawable/ic_profile" />
 
         <TextView
@@ -40,17 +41,17 @@
             android:id="@+id/representative_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{representativeListItem.official.name}"
             app:layout_constraintStart_toStartOf="@id/representative_charge"
             app:layout_constraintTop_toBottomOf="@id/representative_charge"
-            android:text="@{representativeListItem.official.name}"
             tools:text="Joe Biden" />
 
         <TextView
             android:id="@+id/representative_party"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/small_text_size"
             android:text="@{representativeListItem.official.party}"
+            android:textSize="@dimen/small_text_size"
             app:layout_constraintStart_toStartOf="@id/representative_charge"
             app:layout_constraintTop_toBottomOf="@id/representative_name"
             tools:text="Democratic Party" />

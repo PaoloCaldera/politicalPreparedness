@@ -33,7 +33,6 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
     val fabStatus: LiveData<Election?>
         get() = _fabStatus
 
-
     // Flag associated to the status change of the election FAB
     private val _fabStatusFollowingFlag = MutableLiveData<Boolean>()
     val fabStatusFollowingFlag: LiveData<Boolean>
@@ -148,6 +147,9 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
     }
 
 
+    /**
+     * View model factory class: instantiate the view model in the fragment class
+     */
     @Suppress("UNCHECKED_CAST")
     class VoterInfoViewModelFactory(
         private val election: Election,

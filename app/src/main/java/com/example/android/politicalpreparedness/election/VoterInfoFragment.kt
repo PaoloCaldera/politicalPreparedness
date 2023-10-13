@@ -61,16 +61,19 @@ class VoterInfoFragment : Fragment() {
                     connectionErrorImage.visibility = View.GONE
                     loadingImage.visibility = View.VISIBLE
                 }
+
                 CivicsApiStatus.SUCCESS -> binding.apply {
                     dataCard.visibility = View.VISIBLE
                     loadingImage.visibility = View.GONE
                     connectionErrorImage.visibility = View.GONE
                 }
+
                 CivicsApiStatus.ERROR -> binding.apply {
                     dataCard.visibility = View.GONE
                     loadingImage.visibility = View.GONE
                     connectionErrorImage.visibility = View.VISIBLE
                 }
+
                 else -> throw Exception("Invalid HTTP connection status")
             }
         }
@@ -100,7 +103,12 @@ class VoterInfoFragment : Fragment() {
             if (election) {
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(resources.getString(R.string.following_title))
-                    .setMessage(resources.getString(R.string.following_message, args.argElectionName))
+                    .setMessage(
+                        resources.getString(
+                            R.string.following_message,
+                            args.argElectionName
+                        )
+                    )
                     .setPositiveButton(resources.getString(android.R.string.ok)) { dialog, _ ->
                         dialog.dismiss()
                     }
@@ -109,7 +117,12 @@ class VoterInfoFragment : Fragment() {
             } else {
                 MaterialAlertDialogBuilder(requireContext())
                     .setTitle(resources.getString(R.string.unfollowing_title))
-                    .setMessage(resources.getString(R.string.unfollowing_message, args.argElectionName))
+                    .setMessage(
+                        resources.getString(
+                            R.string.unfollowing_message,
+                            args.argElectionName
+                        )
+                    )
                     .setPositiveButton(resources.getString(android.R.string.ok)) { dialog, _ ->
                         dialog.dismiss()
                     }

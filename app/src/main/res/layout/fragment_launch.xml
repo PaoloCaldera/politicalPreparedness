@@ -9,7 +9,6 @@
         android:layout_margin="@dimen/big_margin_1"
         tools:context="com.example.android.politicalpreparedness.MainActivity">
 
-
         <ImageView
             android:id="@+id/ballot_image"
             android:layout_width="wrap_content"

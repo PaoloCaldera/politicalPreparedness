@@ -58,16 +58,19 @@ class ElectionsFragment : Fragment() {
                     connectionErrorImage.visibility = View.INVISIBLE
                     loadingImage.visibility = View.VISIBLE
                 }
+
                 CivicsApiStatus.SUCCESS -> binding.apply {
                     loadingImage.visibility = View.INVISIBLE
                     connectionErrorImage.visibility = View.INVISIBLE
                     upcomingRecyclerView.visibility = View.VISIBLE
                 }
+
                 CivicsApiStatus.ERROR -> binding.apply {
                     upcomingRecyclerView.visibility = View.INVISIBLE
                     loadingImage.visibility = View.INVISIBLE
                     connectionErrorImage.visibility = View.VISIBLE
                 }
+
                 else -> throw Exception("Invalid HTTP connection status")
             }
         }
@@ -149,7 +152,7 @@ class ElectionsFragment : Fragment() {
      * If the menu option is selected, clear all the saved elections from the database
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.clear_following -> {
                 viewModel.clearElections()
                 MaterialAlertDialogBuilder(requireContext())
@@ -162,6 +165,7 @@ class ElectionsFragment : Fragment() {
                     .show()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }

@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:motion="http://schemas.android.com/tools">
 
-    <!-- TODO: Add data binding node -->
     <data>
+
         <variable
             name="representativeViewModel"
             type="com.example.android.politicalpreparedness.representative.RepresentativeViewModel" />
@@ -20,21 +20,21 @@
             android:id="@+id/find_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_margin="@dimen/default_margin"
             app:layout_constraintBottom_toTopOf="@id/representatives_recyclerView"
-            android:layout_margin="@dimen/default_margin">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/search_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
+                android:text="@string/search_form"
+                android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/list_title_size"
                 android:textStyle="bold"
-                android:textColor="@color/colorPrimary"
-                android:text="@string/search_form"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -45,8 +45,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autofillHints=""
-                android:inputType="textPostalAddress"
                 android:hint="@string/address_line_1"
+                android:inputType="textPostalAddress"
                 android:text="@={representativeViewModel.line1}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -82,11 +82,11 @@
                 android:layout_height="0dp"
                 android:autofillHints=""
                 android:inputType="textPostalAddress"
-                app:stateValue="@{representativeViewModel.state}"
                 app:layout_constraintBottom_toBottomOf="@id/city"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/city"
-                app:layout_constraintTop_toTopOf="@id/city" />
+                app:layout_constraintTop_toTopOf="@id/city"
+                app:stateValue="@{representativeViewModel.state}" />
 
             <EditText
                 android:id="@+id/zip"
@@ -105,10 +105,10 @@
                 android:id="@+id/button_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/find_my_representatives"
                 android:backgroundTint="@color/colorPrimaryDark"
-                android:textColor="@color/white"
                 android:onClick="@{() -> representativeViewModel.onFindMyRepresentativesClicked()}"
+                android:text="@string/find_my_representatives"
+                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/zip" />
@@ -134,12 +134,12 @@
             android:scrollbars="vertical"
             android:visibility="invisible"
             app:header="@{@string/representatives_list_title}"
-            app:listData="@{representativeViewModel.representativeList}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/find_form" />
+            app:layout_constraintTop_toBottomOf="@id/find_form"
+            app:listData="@{representativeViewModel.representativeList}" />
 
         <ImageView
             android:id="@+id/loading_image"
@@ -147,10 +147,10 @@
             android:layout_height="0dp"
             android:contentDescription="@string/loading_data"
             android:visibility="invisible"
-            app:layout_constraintTop_toBottomOf="@id/find_form"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/find_form"
             app:srcCompat="@drawable/loading_animation" />
 
         <ImageView
@@ -159,10 +159,10 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/connection_error"
             android:visibility="invisible"
-            app:layout_constraintTop_toBottomOf="@id/find_form"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/find_form"
             app:srcCompat="@drawable/ic_connection_error" />
 
     </androidx.constraintlayout.motion.widget.MotionLayout>

@@ -26,18 +26,15 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     // UI variable: saved election list (from the local database)
     val savedElections: LiveData<List<Election>?> = dataSource.selectAll()
 
-
     // Network status related to the web service call
     private val _networkStatus = MutableLiveData<CivicsApiStatus?>()
     val networkStatus: LiveData<CivicsApiStatus?>
         get() = _networkStatus
 
-
     // Flag that triggers the navigation to VoterInfoFragment
     private val _navigateToVoterInfoFlag = MutableLiveData<Election?>(null)
     val navigateToVoterInfoFlag: LiveData<Election?>
         get() = _navigateToVoterInfoFlag
-
 
     // Flag that triggers the location permission check
     private val _locationPermissionFlag = MutableLiveData(false)
@@ -58,7 +55,6 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     private val _geocodeLocationFlag = MutableLiveData<Location?>(null)
     val geocodeLocationFlag: LiveData<Location?>
         get() = _geocodeLocationFlag
-
 
     // Save the function in a variable to use it also in the binding adapter
     val onItemClick: (Election) -> Unit = this::navigateToVoterInfoFlagOn

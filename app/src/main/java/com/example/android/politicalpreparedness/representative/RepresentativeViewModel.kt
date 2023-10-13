@@ -29,12 +29,10 @@ class RepresentativeViewModel : ViewModel() {
     val representativeList: LiveData<List<Representative>?>
         get() = _representativesList
 
-
     // Variable containing the network status related to the web service call
     private val _networkStatus = MutableLiveData<CivicsApiStatus?>()
     val networkStatus: LiveData<CivicsApiStatus?>
         get() = _networkStatus
-
 
     // Flag that triggers the location permission check
     private val _locationPermissionFlag = MutableLiveData<Boolean>()

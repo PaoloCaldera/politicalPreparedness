@@ -17,16 +17,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-        <Constraint
-            android:id="@id/representatives_recyclerView">
+        <Constraint android:id="@id/representatives_recyclerView">
             <PropertySet app:visibilityMode="ignore" />
         </Constraint>
-        <Constraint
-            android:id="@id/loading_image">
+        <Constraint android:id="@id/loading_image">
             <PropertySet app:visibilityMode="ignore" />
         </Constraint>
-        <Constraint
-            android:id="@id/connection_error_image">
+        <Constraint android:id="@id/connection_error_image">
             <PropertySet app:visibilityMode="ignore" />
         </Constraint>
     </ConstraintSet>
@@ -36,16 +33,13 @@
             android:id="@id/find_form"
             android:layout_width="match_parent"
             app:layout_constraintBottom_toTopOf="parent" />
-        <Constraint
-            android:id="@id/representatives_recyclerView">
+        <Constraint android:id="@id/representatives_recyclerView">
             <PropertySet app:visibilityMode="ignore" />
         </Constraint>
-        <Constraint
-            android:id="@id/loading_image">
+        <Constraint android:id="@id/loading_image">
             <PropertySet app:visibilityMode="ignore" />
         </Constraint>
-        <Constraint
-            android:id="@id/connection_error_image">
+        <Constraint android:id="@id/connection_error_image">
             <PropertySet app:visibilityMode="ignore" />
         </Constraint>
     </ConstraintSet>
