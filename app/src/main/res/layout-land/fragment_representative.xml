@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:motion="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="representativeViewModel"
+            type="com.example.android.politicalpreparedness.representative.RepresentativeViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/search_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/default_margin"
+            android:text="@string/search_form"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/list_title_size"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/representatives_recyclerView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            motion:text="Search form" />
+
+        <ScrollView
+            android:id="@+id/scrolling_form"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/button_search"
+            app:layout_constraintEnd_toStartOf="@id/representatives_recyclerView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_title">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/find_form"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_margin"
+                android:gravity="center_horizontal"
+                app:layout_constraintBottom_toTopOf="@id/button_search"
+                app:layout_constraintEnd_toStartOf="@id/representatives_recyclerView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/search_title">
+
+                <EditText
+                    android:id="@+id/address_line_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/small_margin_1"
+                    android:autofillHints=""
+                    android:hint="@string/address_line_1"
+                    android:inputType="textPostalAddress"
+                    android:text="@={representativeViewModel.line1}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/address_line_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/small_margin_1"
+                    android:autofillHints=""
+                    android:hint="@string/address_line_2"
+                    android:inputType="textPostalAddress"
+                    android:text="@={representativeViewModel.line2}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/address_line_1" />
+
+                <EditText
+                    android:id="@+id/city"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/small_margin_1"
+                    android:autofillHints=""
+                    android:hint="@string/city"
+                    android:inputType="textPostalAddress"
+                    android:text="@={representativeViewModel.city}"
+                    app:layout_constraintEnd_toStartOf="@id/zip"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/address_line_2" />
+
+                <EditText
+                    android:id="@+id/zip"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/small_margin_1"
+                    android:autofillHints=""
+                    android:hint="@string/zip_code"
+                    android:inputType="number"
+                    android:maxLength="5"
+                    android:text="@={representativeViewModel.zip}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/city"
+                    app:layout_constraintTop_toBottomOf="@id/address_line_2" />
+
+                <Spinner
+                    android:id="@+id/state"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="@dimen/small_margin_1"
+                    android:autofillHints=""
+                    android:inputType="textPostalAddress"
+                    app:layout_constraintEnd_toEndOf="@id/city"
+                    app:layout_constraintStart_toStartOf="@id/city"
+                    app:layout_constraintTop_toBottomOf="@id/city"
+                    app:stateValue="@{representativeViewModel.state}" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <Button
+            android:id="@+id/button_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:onClick="@{() -> representativeViewModel.onFindMyRepresentativesClicked()}"
+            android:text="@string/find_my_representatives"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_location"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/button_location"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:onClick="@{() -> representativeViewModel.onUseMyLocationClicked()}"
+            android:text="@string/use_my_location"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/button_search"
+            app:layout_constraintEnd_toStartOf="@id/representatives_recyclerView"
+            app:layout_constraintStart_toEndOf="@id/button_search"
+            app:layout_constraintTop_toTopOf="@+id/button_search" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/representatives_recyclerView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/default_margin"
+            android:scrollbars="vertical"
+            android:visibility="invisible"
+            app:header="@{@string/representatives_list_title}"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/scrolling_form"
+            app:layout_constraintTop_toTopOf="parent"
+            app:listData="@{representativeViewModel.representativeList}" />
+
+        <ImageView
+            android:id="@+id/loading_image"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/loading_data"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/scrolling_form"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/loading_animation" />
+
+        <ImageView
+            android:id="@+id/connection_error_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/connection_error"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/scrolling_form"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_connection_error" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -24,13 +24,21 @@
     <string name="upcoming_list_title">UPCOMING</string>
     <string name="saved_list_title">FOLLOWING</string>
     <string name="clear_list">Clear the entire list of saved elections</string>
+    <string name="clear_following_list_option">Clear following list</string>
+    <string name="clearing_title">Clearing all</string>
+    <string name="clearing_message">You are not following any election anymore</string>
 
     <!-- voter info fragment -->
     <string name="follow_election">Follow the election</string>
     <string name="unfollow_election">Unfollow the election</string>
+    <string name="following_title">Following</string>
+    <string name="unfollowing_title">Unfollowing</string>
+    <string name="following_message">You are following the election %s</string>
+    <string name="unfollowing_message">You are not following the election %s anymore</string>
 
     <!-- representative list fragment -->
     <string name="representatives_fragment_label">Representatives</string>
+    <string name="search_form">Search form</string>
     <string name="address_line_1">Address (line 1)</string>
     <string name="address_line_2">Address (line 2)</string>
     <string name="city">City</string>
@@ -42,7 +50,5 @@
     <string name="twitter_profile_link">Twitter profile link</string>
     <string name="facebook_profile_link">Facebook profile link</string>
     <string name="website_link">Website link</string>
-
-    <!-- TODO: Add necessary string values -->
 
 </resources>

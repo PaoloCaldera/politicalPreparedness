@@ -16,6 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBudNZ6HcFlSryy1Kl7Ump5hxsAt68J_Ic" />
+
         <activity
             android:name="com.example.android.politicalpreparedness.MainActivity"
             android:exported="true">

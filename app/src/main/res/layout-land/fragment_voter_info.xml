@@ -13,7 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/big_margin_2"
+        android:padding="@dimen/big_margin_1"
         tools:context="com.example.android.politicalpreparedness.MainActivity">
 
         <ImageView
@@ -43,18 +43,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:shadowColor="@color/colorPrimaryDark"
-            app:cardElevation="@dimen/cardview_elevation"
             app:cardUseCompatPadding="true"
             app:layout_constraintBottom_toTopOf="@+id/save_remove_election_fab"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/default_margin">
 
                 <TextView
                     android:id="@+id/state_header"
@@ -66,22 +66,31 @@
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="@dimen/list_title_size"
                     android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     tools:text="Utah" />
 
                 <TextView
                     android:id="@+id/election_date"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/big_margin_1"
                     android:drawablePadding="@dimen/big_margin_1"
                     android:gravity="center_vertical"
                     android:text="@{voterInfoViewModel.voterInfo.election.formatDateForDetail()}"
                     app:drawableStartCompat="@drawable/ic_calendar"
+                    app:layout_constraintEnd_toStartOf="@+id/address"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintHorizontal_weight="0.35"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/state_header"
                     tools:text="Friday, 06th June 2025" />
 
                 <TextView
                     android:id="@+id/address"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/big_margin_1"
                     android:drawablePadding="@dimen/big_margin_1"
@@ -89,7 +98,12 @@
                     android:minLines="2"
                     android:text="@{voterInfoViewModel.voterInfo.state[0].electionAdministrationBody.correspondenceAddress.toFormattedString()}"
                     app:drawableStartCompat="@drawable/ic_location"
-                    tools:text="Utah State Capitol Complex 350 North State Street, Suite 220\n84114 Salt Lake City, Utah" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_weight="0.65"
+                    app:layout_constraintStart_toEndOf="@+id/election_date"
+                    app:layout_constraintTop_toBottomOf="@id/state_header"
+                    tools:text="Utah State Capitol Complex 350 North State Street,\nSuite 220 84114 Salt Lake City, Utah" />
 
 
                 <TextView
@@ -103,6 +117,8 @@
                     android:onClick="@{() -> voterInfoViewModel.clickVotingInfoFlagOn()}"
                     android:text="@{voterInfoViewModel.voterInfo.state[0].electionAdministrationBody.votingLocationFinderUrl}"
                     app:drawableStartCompat="@drawable/ic_info"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/election_date"
                     tools:text="https://votesearch.utah.gov/voter-search/search/search-by-address/how-and-where-can-i-vote" />
 
                 <TextView
@@ -116,9 +132,11 @@
                     android:onClick="@{() -> voterInfoViewModel.clickBallotInfoFlagOn()}"
                     android:text="@{voterInfoViewModel.voterInfo.state[0].electionAdministrationBody.ballotInfoUrl}"
                     app:drawableStartCompat="@drawable/ic_ballot"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/state_locations"
                     tools:text="https://votesearch.utah.gov/voter-search/search/search-by-voter/track-mail-ballot" />
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
@@ -128,6 +146,7 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:contentDescription="@string/follow_election"
+            android:elevation="@dimen/cardview_elevation"
             android:onClick="@{() -> voterInfoViewModel.onFabClick()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

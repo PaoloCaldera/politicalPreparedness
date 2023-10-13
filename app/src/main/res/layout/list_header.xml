@@ -11,7 +11,7 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
@@ -21,9 +21,9 @@
             android:layout_gravity="center_horizontal"
             android:padding="@dimen/default_padding"
             android:text="@{listHeaderTitle}"
+            android:textColor="@color/colorPrimary"
             android:textSize="@dimen/list_title_size"
             android:textStyle="bold"
-            android:textColor="@color/colorPrimary"
             tools:text="LIST TITLE" />
 
     </LinearLayout>

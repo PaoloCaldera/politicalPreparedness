@@ -23,44 +23,38 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     val upcomingElections: LiveData<List<Election>?>
         get() = _upcomingElections
 
-    // UI variable: saved election list
-    private val _savedElections = MutableLiveData<List<Election>?>(null)
-    val savedElections: LiveData<List<Election>?>
-        get() = _savedElections
-
+    // UI variable: saved election list (from the local database)
+    val savedElections: LiveData<List<Election>?> = dataSource.selectAll()
 
     // Network status related to the web service call
     private val _networkStatus = MutableLiveData<CivicsApiStatus?>()
     val networkStatus: LiveData<CivicsApiStatus?>
         get() = _networkStatus
 
-
     // Flag that triggers the navigation to VoterInfoFragment
     private val _navigateToVoterInfoFlag = MutableLiveData<Election?>(null)
     val navigateToVoterInfoFlag: LiveData<Election?>
         get() = _navigateToVoterInfoFlag
 
-
     // Flag that triggers the location permission check
-    private val _locationPermissionFlag = MutableLiveData<Boolean>()
+    private val _locationPermissionFlag = MutableLiveData(false)
     val locationPermissionFlag: LiveData<Boolean>
         get() = _locationPermissionFlag
 
     // Flag that triggers the device location activation check
-    private val _activeDeviceLocationFlag = MutableLiveData<Boolean>()
+    private val _activeDeviceLocationFlag = MutableLiveData(false)
     val activeDeviceLocationFlag: LiveData<Boolean>
         get() = _activeDeviceLocationFlag
 
     // Flag that triggers the retrieval of the current location
-    private val _currentLocationFlag = MutableLiveData<Boolean>()
+    private val _currentLocationFlag = MutableLiveData(false)
     val currentLocationFlag: LiveData<Boolean>
         get() = _currentLocationFlag
 
     // Flag that triggers the current location decoding
-    private val _geocodeLocationFlag = MutableLiveData<Location?>()
+    private val _geocodeLocationFlag = MutableLiveData<Location?>(null)
     val geocodeLocationFlag: LiveData<Location?>
         get() = _geocodeLocationFlag
-
 
     // Save the function in a variable to use it also in the binding adapter
     val onItemClick: (Election) -> Unit = this::navigateToVoterInfoFlagOn
@@ -68,33 +62,20 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
 
     init {
         getUpcomingElections()
-        selectSavedElections()
     }
 
 
     /**
      * Retrieve the upcoming elections from the internet
      */
-    private fun getUpcomingElections() {
+    private fun getUpcomingElections() = viewModelScope.launch {
         _networkStatus.value = CivicsApiStatus.LOADING
-        viewModelScope.launch {
-            try {
-                _upcomingElections.value = CivicsApi.retrofitService.getElections().elections
-                _networkStatus.value = CivicsApiStatus.SUCCESS
-            } catch (e: Exception) {
-                _networkStatus.value = CivicsApiStatus.ERROR
-            }
-        }
-    }
-
-    /**
-     * Retrieve the saved elections from the local database
-     */
-    private fun selectSavedElections() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                _savedElections.value = dataSource.selectAll().value
-            }
+        try {
+            _upcomingElections.value =
+                CivicsApi.retrofitService.getElections().elections.sortedBy { it.electionDay }
+            _networkStatus.value = CivicsApiStatus.SUCCESS
+        } catch (e: Exception) {
+            _networkStatus.value = CivicsApiStatus.ERROR
         }
     }
 
@@ -116,6 +97,7 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     private fun navigateToVoterInfoFlagOn(election: Election) {
         _navigateToVoterInfoFlag.value = election
     }
+
     fun navigateToVoterInfoFlagOff() {
         _navigateToVoterInfoFlag.value = null
     }
@@ -127,6 +109,7 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     fun locationPermissionFlagOn() {
         _locationPermissionFlag.value = true
     }
+
     fun locationPermissionFlagOff() {
         _locationPermissionFlag.value = false
     }
@@ -137,6 +120,7 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     fun activeDeviceLocationFlagOn() {
         _activeDeviceLocationFlag.value = true
     }
+
     fun activeDeviceLocationFlagOff() {
         _activeDeviceLocationFlag.value = false
     }
@@ -147,6 +131,7 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     fun currentLocationFlagOn() {
         _currentLocationFlag.value = true
     }
+
     fun currentLocationFlagOff() {
         _currentLocationFlag.value = false
     }
@@ -157,6 +142,7 @@ class ElectionsViewModel(private val dataSource: ElectionDao) : ViewModel() {
     fun geocodeLocationFlagOn(location: Location) {
         _geocodeLocationFlag.value = location
     }
+
     fun geocodeLocationFlagOff(address: Address) {
         _geocodeLocationFlag.value = null
 

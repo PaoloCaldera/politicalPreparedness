@@ -19,22 +19,24 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
     ViewModel() {
 
     // Information about the voter info
-    private val _voterInfo = MutableLiveData<VoterInfoResponse>(null)
-    val voterInfo: LiveData<VoterInfoResponse>
+    private val _voterInfo = MutableLiveData<VoterInfoResponse?>(null)
+    val voterInfo: LiveData<VoterInfoResponse?>
         get() = _voterInfo
-
 
     // Network status related to the web service call
     private val _networkStatus = MutableLiveData<CivicsApiStatus?>()
     val networkStatus: LiveData<CivicsApiStatus?>
         get() = _networkStatus
 
-
     // Status of the save/remove election FAB
     private val _fabStatus = MutableLiveData<Election?>(null)
     val fabStatus: LiveData<Election?>
         get() = _fabStatus
 
+    // Flag associated to the status change of the election FAB
+    private val _fabStatusFollowingFlag = MutableLiveData<Boolean>()
+    val fabStatusFollowingFlag: LiveData<Boolean>
+        get() = _fabStatusFollowingFlag
 
     // Flag associated to the user click to the voting info link
     private val _clickVotingInfoFlag = MutableLiveData(false)
@@ -56,16 +58,14 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
     /**
      * Retrieve voter info data from the web service
      */
-    private fun getVoterInfo(election: Election) {
+    private fun getVoterInfo(election: Election) = viewModelScope.launch {
         _networkStatus.value = CivicsApiStatus.LOADING
-        viewModelScope.launch {
-            try {
-                val address = "${election.division.state}, ${election.division.country}"
-                _voterInfo.value = CivicsApi.retrofitService.getVoterInfo(address, election.id)
-                _networkStatus.value = CivicsApiStatus.SUCCESS
-            } catch (e: Exception) {
-                _networkStatus.value = CivicsApiStatus.ERROR
-            }
+        try {
+            val address = "${election.division.state}, ${election.division.country}"
+            _voterInfo.value = CivicsApi.retrofitService.getVoterInfo(address, election.id)
+            _networkStatus.value = CivicsApiStatus.SUCCESS
+        } catch (e: Exception) {
+            _networkStatus.value = CivicsApiStatus.ERROR
         }
     }
 
@@ -76,9 +76,12 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
      */
     private fun checkFabStatus() {
         viewModelScope.launch {
+            var selectedElection: Election?
             withContext(Dispatchers.IO) {
-                _fabStatus.value = dataSource.select(election.id)
+                // Use a custom variable: LiveData value cannot be set inside the I/O dispatcher
+                selectedElection = dataSource.select(election.id)
             }
+            _fabStatus.value = selectedElection
         }
     }
 
@@ -90,9 +93,11 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
         if (_fabStatus.value == null) {
             insertElection()
             _fabStatus.value = election
+            _fabStatusFollowingFlag.value = true
         } else {
             deleteElection()
             _fabStatus.value = null
+            _fabStatusFollowingFlag.value = false
         }
     }
 
@@ -142,7 +147,9 @@ class VoterInfoViewModel(private val election: Election, private val dataSource:
     }
 
 
-
+    /**
+     * View model factory class: instantiate the view model in the fragment class
+     */
     @Suppress("UNCHECKED_CAST")
     class VoterInfoViewModelFactory(
         private val election: Election,

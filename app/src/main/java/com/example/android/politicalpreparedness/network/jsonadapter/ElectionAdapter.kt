@@ -15,18 +15,18 @@ class ElectionAdapter {
      */
 
     @FromJson
-    fun divisionFromJson (ocdDivisionId: String): Division {
+    fun divisionFromJson(ocdDivisionId: String): Division {
         val countryDelimiter = "country:"
         val stateDelimiter = "state:"
-        val country = ocdDivisionId.substringAfter(countryDelimiter,"")
-                .substringBefore("/")
-        val state = ocdDivisionId.substringAfter(stateDelimiter,"")
-                .substringBefore("/")
+        val country = ocdDivisionId.substringAfter(countryDelimiter, "")
+            .substringBefore("/")
+        val state = ocdDivisionId.substringAfter(stateDelimiter, "")
+            .substringBefore("/")
         return Division(ocdDivisionId, country, state)
     }
 
     @ToJson
-    fun divisionToJson (division: Division): String {
+    fun divisionToJson(division: Division): String {
         return division.id
     }
 
@@ -36,12 +36,12 @@ class ElectionAdapter {
      */
 
     @FromJson
-    fun dateFromJson (electionDay: String): Date {
+    fun dateFromJson(electionDay: String): Date {
         return SimpleDateFormat("yyyy-MM-dd").parse(electionDay)!!
     }
 
     @ToJson
-    fun dateToJson (date: Date): String {
+    fun dateToJson(date: Date): String {
         return SimpleDateFormat("yyyy-MM-dd").format(date)
     }
 }

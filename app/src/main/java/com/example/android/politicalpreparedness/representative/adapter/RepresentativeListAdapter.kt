@@ -148,7 +148,6 @@ class RepresentativeListAdapter(private val listTitle: String) :
     }
 
 
-
     fun addHeaderAndSubmitList(list: List<Representative>?) {
         submitList(when (list) {
             null -> listOf(RepresentativeListViewItem.Header)

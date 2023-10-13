@@ -1,8 +1,10 @@
 package com.example.android.politicalpreparedness.representative
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
@@ -29,29 +31,36 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
     ): View {
 
         binding = FragmentRepresentativeBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = this@RepresentativeFragment
+        binding.apply {
+            lifecycleOwner = this@RepresentativeFragment
+            representativeViewModel = viewModel
+            addressLine1.setOnFocusChangeListener { v, hasFocus -> hideSoftKeyboard(v, hasFocus) }
+            addressLine2.setOnFocusChangeListener { v, hasFocus -> hideSoftKeyboard(v, hasFocus) }
+            city.setOnFocusChangeListener { v, hasFocus -> hideSoftKeyboard(v, hasFocus) }
+            zip.setOnFocusChangeListener { v, hasFocus -> hideSoftKeyboard(v, hasFocus) }
+        }
 
         // Handle the layout based on the network status
         viewModel.networkStatus.observe(viewLifecycleOwner) { apiStatus ->
             when (apiStatus) {
                 CivicsApiStatus.LOADING -> binding.apply {
-                    listPlaceholder.visibility = View.GONE
-                    representativesRecyclerView.visibility = View.GONE
-                    connectionErrorImage.visibility = View.GONE
+                    representativesRecyclerView.visibility = View.INVISIBLE
+                    connectionErrorImage.visibility = View.INVISIBLE
                     loadingImage.visibility = View.VISIBLE
                 }
+
                 CivicsApiStatus.SUCCESS -> binding.apply {
-                    listPlaceholder.visibility = View.GONE
-                    loadingImage.visibility = View.GONE
-                    connectionErrorImage.visibility = View.GONE
+                    loadingImage.visibility = View.INVISIBLE
+                    connectionErrorImage.visibility = View.INVISIBLE
                     representativesRecyclerView.visibility = View.VISIBLE
                 }
+
                 CivicsApiStatus.ERROR -> binding.apply {
-                    listPlaceholder.visibility = View.GONE
-                    representativesRecyclerView.visibility = View.GONE
-                    loadingImage.visibility = View.GONE
+                    representativesRecyclerView.visibility = View.INVISIBLE
+                    loadingImage.visibility = View.INVISIBLE
                     connectionErrorImage.visibility = View.VISIBLE
                 }
+
                 else -> throw Exception("Invalid HTTP connection status")
             }
         }
@@ -74,7 +83,7 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     }
                     .addOnFailureListener { exception ->  // Device location currently inactive
                         if (!locationAppServices.solveOnDeviceLocationInactive(exception))
-                            // When there is no automatic resolution, reset the flag for the next check
+                        // When there is no automatic resolution, reset the flag for the next check
                             viewModel.activeDeviceLocationFlagOff()
                     }
             }
@@ -119,24 +128,10 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
 
-    override fun onStart() {
-        super.onStart()
-
-        // Reset all the flags when accessing the fragment or upon configuration changes
-        viewModel.resetFlags()
-
-        // Hide the recycler view if the live data variable contains an empty list
-        if (viewModel.representativeList.value == null) binding.apply {
-            representativesRecyclerView.visibility = View.GONE
-            listPlaceholder.visibility = View.VISIBLE
-        }
-    }
-
-
     // Spinner selection
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         parent?.let { adapterView ->
-           viewModel.state.value = adapterView.getItemAtPosition(position) as String
+            viewModel.state.value = adapterView.getItemAtPosition(position) as String
         }
     }
 
@@ -172,6 +167,21 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
             // Turn off and on again the flag to perform automatically another check
             viewModel.activeDeviceLocationFlagOff()
             viewModel.activeDeviceLocationFlagOn()
+        }
+    }
+
+
+    /**
+     * Hide soft keyboard when EditText view loses focus
+     */
+    private fun hideSoftKeyboard(view: View, hasFocus: Boolean) {
+        if (!hasFocus) {
+            val inputMethodManager =
+                view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(
+                view.windowToken,
+                InputMethodManager.HIDE_IMPLICIT_ONLY
+            )
         }
     }
 }

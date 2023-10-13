@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@{electionListItem.electionDay.toString()}"
+                android:text="@{electionListItem.formatDateForList()}"
                 tools:text="2023-09-03" />
 
         </LinearLayout>
