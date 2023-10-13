@@ -38,6 +38,7 @@
 
     <!-- representative list fragment -->
     <string name="representatives_fragment_label">Representatives</string>
+    <string name="search_form">Search form</string>
     <string name="address_line_1">Address (line 1)</string>
     <string name="address_line_2">Address (line 2)</string>
     <string name="city">City</string>

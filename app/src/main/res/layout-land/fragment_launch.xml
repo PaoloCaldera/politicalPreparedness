@@ -12,8 +12,8 @@
 
         <ImageView
             android:id="@+id/ballot_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:contentDescription="@string/ballot_logo_content_description"
             android:layout_marginBottom="@dimen/default_margin"
             app:layout_constraintBottom_toTopOf="@+id/representative_button"
@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
             android:text="@string/representative_button_text"
+            app:layout_constraintTop_toBottomOf="@id/ballot_image"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/upcoming_button"
             app:layout_constraintHorizontal_bias="0.5"

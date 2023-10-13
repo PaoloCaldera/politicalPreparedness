@@ -43,7 +43,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:shadowColor="@color/colorPrimaryDark"
-            app:cardElevation="@dimen/cardview_elevation"
             app:cardUseCompatPadding="true"
             app:layout_constraintBottom_toTopOf="@+id/save_remove_election_fab"
             app:layout_constraintEnd_toEndOf="parent"
@@ -148,6 +147,7 @@
             android:clickable="true"
             android:contentDescription="@string/follow_election"
             android:onClick="@{() -> voterInfoViewModel.onFabClick()}"
+            android:elevation="@dimen/cardview_elevation"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:status="@{voterInfoViewModel.fabStatus}" />
