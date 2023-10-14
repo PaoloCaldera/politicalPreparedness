@@ -50,5 +50,7 @@
     <string name="twitter_profile_link">Twitter profile link</string>
     <string name="facebook_profile_link">Facebook profile link</string>
     <string name="website_link">Website link</string>
+    <string name="scrolling_position">KEY_SCROLLING_POSITION</string>
+    <string name="current_motion_state">KEY_CURRENT_MOTION_STATE</string>
 
 </resources>

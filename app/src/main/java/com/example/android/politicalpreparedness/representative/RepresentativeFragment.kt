@@ -3,12 +3,15 @@ package com.example.android.politicalpreparedness.representative
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.android.politicalpreparedness.LocationAppServices
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.FragmentRepresentativeBinding
@@ -23,6 +26,9 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     // LocationAppServices: class with methods for checking location permission and activation
     private val locationAppServices = LocationAppServices(this)
+
+    // Variable for saving the scrolling position of the recycler view
+    private var scrollingPosition: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -124,7 +130,35 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
             spinner.adapter = arrayAdapter
         }
 
+        binding.representativesRecyclerView.addOnScrollListener(object :
+            RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                scrollingPosition =
+                    (binding.representativesRecyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+            }
+        })
+
         return binding.root
+    }
+
+    // Restore the current position of the recycler view
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        savedInstanceState?.let { bundle ->
+            // Scroll to the exact position
+            scrollingPosition = bundle.getInt(getString(R.string.scrolling_position))
+            binding.representativesRecyclerView.scrollToPosition(scrollingPosition)
+            // Save the exact transition state
+            binding.motionForm!!.transitionToState(bundle.getInt(getString(R.string.current_motion_state)))
+        }
+    }
+
+    // Save the current position of the recycler view
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(getString(R.string.scrolling_position), scrollingPosition)
+        outState.putInt(getString(R.string.current_motion_state), binding.motionForm!!.currentState)
     }
 
 
