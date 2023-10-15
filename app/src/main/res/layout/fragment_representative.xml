@@ -17,115 +17,104 @@
         app:layoutDescription="@xml/fragment_representative_scene"
         app:layout_scrollFlags="scroll|enterAlways|snap|exitUntilCollapsed">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/find_form"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/search_title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            app:layout_constraintBottom_toTopOf="@id/representatives_recyclerView"
+            android:gravity="center_horizontal"
+            android:text="@string/search_form"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/list_title_size"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            motion:text="Search form" />
 
-            <TextView
-                android:id="@+id/search_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/search_form"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/list_title_size"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                motion:text="Search form" />
+        <EditText
+            android:id="@+id/address_line_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:hint="@string/address_line_1"
+            android:inputType="textPostalAddress"
+            android:text="@={representativeViewModel.line1}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_title" />
 
-            <EditText
-                android:id="@+id/address_line_1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autofillHints=""
-                android:hint="@string/address_line_1"
-                android:inputType="textPostalAddress"
-                android:text="@={representativeViewModel.line1}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/search_title" />
+        <EditText
+            android:id="@+id/address_line_2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:autofillHints=""
+            android:hint="@string/address_line_2"
+            android:inputType="textPostalAddress"
+            android:text="@={representativeViewModel.line2}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/address_line_1" />
 
-            <EditText
-                android:id="@+id/address_line_2"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:autofillHints=""
-                android:hint="@string/address_line_2"
-                android:inputType="textPostalAddress"
-                android:text="@={representativeViewModel.line2}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/address_line_1" />
+        <EditText
+            android:id="@+id/city"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:hint="@string/city"
+            android:inputType="textPostalAddress"
+            android:text="@={representativeViewModel.city}"
+            app:layout_constraintEnd_toStartOf="@id/state"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/address_line_2" />
 
-            <EditText
-                android:id="@+id/city"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:autofillHints=""
-                android:hint="@string/city"
-                android:inputType="textPostalAddress"
-                android:text="@={representativeViewModel.city}"
-                app:layout_constraintEnd_toStartOf="@id/state"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/address_line_2" />
+        <Spinner
+            android:id="@+id/state"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:autofillHints=""
+            android:inputType="textPostalAddress"
+            app:layout_constraintBottom_toBottomOf="@id/city"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/city"
+            app:layout_constraintTop_toTopOf="@id/city"
+            app:stateValue="@{representativeViewModel.state}" />
 
-            <Spinner
-                android:id="@+id/state"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:autofillHints=""
-                android:inputType="textPostalAddress"
-                app:layout_constraintBottom_toBottomOf="@id/city"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/city"
-                app:layout_constraintTop_toTopOf="@id/city"
-                app:stateValue="@{representativeViewModel.state}" />
+        <EditText
+            android:id="@+id/zip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:hint="@string/zip_code"
+            android:inputType="number"
+            android:maxLength="5"
+            android:text="@={representativeViewModel.zip}"
+            app:layout_constraintEnd_toEndOf="@id/city"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/city" />
 
-            <EditText
-                android:id="@+id/zip"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:autofillHints=""
-                android:hint="@string/zip_code"
-                android:inputType="number"
-                android:maxLength="5"
-                android:text="@={representativeViewModel.zip}"
-                app:layout_constraintEnd_toEndOf="@id/city"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/city" />
+        <Button
+            android:id="@+id/button_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:onClick="@{() -> representativeViewModel.onFindMyRepresentativesClicked()}"
+            android:text="@string/find_my_representatives"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/zip" />
 
-            <Button
-                android:id="@+id/button_search"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/colorPrimaryDark"
-                android:onClick="@{() -> representativeViewModel.onFindMyRepresentativesClicked()}"
-                android:text="@string/find_my_representatives"
-                android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/zip" />
-
-            <Button
-                android:id="@+id/button_location"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/colorPrimaryDark"
-                android:onClick="@{() -> representativeViewModel.onUseMyLocationClicked()}"
-                android:text="@string/use_my_location"
-                android:textColor="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/button_search" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/button_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:onClick="@{() -> representativeViewModel.onUseMyLocationClicked()}"
+            android:text="@string/use_my_location"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_search" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/representatives_recyclerView"
@@ -139,7 +128,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/find_form"
+            app:layout_constraintTop_toBottomOf="@id/button_location"
             app:listData="@{representativeViewModel.representativeList}" />
 
         <ImageView
@@ -151,7 +140,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/find_form"
+            app:layout_constraintTop_toBottomOf="@id/button_location"
             app:srcCompat="@drawable/loading_animation" />
 
         <ImageView
@@ -163,7 +152,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/find_form"
+            app:layout_constraintTop_toBottomOf="@id/button_location"
             app:srcCompat="@drawable/ic_connection_error" />
 
     </androidx.constraintlayout.motion.widget.MotionLayout>
