@@ -175,8 +175,8 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
         super.onViewStateRestored(savedInstanceState)
         savedInstanceState?.let { bundle ->
             // Scroll to the exact position
-            scrollingPosition = bundle.getInt(getString(R.string.scrolling_position))
-            binding.representativesRecyclerView.scrollToPosition(scrollingPosition)
+            //scrollingPosition = bundle.getInt(getString(R.string.scrolling_position))
+            //binding.representativesRecyclerView.scrollToPosition(scrollingPosition)
             // Save the exact transition state
             motionState = bundle.getInt(getString(R.string.current_motion_state))
             motionState?.let { binding.motionLayout?.transitionToState(it) }
@@ -186,7 +186,7 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
     // Save the current position of the recycler view
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(getString(R.string.scrolling_position), scrollingPosition)
+        //outState.putInt(getString(R.string.scrolling_position), scrollingPosition)
         binding.motionLayout?.let { layout -> motionState = layout.currentState }
         motionState?.let { outState.putInt(getString(R.string.current_motion_state), it) }
     }
