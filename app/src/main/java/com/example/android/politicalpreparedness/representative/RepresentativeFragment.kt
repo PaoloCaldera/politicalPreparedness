@@ -21,7 +21,7 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: FragmentRepresentativeBinding
     private val viewModel: RepresentativeViewModel by viewModels {
-        RepresentativeViewModel.RepresentativeViewModelFactory()
+        RepresentativeViewModel.RepresentativeViewModelFactory(this.requireActivity().application)
     }
 
     // LocationAppServices: class with methods for checking location permission and activation

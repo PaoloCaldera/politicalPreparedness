@@ -1,12 +1,17 @@
 package com.example.android.politicalpreparedness.representative
 
 
+import android.app.Application
 import android.location.Location
+import androidx.lifecycle.AbstractSavedStateViewModelFactory
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.network.CivicsApi
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
 import com.example.android.politicalpreparedness.network.models.Address
@@ -14,7 +19,10 @@ import com.example.android.politicalpreparedness.network.models.Representative
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
-class RepresentativeViewModel : ViewModel() {
+class RepresentativeViewModel(
+    private val savedModelState: SavedStateHandle,
+    application: Application
+) : AndroidViewModel(application) {
 
     // LiveData variables exploiting 2-way data binding, used for EditText views (and Spinner)
     val line1 = MutableLiveData<String>()
@@ -58,6 +66,14 @@ class RepresentativeViewModel : ViewModel() {
     private val _geocodeLocationFlag = MutableLiveData<Location?>()
     val geocodeLocationFlag: LiveData<Location?>
         get() = _geocodeLocationFlag
+
+    init {
+        // Restore the list in case of an unexpected shutdown by the OS to free up resources
+        val restoredList = savedModelState.get<List<Representative>>(
+            getApplication<Application>().resources.getString(R.string.representative_list_key)
+        )
+        if (restoredList != null) _representativesList.value = restoredList
+    }
 
 
     /**
@@ -180,14 +196,28 @@ class RepresentativeViewModel : ViewModel() {
     }
 
 
+    override fun onCleared() {
+        super.onCleared()
+        savedModelState[getApplication<Application>().resources.getString(R.string.representative_list_key)] =
+            _representativesList.value
+    }
+
+
     /**
-     * View model factory class: instantiate the view model in the fragment class
+     * View model factory class: instantiate the view model in the fragment class.
+     * Use the AbstractSavedStateViewModelFactory to provide the default SavedStateHandle object
      */
     @Suppress("UNCHECKED_CAST")
-    class RepresentativeViewModelFactory : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    class RepresentativeViewModelFactory(private val application: Application) :
+        ViewModelProvider.Factory,
+        AbstractSavedStateViewModelFactory() {
+        override fun <T : ViewModel> create(
+            key: String,
+            modelClass: Class<T>,
+            handle: SavedStateHandle
+        ): T {
             if (modelClass.isAssignableFrom(RepresentativeViewModel::class.java))
-                return RepresentativeViewModel() as T
+                return RepresentativeViewModel(handle, application) as T
             throw IllegalArgumentException("Unknown view model class RepresentativeViewModel")
         }
     }
