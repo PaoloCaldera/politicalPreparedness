@@ -42,6 +42,7 @@
     <string name="address_line_1">Address (line 1)</string>
     <string name="address_line_2">Address (line 2)</string>
     <string name="city">City</string>
+    <string name="state">State</string>
     <string name="zip_code">Zip Code</string>
     <string name="find_my_representatives">Find my representatives</string>
     <string name="use_my_location">Use my location</string>
@@ -52,5 +53,7 @@
     <string name="website_link">Website link</string>
     <string name="scrolling_position">KEY_SCROLLING_POSITION</string>
     <string name="current_motion_state">KEY_CURRENT_MOTION_STATE</string>
+    <string name="form_not_filled_title">Form not filled correctly</string>
+    <string name="form_not_filled_message">Please, fill the \"%s\" entry to correctly search the representatives</string>
 
 </resources>

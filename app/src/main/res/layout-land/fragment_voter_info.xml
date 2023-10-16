@@ -146,7 +146,7 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:contentDescription="@string/follow_election"
-            android:elevation="@dimen/cardview_elevation"
+            android:elevation="@dimen/fab_elevation"
             android:onClick="@{() -> voterInfoViewModel.onFabClick()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

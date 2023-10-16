@@ -3,7 +3,6 @@ package com.example.android.politicalpreparedness.representative
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
@@ -16,6 +15,7 @@ import com.example.android.politicalpreparedness.LocationAppServices
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.FragmentRepresentativeBinding
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
@@ -29,6 +29,7 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     // Variable for saving the scrolling position of the recycler view
     private var scrollingPosition: Int = 0
+    private var motionState: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,6 +69,33 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 }
 
                 else -> throw Exception("Invalid HTTP connection status")
+            }
+        }
+
+        // Trigger an alert if the form is not correctly filled
+        viewModel.emptyFormFlag.observe(viewLifecycleOwner) { flag ->
+            if (flag) {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(resources.getString(R.string.form_not_filled_title))
+                    .setMessage(
+                        resources.getString(
+                            R.string.form_not_filled_message,
+                            if (viewModel.line1.value.isNullOrEmpty())
+                                resources.getString(R.string.address_line_1)
+                            else if (viewModel.city.value.isNullOrEmpty())
+                                resources.getString(R.string.city)
+                            else if (viewModel.zip.value.isNullOrEmpty())
+                                resources.getString(R.string.zip_code)
+                            else
+                                resources.getString(R.string.state)
+                        )
+                    )
+                    .setPositiveButton(resources.getString(android.R.string.ok)) { dialog, _ ->
+                        viewModel.emptyFormFlagOff()
+                        dialog.dismiss()
+                    }
+                    .create()
+                    .show()
             }
         }
 
@@ -150,7 +178,8 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
             scrollingPosition = bundle.getInt(getString(R.string.scrolling_position))
             binding.representativesRecyclerView.scrollToPosition(scrollingPosition)
             // Save the exact transition state
-            binding.motionForm!!.transitionToState(bundle.getInt(getString(R.string.current_motion_state)))
+            motionState = bundle.getInt(getString(R.string.current_motion_state))
+            motionState?.let { binding.motionLayout?.transitionToState(it) }
         }
     }
 
@@ -158,7 +187,8 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(getString(R.string.scrolling_position), scrollingPosition)
-        outState.putInt(getString(R.string.current_motion_state), binding.motionForm!!.currentState)
+        binding.motionLayout?.let { layout -> motionState = layout.currentState }
+        motionState?.let { outState.putInt(getString(R.string.current_motion_state), it) }
     }
 
 

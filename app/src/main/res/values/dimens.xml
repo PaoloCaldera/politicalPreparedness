@@ -12,11 +12,15 @@
 
     <!-- elevations -->
     <dimen name="cardview_elevation">8dp</dimen>
+    <dimen name="fab_elevation">8dp</dimen>
 
     <!-- text sizes -->
     <dimen name="small_text_size">12sp</dimen>
     <dimen name="large_text_size">16sp</dimen>
     <dimen name="list_title_size">20sp</dimen>
     <dimen name="screen_title_size">36sp</dimen>
+
+    <!-- view dimensions -->
+    <dimen name="spinner_height_land">48dp</dimen>
 
 </resources>

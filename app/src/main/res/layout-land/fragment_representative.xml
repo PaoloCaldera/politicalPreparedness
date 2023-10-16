@@ -104,7 +104,7 @@
                 <Spinner
                     android:id="@+id/state"
                     android:layout_width="0dp"
-                    android:layout_height="48dp"
+                    android:layout_height="@dimen/spinner_height_land"
                     android:layout_marginTop="@dimen/small_margin_1"
                     android:autofillHints=""
                     android:inputType="textPostalAddress"

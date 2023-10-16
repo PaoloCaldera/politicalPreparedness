@@ -10,8 +10,9 @@
             app:touchAnchorId="@id/representatives_recyclerView" />
     </Transition>
 
-    <ConstraintSet android:id="@+id/constraint_start">
 
+    <!-- START CONSTRAINTS -->
+    <ConstraintSet android:id="@+id/constraint_start">
         <Constraint
             android:id="@id/search_title"
             android:layout_width="wrap_content"
@@ -71,14 +72,18 @@
         <Constraint android:id="@id/representatives_recyclerView">
             <PropertySet app:visibilityMode="ignore" />
         </Constraint>
+
         <Constraint android:id="@id/loading_image">
             <PropertySet app:visibilityMode="ignore" />
         </Constraint>
+
         <Constraint android:id="@id/connection_error_image">
             <PropertySet app:visibilityMode="ignore" />
         </Constraint>
     </ConstraintSet>
 
+
+    <!-- END CONSTRAINTS -->
     <ConstraintSet android:id="@+id/constraint_end">
         <Constraint
             android:id="@id/search_title"
@@ -100,21 +105,21 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@id/zip"
             app:layout_constraintEnd_toStartOf="@id/state"
-            app:layout_constraintStart_toStartOf="@id/address_line_2"/>
+            app:layout_constraintStart_toStartOf="@id/address_line_2" />
 
         <Constraint
             android:id="@id/state"
-            app:layout_constraintStart_toEndOf="@id/city"
             app:layout_constraintBottom_toBottomOf="@id/city"
-            app:layout_constraintTop_toTopOf="@id/city"
-            app:layout_constraintEnd_toEndOf="@id/address_line_2" />
+            app:layout_constraintEnd_toEndOf="@id/address_line_2"
+            app:layout_constraintStart_toEndOf="@id/city"
+            app:layout_constraintTop_toTopOf="@id/city" />
 
         <Constraint
             android:id="@id/zip"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/city"
             app:layout_constraintBottom_toTopOf="@id/button_search"
-            app:layout_constraintEnd_toEndOf="@id/city" />
+            app:layout_constraintEnd_toEndOf="@id/city"
+            app:layout_constraintStart_toStartOf="@id/city" />
 
         <Constraint
             android:id="@id/button_search"
@@ -129,9 +134,11 @@
         <Constraint android:id="@id/representatives_recyclerView">
             <PropertySet app:visibilityMode="ignore" />
         </Constraint>
+
         <Constraint android:id="@id/loading_image">
             <PropertySet app:visibilityMode="ignore" />
         </Constraint>
+
         <Constraint android:id="@id/connection_error_image">
             <PropertySet app:visibilityMode="ignore" />
         </Constraint>
