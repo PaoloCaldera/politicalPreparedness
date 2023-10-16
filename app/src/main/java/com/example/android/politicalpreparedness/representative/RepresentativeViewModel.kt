@@ -34,6 +34,11 @@ class RepresentativeViewModel : ViewModel() {
     val networkStatus: LiveData<CivicsApiStatus?>
         get() = _networkStatus
 
+    // Flag triggering an alert if the form is not correctly filled
+    private val _emptyFormFlag = MutableLiveData<Boolean>()
+    val emptyFormFlag: LiveData<Boolean>
+        get() = _emptyFormFlag
+
     // Flag that triggers the location permission check
     private val _locationPermissionFlag = MutableLiveData<Boolean>()
     val locationPermissionFlag: LiveData<Boolean>
@@ -59,6 +64,16 @@ class RepresentativeViewModel : ViewModel() {
      * "Find my representatives" button clicked
      */
     fun onFindMyRepresentativesClicked() {
+        if (line1.value.isNullOrEmpty() ||
+            city.value.isNullOrEmpty() ||
+            state.value.isNullOrEmpty() ||
+            zip.value.isNullOrEmpty()
+        ) {
+
+            emptyFormFlagOn()
+            return
+        }
+
         getRepresentatives(
             Address(
                 line1 = line1.value!!,
@@ -68,6 +83,7 @@ class RepresentativeViewModel : ViewModel() {
                 zip = zip.value!!
             )
         )
+        emptyFormFlagOff()
     }
 
     /**
@@ -77,6 +93,17 @@ class RepresentativeViewModel : ViewModel() {
         locationPermissionFlagOn()
     }
 
+
+    /**
+     * Turn on and off the emptyFormFlag
+     */
+    private fun emptyFormFlagOn() {
+        _emptyFormFlag.value = true
+    }
+
+    fun emptyFormFlagOff() {
+        _emptyFormFlag.value = false
+    }
 
     /**
      * Turn on and off the locationPermissionFlag

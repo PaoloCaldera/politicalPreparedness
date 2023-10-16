@@ -4,9 +4,9 @@ import android.content.Intent
 import android.content.Intent.ACTION_VIEW
 import android.net.Uri
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil.ItemCallback
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -95,9 +95,9 @@ class RepresentativeListAdapter(private val listTitle: String) :
                 representativeListItem = listItem
 
                 // Hide social profile links at the beginning, to show then only the available ones
-                representativeWww.visibility = View.GONE
-                representativeFacebook.visibility = View.GONE
-                representativeTwitter.visibility = View.GONE
+                representativeWww.isVisible = false
+                representativeFacebook.isVisible = false
+                representativeTwitter.isVisible = false
 
                 executePendingBindings()
             }
@@ -139,7 +139,7 @@ class RepresentativeListAdapter(private val listTitle: String) :
         Make the corresponding view visible and then prepare the intent to the web page
          */
         private fun enableLink(view: ImageView, url: String) {
-            view.visibility = View.VISIBLE
+            view.isVisible = true
             view.setOnClickListener {
                 val intent = Intent(ACTION_VIEW, Uri.parse(url))
                 itemView.context.startActivity(intent)

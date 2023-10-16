@@ -9,10 +9,13 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.android.politicalpreparedness.LocationAppServices
 import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.FragmentRepresentativeBinding
 import com.example.android.politicalpreparedness.network.CivicsApiStatus
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
@@ -23,6 +26,10 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     // LocationAppServices: class with methods for checking location permission and activation
     private val locationAppServices = LocationAppServices(this)
+
+    // Variable for saving the scrolling position of the recycler view
+    private var scrollingPosition: Int = 0
+    private var motionState: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,6 +69,33 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 }
 
                 else -> throw Exception("Invalid HTTP connection status")
+            }
+        }
+
+        // Trigger an alert if the form is not correctly filled
+        viewModel.emptyFormFlag.observe(viewLifecycleOwner) { flag ->
+            if (flag) {
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(resources.getString(R.string.form_not_filled_title))
+                    .setMessage(
+                        resources.getString(
+                            R.string.form_not_filled_message,
+                            if (viewModel.line1.value.isNullOrEmpty())
+                                resources.getString(R.string.address_line_1)
+                            else if (viewModel.city.value.isNullOrEmpty())
+                                resources.getString(R.string.city)
+                            else if (viewModel.zip.value.isNullOrEmpty())
+                                resources.getString(R.string.zip_code)
+                            else
+                                resources.getString(R.string.state)
+                        )
+                    )
+                    .setPositiveButton(resources.getString(android.R.string.ok)) { dialog, _ ->
+                        viewModel.emptyFormFlagOff()
+                        dialog.dismiss()
+                    }
+                    .create()
+                    .show()
             }
         }
 
@@ -124,7 +158,37 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
             spinner.adapter = arrayAdapter
         }
 
+        binding.representativesRecyclerView.addOnScrollListener(object :
+            RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                scrollingPosition =
+                    (binding.representativesRecyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+            }
+        })
+
         return binding.root
+    }
+
+    // Restore the current position of the recycler view
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        savedInstanceState?.let { bundle ->
+            // Scroll to the exact position
+            scrollingPosition = bundle.getInt(getString(R.string.scrolling_position))
+            binding.representativesRecyclerView.scrollToPosition(scrollingPosition)
+            // Save the exact transition state
+            motionState = bundle.getInt(getString(R.string.current_motion_state))
+            motionState?.let { binding.motionLayout?.transitionToState(it) }
+        }
+    }
+
+    // Save the current position of the recycler view
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(getString(R.string.scrolling_position), scrollingPosition)
+        binding.motionLayout?.let { layout -> motionState = layout.currentState }
+        motionState?.let { outState.putInt(getString(R.string.current_motion_state), it) }
     }
 
 
