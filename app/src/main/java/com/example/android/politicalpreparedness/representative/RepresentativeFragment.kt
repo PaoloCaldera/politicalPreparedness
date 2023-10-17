@@ -163,7 +163,7 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
         super.onViewStateRestored(savedInstanceState)
         savedInstanceState?.let { bundle ->
             // Save the exact transition state
-            motionState = bundle.getInt(getString(R.string.current_motion_state))
+            motionState = bundle.getInt(getString(R.string.current_motion_state_key))
             motionState?.let { binding.motionLayout?.transitionToState(it) }
         }
     }
@@ -172,7 +172,7 @@ class RepresentativeFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         binding.motionLayout?.let { layout -> motionState = layout.currentState }
-        motionState?.let { outState.putInt(getString(R.string.current_motion_state), it) }
+        motionState?.let { outState.putInt(getString(R.string.current_motion_state_key), it) }
     }
 
 
