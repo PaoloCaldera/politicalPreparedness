@@ -20,9 +20,12 @@ import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 class RepresentativeViewModel(
-    private val savedModelState: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     application: Application
 ) : AndroidViewModel(application) {
+
+    private val KEY_REPRESENTATIVES_LIST =
+        getApplication<Application>().resources.getString(R.string.representatives_list_key)
 
     // LiveData variables exploiting 2-way data binding, used for EditText views (and Spinner)
     val line1 = MutableLiveData<String>()
@@ -31,9 +34,9 @@ class RepresentativeViewModel(
     val state = MutableLiveData<String>()
     val zip = MutableLiveData<String>()
 
-
     // Variable containing the representatives list for the recycler view
-    private val _representativesList = MutableLiveData<List<Representative>?>(null)
+    private val _representativesList: MutableLiveData<List<Representative>?> =
+        savedStateHandle.getLiveData(KEY_REPRESENTATIVES_LIST)
     val representativeList: LiveData<List<Representative>?>
         get() = _representativesList
 
@@ -67,10 +70,11 @@ class RepresentativeViewModel(
     val geocodeLocationFlag: LiveData<Location?>
         get() = _geocodeLocationFlag
 
+
     init {
         // Restore the list in case of an unexpected shutdown by the OS to free up resources
-        val restoredList = savedModelState.get<List<Representative>>(
-            getApplication<Application>().resources.getString(R.string.representative_list_key)
+        val restoredList = savedStateHandle.get<List<Representative>>(
+            getApplication<Application>().resources.getString(R.string.representatives_list_key)
         )
         if (restoredList != null) _representativesList.value = restoredList
     }
@@ -187,19 +191,13 @@ class RepresentativeViewModel(
         try {
             val (offices, officials) = CivicsApi.retrofitService.getRepresentatives(address.toFormattedString())
             // Use the flatMap function to combine all the lists to a single representative list
-            _representativesList.value =
+            // Save the list into the savedStateHandle object to allow it to be restored in case of shutdown
+            savedStateHandle[KEY_REPRESENTATIVES_LIST] =
                 offices.flatMap { office -> office.getRepresentatives(officials) }
             _networkStatus.value = CivicsApiStatus.SUCCESS
         } catch (e: Exception) {
             _networkStatus.value = CivicsApiStatus.ERROR
         }
-    }
-
-
-    override fun onCleared() {
-        super.onCleared()
-        savedModelState[getApplication<Application>().resources.getString(R.string.representative_list_key)] =
-            _representativesList.value
     }
 
 
