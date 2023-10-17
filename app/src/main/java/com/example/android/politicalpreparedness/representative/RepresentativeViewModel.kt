@@ -24,7 +24,8 @@ class RepresentativeViewModel(
     application: Application
 ) : AndroidViewModel(application) {
 
-    private val KEY_REPRESENTATIVES_LIST = getApplication<Application>().resources.getString(R.string.representatives_list_key)
+    private val KEY_REPRESENTATIVES_LIST =
+        getApplication<Application>().resources.getString(R.string.representatives_list_key)
 
     // LiveData variables exploiting 2-way data binding, used for EditText views (and Spinner)
     val line1 = MutableLiveData<String>()
@@ -198,7 +199,6 @@ class RepresentativeViewModel(
             _networkStatus.value = CivicsApiStatus.ERROR
         }
     }
-
 
 
     /**
