@@ -1,6 +1,7 @@
 package com.example.android.politicalpreparedness
 
 
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Spinner
@@ -63,6 +64,9 @@ fun bindRepresentativeListData(
     header: String,
     listData: List<Representative>?
 ) {
+    if (listData.isNullOrEmpty())
+        recyclerView.visibility = View.INVISIBLE
+
     val adapter = RepresentativeListAdapter(header)
     adapter.addHeaderAndSubmitList(listData)
     recyclerView.adapter = adapter

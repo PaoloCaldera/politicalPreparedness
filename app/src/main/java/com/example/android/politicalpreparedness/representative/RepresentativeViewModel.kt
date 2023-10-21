@@ -71,15 +71,6 @@ class RepresentativeViewModel(
         get() = _geocodeLocationFlag
 
 
-    init {
-        // Restore the list in case of an unexpected shutdown by the OS to free up resources
-        val restoredList = savedStateHandle.get<List<Representative>>(
-            getApplication<Application>().resources.getString(R.string.representatives_list_key)
-        )
-        if (restoredList != null) _representativesList.value = restoredList
-    }
-
-
     /**
      * "Find my representatives" button clicked
      */
