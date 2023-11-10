@@ -1,49 +1,45 @@
 ## Political Preparedness
 
-PoliticalPreparedness is an example application built to demonstrate core Android Development skills as presented in the Udacity Android Developers Kotlin curriculum. 
+Political Preparedness is the last project of the Android Kotlin Developer nanodegree provided by Udacity. It is the capstone project of the whole course, the last step for achieving the nanodegree. The project is focused on listing the upcoming elections, with the possibility to follow them, and the list of representatives for US political elections.
 
-This app demonstrates the following views and techniques:
-
-* [Retrofit](https://square.github.io/retrofit/) to make api calls to an HTTP web service.
-* [Moshi](https://github.com/square/moshi) which handles the deserialization of the returned JSON to Kotlin data objects. 
-* [Glide](https://bumptech.github.io/glide/) to load and cache images by URL.
-* [Room](https://developer.android.com/training/data-storage/room) for local database storage.
-  
-It leverages the following components from the Jetpack library:
+The project demonstrates the ability to exploit all the aspects faced in the Android Kotlin Developer course, especially
 
 * [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
 * [LiveData](https://developer.android.com/topic/libraries/architecture/livedata)
 * [Data Binding](https://developer.android.com/topic/libraries/data-binding/) with binding adapters
 * [Navigation](https://developer.android.com/topic/libraries/architecture/navigation/) with the SafeArgs plugin for parameter passing between fragments
 
+for what concerns the layout and the user navigation, and
 
-## Setting up the Repository
+* [Retrofit](https://square.github.io/retrofit/)
+* [Moshi](https://github.com/square/moshi), together with custom adapters for particular JSON fields
+* [Glide](https://bumptech.github.io/glide/) to load and cache images by URL
+* [Room](https://developer.android.com/training/data-storage/room)
+  
+for the development of the source layer, where data is retrieved from external sources.
 
-To get started with this project, simply pull the repository and import the project into Android Studio. From there, deploy the project to an emulator or device. 
+The project consists of four screens, including a welcome screen, when the user launches the app, two screens containing election data, and one screen containing election representatives data.
 
-* NOTE: In order for this project to pull data, you will need to add your API Key to the project as a value in the CivicsHttpClient. You can generate an API Key from the [Google Developers Console](https://console.developers.google.com/)
+Visit the [Wiki](https://github.com/PaoloCaldera/politicalPreparedness/wiki) to see the application screens.
+
 
 ## Getting Started
 
-* For the most part, the TODOs in the project will guide you through getting the project completed. There is a general package architecture and *most* files are present. 
-* Hints are provided for tricky parts of the application that may extend beyond basic Android development skills.
-* As databinding is integral to the project architecture, it is important to be familiar with the IDE features such s cleaning and rebuilding the project as well as invalidating caches. 
+To clone the repository, use the command
+```
+$ git clone https://github.com/PaoloCaldera/locationReminder.git
+```
+or the `Get from VCS` option inside Android Studio by copying the link above.
 
-## Suggested Workflow
+Before running the application, a further step has to be completed, that is to Create a Google Cloud project and add an API key, following the [Google](https://developers.google.com/maps/documentation/android-sdk/get-api-key) indications.
 
-* It is recommend you save all beautification until the end of the project. Ensure functionality first, then clean up UI. While UI is a component of the application, it is best to deliver a functional product.
-* Start by getting all screens in the application to navigate to each other, even with dummy data. If needed, comment out stub code to get the application to compile. You will need to create actions in *nav_graph.xml* and UI elements to trigger the navigation. 
-* Create an API key and begin work on the Elections Fragment  and associated ViewModel. 
-	* Use the elections endpoint in the Civics API and requires no parameters.
-	* You will need to create a file to complete the step.
-	* This will require edits to the Manifest.
-	* Link the election to the Voter Info Fragment.
-* Begin work on the Voter Info Fragment and associated ViewModel.
-* Begin work on the Representative Fragment and associated ViewModel.
-	* This will require edits to Gradle.
-	* You will need to create a file to complete the step.
+To retrieve the SHA-1 of the application, which is going to be used both for creating the API key and the authentication methods, execute in the Android Studio terminal the following line:
+```
+$ keytool -list -v -alias androiddebugkey -keystore <USER_FOLDER>\.android\debug.keystore
+```
+Then, run the application on an Android device or emulator. The application is compiled with API 33, thus use a device or emulator supporting such API version. For complete usage of the application, be sure that the device or emulator is connected to a Wi-Fi network.
 
 
+## License
 
-## Report Issues
-Notice any issues with a repository? Please file a github issue in the repository.
+Loading Status is a public project that can be downloaded and modified under the terms and conditions of the [MIT License](LICENSE).
